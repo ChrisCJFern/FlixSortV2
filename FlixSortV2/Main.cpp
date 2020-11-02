@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 using namespace std;
 
 int main() {
@@ -15,6 +16,8 @@ int main() {
 	cout << "julia welcome buddyy";
 	cout << "aasdadafa" << endl;
 	cout << "hello my computer is no longer wack" << endl;
+
+	ifstream movieFile;
 
 	return 0;
 }
