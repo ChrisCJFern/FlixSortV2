@@ -4,8 +4,9 @@ using namespace std;
 
 int main() {
 	cout << "==================================================" << endl;
-	cout << "|                 Welcome to FlixSort!           |" << endl;
+	cout << "|             Welcome to FlixSort!               |" << endl;
 	cout << "|   Est. 2020 by the Magical Movie Masters :)    |" << endl;
+	cout << "|   forever crying thanks to github :''''''(     |" << endl;
 	cout << "==================================================" << endl;
 	
 	cout << "Hello" << endl;
