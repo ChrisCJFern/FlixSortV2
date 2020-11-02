@@ -43,12 +43,6 @@ int main() {
 		cout << "i think it's working" << endl;
 		movieFile.close();
 	}
-	
-	ofstream myfile;
-	myfile.open("test.txt");
-	myfile << "testing to see where this file ends up ahah" << endl;
-	myfile.close();
-
 
 
 	return 0;
