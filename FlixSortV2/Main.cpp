@@ -54,12 +54,12 @@ struct movie {
 	string genre;
 	unsigned int gross;
 	string name;
-	string rating;
+	double rating;
 	string releaseDate;
 	int runtime;
 	double score;
 	string star;
-	unsigned int votes;
+	int votes;
 	string writer; 
 	int year;
 };
