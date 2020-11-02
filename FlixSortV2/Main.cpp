@@ -3,49 +3,6 @@
 #include <string>
 using namespace std;
 
-/*
-void createMovieArray(const char* filePath, vector<lego>& legos) {
-	ifstream file(filePath);
-	if (file.is_open()) {
-		string fileLine;
-		getline(file, fileLine);
-
-		while (!file.eof()) {
-			// 1. Get a line from the file (from lecture)
-			getline(file, fileLine);
-
-			// 2. Break line into separate pieces, based on comma delimiter (from lecture)
-			istringstream stream(fileLine);
-			string setNum, legoTheme, legoName, stringMinifigs, stringPieces, stringPrice;
-			getline(stream, setNum, ',');
-			getline(stream, legoTheme, ',');
-			getline(stream, legoName, ',');
-			getline(stream, stringMinifigs, ',');
-			getline(stream, stringPieces, ',');
-			getline(stream, stringPrice, ',');
-
-			int minifigs, pieces;
-			double _price;
-
-			minifigs = stoi(stringMinifigs);
-			pieces = stoi(stringPieces);
-			_price = stod(stringPrice);
-
-			lego newLego;
-			newLego.setNumber = setNum;
-			newLego.theme = legoTheme;
-			newLego.setName = legoName;
-			newLego.numPieces = pieces;
-			newLego.numMinifigures = minifigs;
-			newLego.price = _price;
-
-			legos.push_back(newLego);
-		}
-	}
-
-}
-*/
-
 struct movie {
 	unsigned int budget;
 	string company;
