@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <iomanip>
 using namespace std;
 
 struct movie {
@@ -22,11 +23,16 @@ struct movie {
 };
 
 int main() {
-	cout << "==================================================" << endl;
-	cout << "|             Welcome to FlixSort!               |" << endl;
-	cout << "|   Est. 2020 by the Magical Movie Masters :)    |" << endl;
-	cout << "|   forever crying thanks to github :''''''(     |" << endl;
-	cout << "==================================================" << endl;
+	cout << setfill('=') << setw(51);
+	cout << "\n";
+	cout << "|              Welcome to FlixSort               |" << endl;
+	cout << "|     Est. 2020 by the Magical Movie Masters     |" << endl;
+	cout << "|><><><><><><><><><><><><><><><><><><><><><><><><|" << endl;
+	cout << "|1. Want to watch a movie marathon?              |" << endl;
+	cout << "|2. Can't decide what movie to watch?            |" << endl;
+	cout << "|             We can choose for you!             |" << endl;
+	cout << setfill('=') << setw(51);
+	cout << "\n";
 	
 	cout << "Hello" << endl;
 	cout << "NO im still scared";
