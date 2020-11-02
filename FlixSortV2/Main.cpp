@@ -37,10 +37,12 @@ int main() {
 	cout << "aasdadafa" << endl;
 	cout << "hello my computer is no longer wack" << endl;
 
+	string line;
 	ifstream movieFile;
 	movieFile.open("movies.csv", ios::in);
 	if (movieFile.is_open()) {
-		cout << "i think it's working" << endl;
+		getline(movieFile, line);
+		cout << line << endl;
 		movieFile.close();
 	}
 
