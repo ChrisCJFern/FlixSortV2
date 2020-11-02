@@ -33,15 +33,6 @@ int main() {
 	cout << "|             We can choose for you!             |" << endl;
 	cout << setfill('=') << setw(51);
 	cout << "\n";
-	
-	cout << "Hello" << endl;
-	cout << "NO im still scared";
-	cout << "grr";
-	cout << 5 + 99;
-	cout << "Can you see me" << endl;
-	cout << "julia welcome buddyy";
-	cout << "aasdadafa" << endl;
-	cout << "hello my computer is no longer wack" << endl;
 
 	string line;
 	ifstream movieFile;
