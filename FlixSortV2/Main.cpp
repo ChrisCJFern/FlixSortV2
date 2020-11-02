@@ -14,6 +14,7 @@ int main() {
 	cout << "Can you see me" << endl;
 	cout << "julia welcome buddyy";
 	cout << "aasdadafa" << endl;
+	cout << "hello my computer is no longer wack" << endl;
 
 	return 0;
 }
