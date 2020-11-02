@@ -8,6 +8,7 @@ int main() {
 	cout << 5 + 99;
 	cout << "Can you see me" << endl;
 	cout << "julia welcome buddyy";
+	cout << "aasdadafa" << endl;
 
 	return 0;
 }
