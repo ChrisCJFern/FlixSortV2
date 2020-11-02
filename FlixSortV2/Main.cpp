@@ -44,6 +44,10 @@ int main() {
 		movieFile.close();
 	}
 	
+	ofstream myfile;
+	myfile.open("test.txt");
+	myfile << "testing to see where this file ends up ahah" << endl;
+	myfile.close();
 
 
 
