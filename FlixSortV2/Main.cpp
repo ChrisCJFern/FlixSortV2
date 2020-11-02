@@ -41,6 +41,7 @@ int main() {
 	movieFile.open("movies.csv", ios::in);
 	if (movieFile.is_open()) {
 		cout << "i think it's working" << endl;
+		cout << "i dead" << endl;
 		movieFile.close();
 	}
 	
