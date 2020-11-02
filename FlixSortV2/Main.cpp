@@ -17,5 +17,13 @@ int main() {
 	cout << "aasdadafa" << endl;
 	cout << "hello my computer is no longer wack" << endl;
 
+	ofstream moviesFile;
+	moviesFile.open("movies.csv", ios::in);
+	if (moviesFile.is_open()) {
+		cout << "i think it's working" << endl;
+		moviesFile.close();
+	}
+	
+
 	return 0;
 }
