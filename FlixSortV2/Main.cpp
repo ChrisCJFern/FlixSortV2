@@ -5,6 +5,8 @@
 #include <vector>
 #include <algorithm>
 #include <limits>
+#include <ctype.h>
+
 using namespace std;
 
 struct movie {
@@ -25,94 +27,195 @@ struct movie {
 	int year;
 };
 
-vector<int> menuPrint() {
+int menuPrint() {
 	cout << setfill('=') << setw(51);
 	cout << "\n";
-	cout << "|     How would you like to base your search?    |" << endl;
-	cout << "|Enter the numbers of the choices you would like |" << endl;
-	cout << "|to search by in the following format: # # # ..  |" << endl;
-	cout << "|1. Length of time                               |" << endl;
-	cout << "|2. Company                                      |" << endl;
-	cout << "|3. Genre                                        |" << endl;
-	cout << "|4. Rating                                       |" << endl;
-	cout << "|5. Release year                                 |" << endl;
-	cout << "|6. Director                                     |" << endl;
-	cout << "|7. Starring actor/actress                       |" << endl;
+	cout << "|      What movie genre were you thinking?       |" << endl;
+	cout << "|   (a) Action      (g) Drama     (m) Romance    |" << endl;
+	cout << "|   (b) Adventure   (h) Family    (n) Sci-Fi     |" << endl;
+	cout << "|   (c) Animation   (i) Fantasy   (o) Thriller   |" << endl;          //what genre are you thinking 
+	cout << "|   (d) Biography   (j) Horror    (p) War        |" << endl;           //indexed list
+	cout << "|   (e) Comedy      (k) Musical   (q) Western    |" << endl;
+	cout << "|   (f) Crime       (l) Mystery                  |" << endl;
+	cout << "|   (0) Enter 0 to Exit                          |" << endl;
 	cout << setfill('=') << setw(51);
 	cout << "\n";
+	cout << "Please input the letter of the selected genre: ";
 	string choice;
-	vector<int> choices;
-	while (true) {
+	bool chosen = false;
+	int val = 0;
+	while (!chosen) {
 		cin >> choice;
-		try {
-			if (stoi(choice)) {
-				int num = stoi(choice);
-				if (find(choices.begin(), choices.end(), num) == choices.end()) {
-					choices.push_back(num);
-				}
+		if (choice == "0") {
+			val = 0;
+			chosen = true;
+		}
+		else {
+			if (choice.length() > 1 || choice.length() < 1 || choice[0] < 'A' || (choice[0] < 'a' && choice[0] > 'Q') ||  choice[0] > 'q') {
+				cout << choice << " is an invalid input." << endl;
+				cout << "Please enter your input in the correct format: ";
+				choice.clear();
+			}
+			else {
+				chosen = true;
+				val = tolower(int(choice[0]));
+				break;
 			}
 		}
-		catch (const invalid_argument&) {
-			cout << choice << " is an invalid input." << endl;
-			cout << "Please enter your input in the format: # # #" << endl;
-			choices.clear();
-			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');          //found information about cin.ignore() -> http://www.cplusplus.com/reference/istream/istream/ignore/
-		}
-		if (cin.peek() == '\n') {
-			break;
-		}
 	}
-	sort(choices.begin(), choices.end());
-	return choices;
+	return val;
 }
 
-void runChoices(vector<int> choices) {
-	for (int i = 0; i < choices.size(); i++) {
-		cout << choices[i] << ". ";
-		switch (choices[i]) {
-		case 1:
-			cout << "How much time do you have? (in minutes)" << endl;
+bool runGenres(int choice) {
+	switch (choice) {
+		case 97:
+			cout << "You chose Action." << endl;
 			break;
-		case 2:
-			cout << "Production Company" << endl;
-			//list of options from a map or set?									//do methods for each here?
+		case 98:				
+			cout << "You chose Adventure." << endl;
 			break;
-		case 3:
-			cout << "Genre: " << endl;
-			//menu list of options from a set ?
+		case 99:
+			cout << "You chose Animation." << endl;
 			break;
-		case 4:
-			cout << "Rating" << endl;
+		case 100:
+			cout << "You chose Biography." << endl;
 			break;
-		case 5:
-			cout << "Release Year" << endl;
+		case 101:
+			cout << "You chose Comedy." << endl;
 			break;
-		case 6:
-			cout << "Director" << endl;
+		case 102:
+			cout << "You chose Crime." << endl;
 			break;
-		case 7:
-			cout << "Starring actor" << endl;
+		case 103:
+			cout << "You chose Drama." << endl;
+			break;
+		case 104:
+			cout << "You chose Family." << endl;
+			break;
+		case 105:
+			cout << "You chose Fantasy." << endl;
+			break;
+		case 106:
+			cout << "You chose Horror." << endl;
+			break;
+		case 107:
+			cout << "You chose Musical." << endl;
+			break;
+		case 108:
+			cout << "You chose Mystery." << endl;
+			break;
+		case 109:
+			cout << "You chose Romance." << endl;
+			break;
+		case 110:
+			cout << "You chose Sci-Fi." << endl;
+			break;
+		case 111:
+			cout << "You chose Thriller." << endl;
+			break;
+		case 112:
+			cout << "You chose War." << endl;
+			break;
+		case 113:
+			cout << "You chose Western." << endl;
+			break;
+		case 0:
+			cout << "Exiting now!" << endl;
+			return false;
 			break;
 		default:
+			cout << "..." << endl;
 			break;
+	}
+	return true;
+}
+bool runYear() {
+	string input;
+	int choice = 0;
+	bool chosen = false;
+	cout << setfill('=') << setw(51);
+	cout << "\n";
+	cout << "|   Let's pick a range of years for your movie!  |" << endl;
+	cout << "|      (a) 1986 - 1990      (d) 2001 - 2005      |" << endl;
+	cout << "|      (b) 1991 - 1995      (e) 2005 - 2010      |" << endl;
+	cout << "|      (c) 1996 - 2000      (f) 2011 - 2016      |" << endl;
+	cout << "|      (0) Enter 0 to Exit                       |" << endl;
+	cout << setfill('=') << setw(51);
+	cout << "\n";
+	cout << "Please input the letter of the selected year: ";
+	while (!chosen) {
+		cin >> input;
+		if (input == "0") {
+			choice = 0;
+			chosen = true;
+		}
+		else {
+			if (input.length() > 1 || input.length() < 1 || input[0] < 'A' || (input[0] < 'a' && input[0] > 'F') || input[0] > 'f') {
+				cout << input << " is an invalid input." << endl;
+				cout << "Please enter your input in the correct format: ";
+				input.clear();
+			}
+			else {
+				chosen = true;
+				choice = tolower(int(input[0]));
+				break;
+			}
 		}
 	}
+	switch (choice) {
+	case 97:
+		cout << "You chose 86-90." << endl;
+		break;
+	case 98:
+		cout << "You chose 91-95." << endl;
+		break;
+	case 99:
+		cout << "You chose 95-00." << endl;
+		break;
+	case 100:
+		cout << "You chose 01-05." << endl;
+		break;
+	case 101:
+		cout << "You chose 05-10." << endl;
+		break;
+	case 102:
+		cout << "You chose 11-16." << endl;
+		break;
+	case 0:
+		cout << "Exiting now!" << endl;
+		return false;
+		break;
+	default:
+		cout << "..." << endl;
+		break;
+	}
+	return true;
 }
 
 void searchAgain() {
 	string input;
-	vector<int> choices;
+	int choice;
 	do {
-		cout << setfill('=') << setw(51);																		//not sure if this should be a function to be called...
-		cout << "\n";
-		cout << "|        Would you like to search again?         |" << endl;
-		cout << "|                 Enter: Y or N                  |" << endl;
 		cout << setfill('=') << setw(51);
 		cout << "\n";
+		cout << "|        Would you like to search again?         |" << endl;
+		cout << setfill('=') << setw(51);
+		cout << "\n";
+		cout << "Enter Y or N: ";
 		cin >> input;
 		if (input == "Y" || input == "y") {
-			choices = menuPrint();
-			runChoices(choices);
+			choice = menuPrint();
+			if (runGenres(choice)) {
+				if (runYear()) {
+					searchAgain();
+				}
+				else {
+					break;
+				}
+			}
+			else {
+				break;
+			}
 		}
 	}
 	while (input == "Y" || input == "y");
@@ -128,19 +231,29 @@ int main() {
 	cout << "|><><><><><><><><><><><><><><><><><><><><><><><><|" << endl;
 	cout << "|1. Want to watch a movie marathon?              |" << endl;
 	cout << "|2. Can't decide what movie to watch?            |" << endl;
-	cout << "|             We can choose for you!             |" << endl;
-
-	vector<int> choices;
-	choices = menuPrint();
-	runChoices(choices);
-	searchAgain();
+	cout << "|      We can provide you with some options.     |" << endl;
+	cout << "|><><><><><><><><><><><><><><><><><><><><><><><><|" << endl;
+	cout << "|              Let's get started :)              |" << endl;
+	int choice = 0;
+	choice = menuPrint();
+	if (runGenres(choice)) {
+		if (runYear()) {
+			searchAgain();
+		}
+		else {
+			cout << "Enjoy!" << endl;
+		}
+	}
+	else {
+		cout << "Ok goodbye!" << endl;
+	}
 	
 	string line;
 	ifstream movieFile;
 	movieFile.open("movies.csv", ios::in);
 	if (movieFile.is_open()) {
 		getline(movieFile, line);
-		cout << line << endl;
+		//cout << line << endl;
 	}
 	movieFile.close();
 
@@ -156,7 +269,7 @@ int main() {
 		break;
 	case 2:
 		cout << "Production Company" << endl;
-					//list of options from a map or set?									//do methods for each here?
+					//list of options from a map or set?									//made into a method
 		break;
 	case 3:
 		cout << "Genre: " << endl;
@@ -178,7 +291,7 @@ int main() {
 }*/
 /*------------------------SEARCH AGAIN---------------------------------------------
 //cout << endl;
-cout << setfill('=') << setw(51);																		//not sure if this should be a function to be called...
+cout << setfill('=') << setw(51);																		//made into function but here just in case
 cout << "\n";
 cout << "|        Would you like to search again?         |" << endl;
 cout << "|                 Enter: Y or N                  |" << endl;
@@ -200,3 +313,171 @@ while (input == "Y" || input == "y") {
 }
 cout << "Enjoy the movie!" << endl;*/
 ////////////////////////////////////////////////////////////////////////////////////
+
+
+
+//graph of genre to a vector of movie objects.
+
+// genre's
+// a. Action
+// b. Adventure
+// c. Animation
+// d. Biography
+// e. Comedy
+// f. Crime
+// g. Drama
+// h. Family
+// i. Fantasy
+// j. Horror
+// k. Musical
+// l. Mystery
+// m. Romance
+// n. Sci-Fi
+// o. Thriller
+// p. War
+// q. Western
+
+/*
+
+vector<int> menuPrint() {
+	cout << setfill('=') << setw(51);
+	cout << "\n";
+	cout << "|     How would you like to base your search?    |" << endl;
+	cout << "|Enter the numbers of the choices you would like |" << endl;
+	cout << "|to search by in the following format: # # # ..  |" << endl;
+	cout << "|1. Company                                      |" << endl;          //what genre are you thinking 
+	cout << "|2. Genre                                        |" << endl;           //indexed list
+	cout << "|3. Rating                                       |" << endl;
+	cout << "|4. Release year (search by decade)              |" << endl;
+	cout << "|5. Director                                     |" << endl;
+	cout << "|6. Starring actor/actress                       |" << endl;
+	cout << "|7. Exit                                         |" << endl;
+	cout << setfill('=') << setw(51);
+	cout << "\n";
+	string choice;
+	vector<int> choices;
+	while (true) {
+		cin >> choice;
+		try {
+			if (stoi(choice)) {
+				int num = stoi(choice);
+				if (num == 7) {
+					choices.clear();
+					choices.push_back(7);
+					break;
+				}
+				if (find(choices.begin(), choices.end(), num) == choices.end()) {
+					choices.push_back(num);
+				}
+			}
+		}
+		catch (const invalid_argument&) {
+			cout << choice << " is an invalid input." << endl;
+			cout << "Please enter your input in the format: # # #" << endl;
+			choices.clear();
+			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');          //found information about cin.ignore() -> http://www.cplusplus.com/reference/istream/istream/ignore/
+		}
+		if (cin.peek() == '\n') {
+			break;
+		}
+	}
+	sort(choices.begin(), choices.end());
+	return choices;
+}
+
+bool runChoices(vector<int> choices) {
+	for (int i = 0; i < choices.size(); i++) {
+		cout << choices[i] << ". ";
+		switch (choices[i]) {
+		case 1:
+			cout << "hi";
+			//cout << "How much time do you have? (in minutes)" << endl;
+			break;
+		case 1:
+			cout << "Production Company" << endl;
+			//list of options from a map or set?									//do methods for each here?
+			break;
+		case 2:
+			cout << "Genre: " << endl;
+			//menu list of options from a set ?
+			break;
+		case 3:
+			cout << "Rating" << endl;
+			break;
+		case 4:
+			cout << "Release Year" << endl;
+			break;
+		case 5:
+			cout << "Director" << endl;
+			break;
+		case 7:
+			cout << "goodbye" << endl;
+			return false;
+			break;
+		default:
+			cout << "===";
+			break;
+		}
+	}
+	return true;
+}
+
+void searchAgain() {
+	string input;
+	vector<int> choices;
+	do {
+		cout << setfill('=') << setw(51);
+		cout << "\n";
+		cout << "|        Would you like to search again?         |" << endl;
+		cout << "|                 Enter: Y or N                  |" << endl;
+		cout << setfill('=') << setw(51);
+		cout << "\n";
+		cin >> input;
+		if (input == "Y" || input == "y") {
+			choices = menuPrint();
+			runChoices(choices);
+		}
+	} while (input == "Y" || input == "y");
+	cout << "Enjoy the movie!" << endl;
+}
+
+
+
+cout << setfill('=') << setw(51);
+	cout << "\n";
+	cout << "|      What genre movie were you thinking?       |" << endl;
+	cout << "|a. Action                                       |" << endl;
+	cout << "|b. Adventure                                    |" << endl;
+	cout << "|c. Animation                                    |" << endl;          //what genre are you thinking
+	cout << "|d. Biography                                    |" << endl;           //indexed list
+	cout << "|e. Comedy                                       |" << endl;
+	cout << "|f. Crime                                        |" << endl;
+	cout << "|g. Drama                                        |" << endl;
+	cout << "|h. Family                                       |" << endl;
+	cout << "|i. Fantasy                                      |" << endl;
+	cout << "|j. Horror                                       |" << endl;
+	cout << "|k. Musical                                      |" << endl;
+	cout << "|l. Mystery                                      |" << endl;
+	cout << "|m. Romance                                      |" << endl;
+	cout << "|n. Sci-Fi                                       |" << endl;
+	cout << "|o. Thriller                                     |" << endl;
+	cout << "|p. War                                          |" << endl;
+	cout << "|q. Western                                      |" << endl;
+	cout << "|1. Exit                                         |" << endl;
+	cout << setfill('=') << setw(51);
+	cout << "\n";
+
+	-------------------
+	cout << setfill('=') << setw(51);
+	cout << "\n";
+	cout << "|      What genre movie were you thinking?       |" << endl;
+	cout << "|   a. Action     b. Adventure   c. Animation    |" << endl;
+	cout << "|   d. Biography  e. Comedy      f. Crime        |" << endl;
+	cout << "|   g. Drama      h. Family      i. Fantasy      |" << endl;          //what genre are you thinking
+	cout << "|   j. Horror     k. Musical     l. Mystery      |" << endl;           //indexed list
+	cout << "|   m. Romance    n. Sci-Fi      o. Thriller     |" << endl;
+	cout << "|   p. War        q. Western                     |" << endl;
+	cout << "|1. Exit                                         |" << endl;
+	cout << setfill('=') << setw(51);
+	cout << "\n";
+*/
