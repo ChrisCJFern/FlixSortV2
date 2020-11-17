@@ -6,25 +6,26 @@
 #include <algorithm>
 #include <limits>
 #include <ctype.h>
+#include <unordered_map>
 
 using namespace std;
 
 struct movie {
-	unsigned int budget;
-	string company;
-	string country;
-	string director;
-	string genre;
-	unsigned int gross;
-	string name;
-	double rating;
-	string releaseDate;
-	int runtime;
-	double score;
-	string star;
-	int votes;
-	string writer; 
-	int year;
+	unsigned int budget = 0;
+	string company = "";
+	string country = "";
+	string director = "";
+	string genre = "";
+	unsigned int gross = 0;
+	string name = "";
+	string rating = "";
+	string releaseDate = "";
+	int runtime = 0;
+	double score = 0.0;
+	string star = "";
+	int votes = 0;
+	string writer = "";
+	int year = 0;
 };
 
 int menuPrint() {
@@ -247,15 +248,87 @@ int main() {
 	else {
 		cout << "Ok goodbye!" << endl;
 	}
+
+	/*
+	ok so i got bored and started to play around with the taking in info stuff and got all the parsing to work, need to figure out how to deal with 
 	
+	*/
+	unordered_map<string, movie*> m;
 	string line;
 	ifstream movieFile;
 	movieFile.open("movies.csv", ios::in);
+	int numLine = 0;
 	if (movieFile.is_open()) {
 		getline(movieFile, line);
-		//cout << line << endl;
+		while (getline(movieFile, line)) {
+			numLine++;
+		}
+		movieFile.close();
+	}
+	string _budget, _company, _country, _director, _genre, _gross, _name, _rating;
+	string _released, _runtime, _score, _star, _votes, _writer, _year;
+	movieFile.open("movies.csv", ios::in);
+	getline(movieFile, line);
+	for (int i = 0; i < numLine-1; i++) {
+		movie *temp = new movie();
+		getline(movieFile, _budget, ',');
+		char d; 
+		d = movieFile.get();
+		if (char(d) == '"') {
+			getline(movieFile, _company, '"');
+			_company = _company.substr(0, _company.length() - 1);
+			getline(movieFile, line, ',');
+		}
+		else{
+			movieFile.putback(d);
+			getline(movieFile, _company, ',');
+		}
+		getline(movieFile, _country, ',');
+		getline(movieFile, _director, ',');
+		getline(movieFile, _genre, ',');
+		getline(movieFile, _gross, ',');
+		d = movieFile.get();
+		if(char(d) == '"'){
+			getline(movieFile, _name, '"');
+			_name = _name.substr(0, _name.length() - 2);
+			getline(movieFile, line, ',');
+		}
+		else {
+			movieFile.putback(d);
+			getline(movieFile, _name, ',');
+		}		
+		getline(movieFile, _rating, ',');
+		getline(movieFile, _released, ',');
+		getline(movieFile, _runtime, ',');
+		getline(movieFile, _score, ',');
+		getline(movieFile, _star, ',');
+		getline(movieFile, _votes, ',');
+		getline(movieFile, _writer, ',');
+		getline(movieFile, _year);
+		temp->budget = stoi(_budget);
+		temp->company = _company;
+		temp->country = _country;
+		temp->director = _director;
+		temp->genre = _genre;
+		temp->gross = stoi(_gross);
+		temp->name = _name;
+		temp->rating = _rating;
+		temp->releaseDate = _released;
+		temp->runtime = stoi(_runtime);
+		temp->score = stod(_score);
+		temp->star = _star;
+		temp->votes = stoi(_votes);
+		temp->writer = _writer;
+		temp->year = stoi(_year);
+		m[_name] = temp;
 	}
 	movieFile.close();
+	auto iter = m.begin();
+	cout << m.size() << endl;
+	cout << "here we go" << endl;
+	/*for (iter; iter != m.end(); iter++) {
+		cout << iter->second->name << endl;
+	}*/
 	return 0;
 }
 
