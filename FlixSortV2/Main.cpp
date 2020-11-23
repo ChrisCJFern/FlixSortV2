@@ -26,6 +26,42 @@ struct movie {
 	int votes = 0;
 	string writer = "";
 	int year = 0;
+
+	movie() {
+		unsigned int budget = 0;
+		string company = "";
+		string country = "";
+		string director = "";
+		string genre = "";
+		unsigned int gross = 0;
+		string name = "";
+		string rating = "";
+		string releaseDate = "";
+		int runtime = 0;
+		double score = 0.0;
+		string star = "";
+		int votes = 0;
+		string writer = "";
+		int year = 0;
+	}
+	movie(unsigned int _budget, string _company, string _country, string _director, string _genre, unsigned int _gross, string _name,
+		string _rating, string _releaseDate, int _runtime, double _score, string _star, int _votes, string _writer, int _year) {
+		budget = _budget;
+		company = _company;
+		country = _country;
+		director = _director;
+		genre = _genre;
+		gross = _gross;
+		name = _name;
+		rating = _rating;
+		releaseDate = _releaseDate;
+		runtime = _runtime;
+		score = _score;
+		star = _star;
+		votes = _votes;
+		writer = _writer;
+		year = _year;
+	}
 };
 
 int menuPrint() {
@@ -251,9 +287,8 @@ int main() {
 
 	/*
 	ok so i got bored and started to play around with the taking in info stuff and got all the parsing to work, need to figure out how to deal with duplicates...
-	
 	*/
-	unordered_map<string, movie*> m;
+	unordered_map<string, movie> m;
 	string line;
 	ifstream movieFile;
 	movieFile.open("movies.csv", ios::in);
@@ -270,7 +305,7 @@ int main() {
 	movieFile.open("movies.csv", ios::in);
 	getline(movieFile, line);
 	for (int i = 0; i < numLine-1; i++) {
-		movie *temp = new movie();
+		// movie *temp = new movie();
 		getline(movieFile, _budget, ',');
 		char d; 
 		d = movieFile.get();
@@ -305,6 +340,7 @@ int main() {
 		getline(movieFile, _votes, ',');
 		getline(movieFile, _writer, ',');
 		getline(movieFile, _year);
+		/*
 		temp->budget = stoi(_budget);
 		temp->company = _company;
 		temp->country = _country;
@@ -320,18 +356,19 @@ int main() {
 		temp->votes = stoi(_votes);
 		temp->writer = _writer;
 		temp->year = stoi(_year);
+		*/
+		movie temp(stoi(_budget), _company, _country, _director, _genre, stoi(_gross), _name, _rating, _released, stoi(_runtime),
+			stod(_score), _star, stoi(_votes), _writer, stoi(_year));
 		m[_name] = temp;
 	}
 	movieFile.close();
 	auto iter = m.begin();
 	cout << m.size() << endl;
 	for (iter; iter != m.end(); iter++) {
-		cout << iter->second->name << endl;
+		cout << iter->second.name << endl;
 	}
 	return 0;
 }
-
-// AASFASAS
 
 
 /*for (int i = 0; i < choices.size(); i++) {
