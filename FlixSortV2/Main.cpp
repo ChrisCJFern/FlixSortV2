@@ -250,7 +250,7 @@ int main() {
 	}
 
 	/*
-	ok so i got bored and started to play around with the taking in info stuff and got all the parsing to work, need to figure out how to deal with 
+	ok so i got bored and started to play around with the taking in info stuff and got all the parsing to work, need to figure out how to deal with duplicates...
 	
 	*/
 	unordered_map<string, movie*> m;
@@ -325,10 +325,9 @@ int main() {
 	movieFile.close();
 	auto iter = m.begin();
 	cout << m.size() << endl;
-	cout << "here we go" << endl;
-	/*for (iter; iter != m.end(); iter++) {
+	for (iter; iter != m.end(); iter++) {
 		cout << iter->second->name << endl;
-	}*/
+	}
 	return 0;
 }
 
