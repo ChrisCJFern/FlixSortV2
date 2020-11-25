@@ -300,12 +300,12 @@ int main() {
 		}
 		movieFile.close();
 	}
-	string _budget, _company, _country, _director, _genre, _gross, _name, _rating;
+	string _budget, _company, _country, _director, _genre, _gross, _name, _rating; 
 	string _released, _runtime, _score, _star, _votes, _writer, _year;
 	movieFile.open("movies.csv", ios::in);
 	getline(movieFile, line);
 	for (int i = 0; i < numLine-1; i++) {
-		// movie *temp = new movie();
+		// movie *temp = new movie(); // If we want dynamically allocated memory
 		getline(movieFile, _budget, ',');
 		char d; 
 		d = movieFile.get();
@@ -341,6 +341,7 @@ int main() {
 		getline(movieFile, _writer, ',');
 		getline(movieFile, _year);
 		/*
+		If we want dynamically allocated memory
 		temp->budget = stoi(_budget);
 		temp->company = _company;
 		temp->country = _country;
