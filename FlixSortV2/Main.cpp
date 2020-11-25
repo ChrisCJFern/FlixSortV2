@@ -207,7 +207,7 @@ unordered_multimap<string, movie> createMap(string genre, int year1, int year2) 
 	return m;
 }
 
-void printMap(unordered_multimap<string,movie> m1){
+unordered_multimap<string, movie>  printMap(unordered_multimap<string, movie> m1) {
 	auto iter = m1.begin();
 	map<double, vector<movie>> m2;
 	cout << m1.size() << endl;
@@ -216,13 +216,39 @@ void printMap(unordered_multimap<string,movie> m1){
 		m2[(iter->second.score)].push_back(iter->second);
 	}
 	cout << m2.size() << endl;
-	auto iter2 = m2.rbegin(); //https://www.geeksforgeeks.org/how-to-traverse-a-stl-map-in-reverse-direction/
+	auto iter2 = m2.rbegin();								//https://www.geeksforgeeks.org/how-to-traverse-a-stl-map-in-reverse-direction/
 	for (iter2; iter2 != m2.rend(); iter2++) {
 		for (int i = 0; i < iter2->second.size(); i++) {
 			cout << ct << ". " << iter2->second[i].name << " " << iter2->second[i].director << " " << iter2->second[i].runtime << endl;
 			ct++;
 		}
 	}
+	return m1;
+}
+
+vector<movie> marathon(double time, unordered_multimap<string, movie> m1) {
+	vector<movie> v;
+	auto iter = m1.begin();
+	map<double, vector<movie>> m2;
+	int ct = 1;
+	for (iter; iter != m1.end(); iter++) {
+		m2[(iter->second.runtime)].push_back(iter->second);
+	}
+	auto iter2 = m2.rbegin();
+	for (iter2; iter2 != m2.rend(); iter2++) {
+		if(iter2->first < time){
+			for (int i = 0; i < iter2->second.size(); i++) {
+				if (iter2->second[i].runtime < time) {
+					v.push_back(iter2->second[i]);
+					time -= iter2->first;
+				}
+				else {
+					break;
+				}
+			}
+		}
+	}
+	return v;	
 }
 
 int main() {
@@ -247,12 +273,20 @@ int main() {
 	string throwaway;
 	do {
 		int choice = 0;
+		double mins = 0.0;
 		choice = chooseGenre();
 		if (choice != 0) {
 			int choice2 = chooseYear();
 			if (choice2 != 0) {
 				m1 = createMap(genre[choice], year[choice2].first, year[choice2].second);
 				printMap(m1);
+				/*cout << "How much time do you have? Enter in minutes: ";     //testing how to marathon?
+				cin >> mins;
+				vector<movie> movies;
+				movies = marathon(mins, m1);
+				for (int i = 1; i < movies.size()+1; i++) {
+					cout << i << ". " << movies[i].name << " " << movies[i].runtime << endl;
+				}*/
 				cout << setfill('=') << setw(51);
 				cout << "\n";
 				cout << "|        Would you like to search again?         |" << endl;
@@ -271,7 +305,6 @@ int main() {
 		}
 	} while (input == "Y" || input == "y");
 	cout << "Enjoy the movie!" << endl;
-
 	return 0;
 }
 
