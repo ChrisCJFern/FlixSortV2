@@ -90,7 +90,7 @@ int chooseGenre() {
 			chosen = true;
 		}
 		else {
-			if (choice.length() > 1 || choice.length() < 1 || choice[0] < 'A' || (choice[0] < 'a' && choice[0] > 'Q') ||  choice[0] > 'q') {
+			if (choice.length() != 1 || choice[0] < 'A' || (choice[0] < 'a' && choice[0] > 'Q') || choice[0] > 'q') {
 				cout << choice << " is an invalid input." << endl;
 				cout << "Please enter your input in the correct format: ";
 				choice.clear();
@@ -106,9 +106,6 @@ int chooseGenre() {
 }
 
 int chooseYear() {
-	cin.clear();
-	unordered_map<int, string> genre = { {97, "Action"}, {98, "Adventure"}, {99, "Animation"}, {100, "Biography"}, {101, "Comedy"}, {102, "Crime"}, {103, "Drama"}, {104, "Family"}, {105, "Fantasy"}, {106, "Horror"}, {107, "Musical"}, {108, "Mystery"}, {109, "Romance"}, {110, "Sci-Fi"}, {111, "hriller"}, {112, "War"}, {113, "Western"} };
-	unordered_map<int, pair<int, int>> year = { {97, {1986, 1990}}, {98, {1991, 1995}}, {99, {1995, 2000}}, {100, {2001, 2005}}, {101, {2006, 2010}}, {102, {2011, 2016}}, {103, {1986, 2016}} };
 	string input;
 	int choice = 0;
 	bool chosen = false;
@@ -130,7 +127,7 @@ int chooseYear() {
 			chosen = true;
 		}
 		else {
-			if (input.length() > 1 || input.length() < 1 || input[0] < 'A' || (input[0] < 'a' && input[0] > 'G') || input[0] > 'g') {
+			if (input.length() != 1 || input[0] < 'A' || (input[0] < 'a' && input[0] > 'G') || input[0] > 'g') {
 				cout << input << " is an invalid input." << endl;
 				cout << "Please enter your input in the correct format: ";
 				input.clear();
@@ -207,7 +204,7 @@ unordered_multimap<string, movie> createMap(string genre, int year1, int year2) 
 	return m;
 }
 
-unordered_multimap<string, movie>  printMap(unordered_multimap<string, movie> m1) {
+unordered_multimap<string, movie> printMap(unordered_multimap<string, movie> m1) {
 	auto iter = m1.begin();
 	map<double, vector<movie>> m2;
 	cout << m1.size() << endl;
@@ -236,7 +233,7 @@ vector<movie> marathon(double time, unordered_multimap<string, movie> m1) {
 	}
 	auto iter2 = m2.rbegin();
 	for (iter2; iter2 != m2.rend(); iter2++) {
-		if(iter2->first < time){
+		if (iter2->first < time) {
 			for (int i = 0; i < iter2->second.size(); i++) {
 				if (iter2->second[i].runtime < time) {
 					v.push_back(iter2->second[i]);
@@ -248,13 +245,14 @@ vector<movie> marathon(double time, unordered_multimap<string, movie> m1) {
 			}
 		}
 	}
-	return v;	
+	return v;
 }
 
 int main() {
 	unordered_map<int, string> genre = { {97, "Action"}, {98, "Adventure"}, {99, "Animation"}, {100, "Biography"}, {101, "Comedy"}, {102, "Crime"}, {103, "Drama"}, {104, "Family"}, {105, "Fantasy"}, {106, "Horror"}, {107, "Musical"}, {108, "Mystery"}, {109, "Romance"}, {110, "Sci-Fi"}, {111, "Thriller"}, {112, "War"}, {113, "Western"} };
 	unordered_map<int, pair<int, int>> year = { {97, {1986, 1990}}, {98, {1991, 1995}}, {99, {1996, 2000}}, {100, {2001, 2005}}, {101, {2006, 2010}}, {102, {2011, 2016}}, {103, {1986, 2016}} };
 	unordered_multimap<string, movie> m1;
+	
 	//---------------------PRINTS INITIAL MENU---------------------------------------
 	cout << setfill('=') << setw(51);
 	cout << "\n";
@@ -266,18 +264,18 @@ int main() {
 	cout << "|      We can provide you with some options.     |" << endl;
 	cout << "|><><><><><><><><><><><><><><><><><><><><><><><><|" << endl;
 	cout << "|              Let's get started :)              |" << endl;
-	
-	
+
 	string input;
-	int choice1;
+	int choice;
+	int choice2;
 	string throwaway;
 	do {
-		int choice = 0;
 		double mins = 0.0;
 		choice = chooseGenre();
 		if (choice != 0) {
-			int choice2 = chooseYear();
+			choice2 = chooseYear();
 			if (choice2 != 0) {
+				cout << "Here is a list of " << genre[choice] << " movies from the year " << year[choice2].first << " to " << year[choice2].second << "." << endl;
 				m1 = createMap(genre[choice], year[choice2].first, year[choice2].second);
 				printMap(m1);
 				/*cout << "How much time do you have? Enter in minutes: ";     //testing how to marathon?
@@ -298,13 +296,14 @@ int main() {
 			}
 			else {
 				cout << "Goodbye!" << endl;
+				input = "n";
 			}
 		}
 		else {
 			cout << "Goodbye!" << endl;
+			input = "n";
 		}
 	} while (input == "Y" || input == "y");
-	cout << "Enjoy the movie!" << endl;
 	return 0;
 }
 
@@ -344,7 +343,7 @@ cout << "\n";
 cout << "|        Would you like to search again?         |" << endl;
 cout << "|                 Enter: Y or N                  |" << endl;
 cout << setfill('=') << setw(51);
-cout << "\n"; 
+cout << "\n";
 string input;
 cin >> input;
 while (input == "Y" || input == "y") {
@@ -393,7 +392,7 @@ vector<int> menuPrint() {
 	cout << "|     How would you like to base your search?    |" << endl;
 	cout << "|Enter the numbers of the choices you would like |" << endl;
 	cout << "|to search by in the following format: # # # ..  |" << endl;
-	cout << "|1. Company                                      |" << endl;          //what genre are you thinking 
+	cout << "|1. Company                                      |" << endl;          //what genre are you thinking
 	cout << "|2. Genre                                        |" << endl;           //indexed list
 	cout << "|3. Rating                                       |" << endl;
 	cout << "|4. Release year (search by decade)              |" << endl;
