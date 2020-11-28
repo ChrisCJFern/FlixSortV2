@@ -501,11 +501,11 @@ Node* insertNameId(Node* node, int year1, int year2, string genre) {
 				return root;
 			}
 			// if score is less than node's val, traverse through the tree on the left
-			if (score <= node->val) {
+			if (stod(_score) <= node->val) {
 				node->left = insertNameId(node->left, year1, year2, genre);
 			}
 			// if score is greater than node's val, traverse through the tree on the right
-			else if (score > node->val) {
+			else if (stod(_score) > node->val) {
 				node->right = insertNameId(node->right, year1, year2, genre);
 			}
 		}
@@ -643,9 +643,9 @@ int main() {
 			if (choice2 != 0) {
 				cout << "Here is a list of " << genre[choice] << " movies from the year " << year[choice2].first << " to " << year[choice2].second << "." << endl;
 				m1 = createMap(genre[choice], year[choice2].first, year[choice2].second);
-				insertNameId(tree, year[choice2].first, year[choice2].second, genre[choice]);
+				//insertNameId(tree, year[choice2].first, year[choice2].second, genre[choice]);
 				printMap(m1);
-				printInorder(tree);
+				//printInorder(tree);
 				/*cout << "How much time do you have? Enter in minutes: ";     //testing how to marathon?
 				cin >> mins;
 				vector<movie> movies;
