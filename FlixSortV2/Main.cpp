@@ -33,6 +33,7 @@ public:
 };
 */
 
+// movie structure
 struct movie {
 	unsigned int budget = 0;
 	string company = "";
@@ -50,6 +51,7 @@ struct movie {
 	string writer = "";
 	int year = 0;
 
+	// default constructor
 	movie() {
 		unsigned int budget = 0;
 		string company = "";
@@ -67,6 +69,7 @@ struct movie {
 		string writer = "";
 		int year = 0;
 	}
+	// constructor
 	movie(unsigned int _budget, string _company, string _country, string _director, string _genre, unsigned int _gross, string _name,
 		string _rating, string _releaseDate, int _runtime, double _score, string _star, int _votes, string _writer, int _year) {
 		budget = _budget;
@@ -87,6 +90,7 @@ struct movie {
 	}
 };
 
+// chooses movies based on user's preferred genre
 int chooseGenre() {
 	cin.clear();
 	cout << setfill('=') << setw(51);
@@ -127,6 +131,7 @@ int chooseGenre() {
 	return val;
 }
 
+// chooses movies based on user's preferred year range
 int chooseYear() {
 	string input;
 	int choice = 0;
@@ -164,6 +169,7 @@ int chooseYear() {
 	return choice;
 }
 
+// creates a multimap based on user's preferences with greatest to lowest rank
 unordered_multimap<string, movie> createMap(string genre, int year1, int year2) {
 	unordered_multimap<string, movie> m;              //https://www.cplusplus.com/reference/map/multimap/
 	string line;
@@ -226,6 +232,7 @@ unordered_multimap<string, movie> createMap(string genre, int year1, int year2) 
 	return m;
 }
 
+// prints the Map
 void printMap(unordered_multimap<string, movie> m1) {
 	auto iter = m1.begin();
 	map<double, vector<movie>> m2;
