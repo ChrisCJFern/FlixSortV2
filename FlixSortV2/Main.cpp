@@ -373,7 +373,6 @@ Node* insertNameId(Node* node, int year1, int year2, string genre, string name, 
 				// adds rating and movie name into node
 				Node* root = new Node(stod(_score), temp);
 				return root;
-				delete temp;
 			}
 			// if score is less than node's val, traverse through the tree on the left
 			if (score <= node->val) {
@@ -530,11 +529,87 @@ string printTree(Node* node) {
 	//your code here
 	if (node == nullptr) { return ""; }
 	string rightTree = printTree(node->right);
-	cout << node->name << "  rating: " << node->val << endl;
+	cout << node->name.name << "  rating: " << node->val << endl;
 	string leftTree = printTree(node->left);	
 	//return rightTree + node->name + ", " + node->val + " " + leftTree;
 }
+/*
+Node* createTree(Node* tree, string genre, int year1, int year2) {
+	Node* root = new Node;
+	string line;
+	ifstream movieFile;
+	movieFile.open("movies.csv", ios::in);
+	int numLine = 0;
+	if (movieFile.is_open()) {
+		getline(movieFile, line);
+		while (getline(movieFile, line)) {
+			numLine++;
+		}
+		movieFile.close();
+	}
+	string _budget, _company, _country, _director, _genre, _gross, _name, _rating;
+	string _released, _runtime, _score, _star, _votes, _writer, _year;
+	movieFile.open("movies.csv", ios::in);
+	getline(movieFile, line);
+	for (int i = 0; i < numLine; i++) {
+		getline(movieFile, _budget, ',');
+		char d;
+		d = movieFile.get();
+		if (char(d) == '"') {
+			getline(movieFile, _company, '"');
+			_company = _company.substr(0, _company.length() - 1);
+			getline(movieFile, line, ',');
+		}
+		else {
+			movieFile.putback(d);
+			getline(movieFile, _company, ',');
+		}
+		getline(movieFile, _country, ',');
+		getline(movieFile, _director, ',');
+		getline(movieFile, _genre, ',');
+		getline(movieFile, _gross, ',');
+		d = movieFile.get();
+		if (char(d) == '"') {
+			getline(movieFile, _name, '"');
+			_name = _name.substr(0, _name.length() - 2);
+			getline(movieFile, line, ',');
+		}
+		else {
+			movieFile.putback(d);
+			getline(movieFile, _name, ',');
+		}
+		getline(movieFile, _rating, ',');
+		getline(movieFile, _released, ',');
+		getline(movieFile, _runtime, ',');
+		getline(movieFile, _score, ',');
+		getline(movieFile, _star, ',');
+		getline(movieFile, _votes, ',');
+		getline(movieFile, _writer, ',');
+		getline(movieFile, _year);
+		movie temp(stoi(_budget), _company, _country, _director, _genre, stoi(_gross), _name, _rating, _released, stoi(_runtime),
+			stod(_score), _star, stoi(_votes), _writer, stoi(_year));
+		if (_genre == genre && (stoi(_year) >= year1) && (stoi(_year) <= year2)) {
+			root = insertNameId(root, temp, stod(_score));
+		}
+		if (i != 0) {
+			recalcBalanceFactor(root);
+		}
+	}
+	movieFile.close();
+	return root;
+}
 
+void printInorder(Node* node) {
+	if (node == nullptr) {
+		return;
+	}
+	else {
+		printInorder(node->right);
+		cout << node->name.name << " | " << node->name.company << " | " << node->name.director << " | " << node->name.runtime << endl;
+		printInorder(node->left);
+	}
+}
+*/
 
 int main() {
 	unordered_map<int, string> genre = { {97, "Action"}, {98, "Adventure"}, {99, "Animation"}, {100, "Biography"}, {101, "Comedy"}, {102, "Crime"}, {103, "Drama"}, {104, "Family"}, {105, "Fantasy"}, {106, "Horror"}, {107, "Musical"}, {108, "Mystery"}, {109, "Romance"}, {110, "Sci-Fi"}, {111, "Thriller"}, {112, "War"}, {113, "Western"} };
