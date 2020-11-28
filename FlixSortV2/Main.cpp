@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include <map>
 #include <random>
+#include <ctime>
 using namespace std;
 
 class Random // Taken from given random number generator in COP3503 //MAYBE FOR RANDOM MOVIE SELECTOR
@@ -30,6 +31,7 @@ public:
 		return dist(random);
 	}
 };
+std::mt19937 Random::random(time(0)); // Static variables must be redeclared in global space
 
 // movie structure
 struct movie {
@@ -87,6 +89,19 @@ struct movie {
 		year = _year;
 	}
 };
+
+movie select_random(unordered_multimap<string, movie> m1) {
+	vector<movie> v;
+	auto iter = m1.begin();
+	int ct = 1;
+	for (iter; iter != m1.end(); iter++) {
+		v.push_back(iter->second);
+	}
+	int randomIndex = Random::Int(0, v.size()-1); // Generate a random number
+	cout << randomIndex << endl;
+	return v.at(randomIndex);
+}
+
 
 // chooses movies based on user's preferred genre
 int chooseGenre() {
@@ -642,6 +657,8 @@ int main() {
 				cout << "Here is a list of " << genre[choice] << " movies from the year " << year[choice2].first << " to " << year[choice2].second << "." << endl;
 				m1 = createMap(genre[choice], year[choice2].first, year[choice2].second);
 				printMap(m1);
+				cout << "World you like us to select a movie from this list?" << endl;
+				cout << select_random(m1).name << endl;
 				//tree = createTree(tree, genre[choice], year[choice2].first, year[choice2].second);
 			    //printInorder(tree);
 				/*cout << "How much time do you have? Enter in minutes: ";     //testing how to marathon?
