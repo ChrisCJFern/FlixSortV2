@@ -413,6 +413,7 @@ Node* balance(Node* node) {
 	return node;
 }
 
+/*
 Node* insertNameId(Node* node, movie name, double id) {                           //insert a node, by taking in a root node, a string for the name and an int for the id
 	if (node == nullptr) {														//if node is nullptr, make a new node, else go to the left or right depending on how id compares to node value
 		Node* temp = new Node(id, name);										//then set node's left or right equal to the result of calling insert on the node->left or node->right
@@ -428,6 +429,7 @@ Node* insertNameId(Node* node, movie name, double id) {                         
 	}
 	return balance(node);                                   //balance node and return resulting root
 }
+*/
 
 void recalcBalanceFactor(Node* node) {
 	if (node) {
@@ -441,8 +443,8 @@ void recalcBalanceFactor(Node* node) {
 //if node is nullptr, make a new node, else go to the left or right depending on how id compares to node value
 //then set node's left or right equal to the result of calling insert on the node->left or node->right
 // inserts if year and genre match, if they do, add in rating/score value and movie name
-Node* insertNameId(Node* node, int year1, int year2, string genre, string name, int score) {  
-	Node* root = new Node();
+Node* insertNameId(Node* node, int year1, int year2, string genre) {  
+	//Node* root = new Node();
 	// takes in movies.csv file
 	string line;
 	ifstream movieFile;
@@ -514,12 +516,12 @@ Node* insertNameId(Node* node, int year1, int year2, string genre, string name, 
 				return root;
 			}
 			// if score is less than node's val, traverse through the tree on the left
-			if (score <= node->val) {
-				node->left = insertNameId(node->left, year1, year2, genre, name, score);
+			if (stod(_score) <= node->val) {
+				node->left = insertNameId(node->left, year1, year2, genre);
 			}
 			// if score is greater than node's val, traverse through the tree on the right
-			else if (score > node->val) {
-				node->right = insertNameId(node->right, year1, year2, genre, name, score);
+			else if (stod(_score) > node->val) {
+				node->right = insertNameId(node->right, year1, year2, genre);
 			}
 		}
 	}
@@ -529,6 +531,7 @@ Node* insertNameId(Node* node, int year1, int year2, string genre, string name, 
 	return balance(node);                             // idk if i need to include this in the for loop      
 }
 
+// prints the AVL Tree in inorder order
 void printInorder(Node* node) {						//place the order of the nodes using In order traversal in a string
 	if (node == nullptr) {												//Right
 		return;														     //Node
@@ -540,15 +543,6 @@ void printInorder(Node* node) {						//place the order of the nodes using In ord
 	}
 }
 
-// prints the AVL Tree in inorder order
-string printTree(Node* node) {
-	//your code here
-	if (node == nullptr) { return ""; }
-	string rightTree = printTree(node->right);
-	cout << node->name.name << "  rating: " << node->val << endl;
-	string leftTree = printTree(node->left);	
-	//return rightTree + node->name + ", " + node->val + " " + leftTree;
-}
 /*
 Node* createTree(Node* tree, string genre, int year1, int year2) {
 	Node* root = new Node;
@@ -656,6 +650,7 @@ int main() {
 			if (choice2 != 0) {
 				cout << "Here is a list of " << genre[choice] << " movies from the year " << year[choice2].first << " to " << year[choice2].second << "." << endl;
 				m1 = createMap(genre[choice], year[choice2].first, year[choice2].second);
+				//insertNameId(tree, year[choice2].first, year[choice2].second, genre[choice]);
 				printMap(m1);
 				cout << "World you like us to select a movie from this list?" << endl;
 				cout << select_random(m1).name << endl;
