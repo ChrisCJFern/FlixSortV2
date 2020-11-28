@@ -384,8 +384,8 @@ Node* insertNameId(Node* node, int year1, int year2, string genre, string name, 
 			stod(_score), _star, stoi(_votes), _writer, stoi(_year));
 
 		// begins inserting nodes into AVL Tree
-		// only inserts movies based on the preferred genre and year range
 
+		// only inserts movies based on the preferred genre and year range
 		// if there is no node, make new node
 		if (_genre == genre && (stoi(_year) >= year1) && (stoi(_year) <= year2)) {
 			if (node == nullptr) {
@@ -395,9 +395,11 @@ Node* insertNameId(Node* node, int year1, int year2, string genre, string name, 
 				return node;
 				delete temp;
 			}
+			// if score is less than node's val, traverse through the tree on the left
 			if (score < node->val) {
 				node->left = insertNameId(node->left, year1, year2, genre, name, score);
 			}
+			// if score is greater than node's val, traverse through the tree on the right
 			else if (score > node->val) {
 				node->right = insertNameId(node->right, year1, year2, genre, name, score);
 			}
