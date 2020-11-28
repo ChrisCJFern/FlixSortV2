@@ -31,18 +31,6 @@ public:
 	}
 };
 
-movie select_random(unordered_multimap<string, movie> m1) {
-	vector<movie> v;
-	auto iter = m1.begin();
-	int ct = 1;
-	for (iter; iter != m1.end(); iter++) {
-		v.push_back(iter->second);
-	}
-	Random rand;
-	int randomIndex = rand.Int(0, v.size() - 1); // Generate a random number
-	return v.at(randomIndex);
-}
-
 // movie structure
 struct movie {
 	unsigned int budget = 0;
@@ -587,6 +575,8 @@ int main() {
 				for (int i = 1; i < movies.size()+1; i++) {
 					cout << i << ". " << movies[i].name << " " << movies[i].runtime << endl;
 				}*/
+
+				
 				cout << setfill('=') << setw(51);
 				cout << "\n";
 				cout << "|        Would you like to search again?         |" << endl;
