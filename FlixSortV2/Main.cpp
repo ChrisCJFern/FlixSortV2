@@ -367,17 +367,23 @@ Node* insertNameId(Node* node, string year, string genre, string name, int score
 	}
 	movieFile.close();
 
-	if (node == nullptr) {														
-		Node* temp = new Node(score, name);										
-		node = temp;
-		return node;
-		delete temp;
-	}
-	if (score < node->val) {
-		node->left = insertNameId(node->left, name, id);
-	}
-	else if (score > node->val) {
-		node->right = insertNameId(node->right, name, id);
+	// begins inserting nodes into AVL Tree
+
+	// if there is no node, make new node
+	if (_genre == genre && (stoi(_year) >= year1) && (stoi(_year) <= year2)) {
+		if (node == nullptr) {
+			// adds rating and movie name into node
+			Node* temp = new Node(score, name);
+			node = temp;
+			return node;
+			delete temp;
+		}
+		if (score < node->val) {
+			node->left = insertNameId(node->left, year, genre, name, score);
+		}
+		else if (score > node->val) {
+			node->right = insertNameId(node->right, year, genre, name, score);
+		}
 	}
 	//balance node and return resulting root
 	return balance(node);                                   
