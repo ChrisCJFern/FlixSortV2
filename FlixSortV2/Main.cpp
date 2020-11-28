@@ -558,8 +558,10 @@ Node* insertNameId(Node* node, int year1, int year2, string genre) {
 		if (_genre == genre && (stoi(_year) >= year1) && (stoi(_year) <= year2)) {
 			if (node == nullptr) {
 				// adds rating and movie name into node
-				Node* root = new Node(stod(_score), temp);
-				return root;
+				Node* tempNode = new Node(stod(_score), temp);
+				node = tempNode;
+				return node;
+				delete tempNode;
 			}
 			// if score is less than node's val, traverse through the tree on the left
 			if (stod(_score) <= node->val) {
@@ -570,11 +572,12 @@ Node* insertNameId(Node* node, int year1, int year2, string genre) {
 				node->right = insertNameId(node->right, year1, year2, genre);
 			}
 		}
+		return balance(node);
 	}
 	movieFile.close();
 	
 	//balance node and return resulting root
-	return balance(node);                             // idk if i need to include this in the for loop      
+	return node;                             // idk if i need to include this in the for loop      
 }
 
 // prints the AVL Tree in inorder order
@@ -701,8 +704,8 @@ int main() {
 					cout << "Here is a list of " << genre[choice] << " movies from the year " << year[choice2].first << " to " << year[choice2].second << "." << endl;
 					m1 = createMap(genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
 					printMap(m1);
-					//tree = createTree(tree, genre[choice], year[choice2].first, year[choice2].second);
-					//printInorder(tree);
+					tree = insertNameId(tree, year[choice2].first, year[choice2].second, genre[choice]);
+					printInorder(tree);
 					/*cout << "How much time do you have? Enter in minutes: ";     //testing how to marathon?
 					cin >> mins;
 					vector<movie> movies;
