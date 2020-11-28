@@ -635,7 +635,7 @@ int main() {
 			if (choice2 != 0) {
 				cout << "Here is a list of " << genre[choice] << " movies from the year " << year[choice2].first << " to " << year[choice2].second << "." << endl;
 				m1 = createMap(genre[choice], year[choice2].first, year[choice2].second);
-				insertNameId(tree, year[choice2].first, year[choice2].second, genre[choice]);
+				//insertNameId(tree, year[choice2].first, year[choice2].second, genre[choice]);
 				printMap(m1);
 				//printInorder(tree);
 				/*cout << "How much time do you have? Enter in minutes: ";     //testing how to marathon?
