@@ -571,13 +571,14 @@ Node* insertNameId(Node* node, int year1, int year2, string genre) {
 			else if (stod(_score) > node->val) {
 				node->right = insertNameId(node->right, year1, year2, genre);
 			}
+			return balance(node);
 		}
-		return balance(node);
+		
 	}
 	movieFile.close();
 	
 	//balance node and return resulting root
-	return node;                             // idk if i need to include this in the for loop      
+	return node;                             
 }
 
 // prints the AVL Tree in inorder order
