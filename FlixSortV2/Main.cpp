@@ -33,7 +33,6 @@ public:
 };
 */
 
-// creates movie structure
 struct movie {
 	unsigned int budget = 0;
 	string company = "";
@@ -51,7 +50,6 @@ struct movie {
 	string writer = "";
 	int year = 0;
 
-	// default constructor
 	movie() {
 		unsigned int budget = 0;
 		string company = "";
@@ -69,8 +67,6 @@ struct movie {
 		string writer = "";
 		int year = 0;
 	}
-
-	// constructor
 	movie(unsigned int _budget, string _company, string _country, string _director, string _genre, unsigned int _gross, string _name,
 		string _rating, string _releaseDate, int _runtime, double _score, string _star, int _votes, string _writer, int _year) {
 		budget = _budget;
@@ -91,12 +87,10 @@ struct movie {
 	}
 };
 
-// asks user for preferred genre
 int chooseGenre() {
 	cin.clear();
 	cout << setfill('=') << setw(51);
 	cout << "\n";
-	// prints out the menu 
 	cout << "|      What movie genre were you thinking?       |" << endl;
 	cout << "|   (a) Action      (g) Drama     (m) Romance    |" << endl;
 	cout << "|   (b) Adventure   (h) Family    (n) Sci-Fi     |" << endl;
@@ -107,7 +101,6 @@ int chooseGenre() {
 	cout << "|   (0) Enter 0 to Exit                          |" << endl;
 	cout << setfill('=') << setw(51);
 	cout << "\n";
-	// takes in the user's input
 	cout << "Please input the letter of the selected genre: ";
 	string choice;
 	bool chosen = false;
@@ -119,7 +112,6 @@ int chooseGenre() {
 			chosen = true;
 		}
 		else {
-			// if user gives an invalid choice
 			if (choice.length() != 1 || choice[0] < 'A' || (choice[0] < 'a' && choice[0] > 'Q') || choice[0] > 'q') {
 				cout << choice << " is an invalid input." << endl;
 				cout << "Please enter your input in the correct format: ";
@@ -135,14 +127,12 @@ int chooseGenre() {
 	return val;
 }
 
-// asks user for preferred year range
 int chooseYear() {
 	string input;
 	int choice = 0;
 	bool chosen = false;
 	cout << setfill('=') << setw(51);
 	cout << "\n";
-	// prints menu
 	cout << "|   Let's pick a range of years for your movie!  |" << endl;
 	cout << "|      (a) 1986 - 1990      (e) 2006 - 2010      |" << endl;
 	cout << "|      (b) 1991 - 1995      (f) 2011 - 2016      |" << endl;
@@ -151,7 +141,6 @@ int chooseYear() {
 	cout << "|      (0) Enter 0 to Exit                       |" << endl;
 	cout << setfill('=') << setw(51);
 	cout << "\n";
-	// takes in the user's input
 	cout << "Please input the letter of the selected year: ";
 	while (!chosen) {
 		getline(cin, input);
@@ -160,7 +149,6 @@ int chooseYear() {
 			chosen = true;
 		}
 		else {
-			// if user gives an invalid choice
 			if (input.length() != 1 || input[0] < 'A' || (input[0] < 'a' && input[0] > 'G') || input[0] > 'g') {
 				cout << input << " is an invalid input." << endl;
 				cout << "Please enter your input in the correct format: ";
@@ -176,7 +164,6 @@ int chooseYear() {
 	return choice;
 }
 
-// creates the multimap for movies
 unordered_multimap<string, movie> createMap(string genre, int year1, int year2) {
 	unordered_multimap<string, movie> m;              //https://www.cplusplus.com/reference/map/multimap/
 	string line;
@@ -239,19 +226,19 @@ unordered_multimap<string, movie> createMap(string genre, int year1, int year2) 
 	return m;
 }
 
-// prints the movies according to the preferences in order from greatest rank to lowest rank
 void printMap(unordered_multimap<string, movie> m1) {
 	auto iter = m1.begin();
 	map<double, vector<movie>> m2;
+	cout << m1.size() << endl; // For debugging purposes
 	int ct = 1;
 	for (iter; iter != m1.end(); iter++) {
 		m2[(iter->second.score)].push_back(iter->second);
 	}
-	cout << "  Movie  |  Company  |  Director  | Runtime (in mins)" << endl;
+	cout << m2.size() << endl;
 	auto iter2 = m2.rbegin();								//https://www.geeksforgeeks.org/how-to-traverse-a-stl-map-in-reverse-direction/
 	for (iter2; iter2 != m2.rend(); iter2++) {
 		for (int i = 0; i < iter2->second.size(); i++) {
-			cout << ct << ". " << iter2->second[i].name << " | " <<  iter2->second[i].company << "|" << iter2->second[i].director << " | " << iter2->second[i].runtime << " minutes" << endl;
+			cout << ct << ". " << iter2->second[i].name << " | " << iter2->second[i].director << " | " << iter2->second[i].runtime << " minutes" << endl;
 			ct++;
 		}
 	}
