@@ -313,6 +313,7 @@ Node* rotateRightLeft(Node* node) {
 	return rotateLeft(node);
 }
 
+
 //calculate the left height of a node by adding one for every 
 //left node that exists and do the same for the right side
 //return the max of the left or right value 
