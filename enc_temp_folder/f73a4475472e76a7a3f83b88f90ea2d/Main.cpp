@@ -8,8 +8,29 @@
 #include <ctype.h>
 #include <unordered_map>
 #include <map>
+#include <random>
 
 using namespace std;
+
+class Random // Taken from given random number generator in COP3503
+{
+	// One instance of the x variable, and all instances SHARE this variable
+	// static variables/functions exist for the lifetime of your program
+	static std::mt19937 random;
+public:
+	static int x;
+	// One and only one of this function
+	// "this" doesn't exist in static functions b/c only one of the function
+	// Can only access static variables within static functions
+	static int Int(int min, int max) {
+		std::uniform_int_distribution<int> dist(min, max);
+		return dist(random);
+	}
+	static float Float(float min, float max) {
+		std::uniform_real_distribution<float> dist(min, max);
+		return dist(random);
+	}
+};
 
 struct movie {
 	unsigned int budget = 0;

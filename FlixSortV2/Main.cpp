@@ -12,7 +12,8 @@
 
 using namespace std;
 
-class Random // Taken from given random number generator in COP3503
+/*
+class Random // Taken from given random number generator in COP3503 //MAYBE FOR RANDOM MOVIE SELECTOR
 {
 	// One instance of the x variable, and all instances SHARE this variable
 	// static variables/functions exist for the lifetime of your program
@@ -31,6 +32,7 @@ public:
 		return dist(random);
 	}
 };
+*/
 
 struct movie {
 	unsigned int budget = 0;
