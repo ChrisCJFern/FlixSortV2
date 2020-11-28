@@ -250,9 +250,10 @@ void printMap(unordered_multimap<string, movie> m1) {
 	}
 	cout << m2.size() << endl;
 	auto iter2 = m2.rbegin();								//https://www.geeksforgeeks.org/how-to-traverse-a-stl-map-in-reverse-direction/
+	cout << " Movie | Company | Director | Runtime (in mins)" << endl;
 	for (iter2; iter2 != m2.rend(); iter2++) {
 		for (int i = 0; i < iter2->second.size(); i++) {
-			cout << ct << ". " << iter2->second[i].name << " | " << iter2->second[i].director << " | " << iter2->second[i].runtime << " minutes" << endl;
+			cout <<  ct << ". " << iter2->second[i].name << " | " << iter2->second[i].company << " | " << iter2->second[i].director << " | " << iter2->second[i].runtime << " minutes" << endl;
 			ct++;
 		}
 	}
@@ -287,14 +288,14 @@ vector<movie> marathon(double time, unordered_multimap<string, movie> m1) {
 
 struct Node {
 public:
-	int val;
-	string name;
+	double val;
+	movie name;
 	Node* left;
 	Node* right;
 	int balancefactor = 0;
-	Node() : val(0), name(""), left(nullptr), right(nullptr) {}
-	Node(int x, string name1) : val(x), name(name1), left(nullptr), right(nullptr) {}
-	Node(int x, string name1, Node* left, Node* right) : val(x), name(name1), left(left), right(right) {}
+	Node() : val(0), name(), left(nullptr), right(nullptr) {}
+	Node(double x, movie name1) : val(x), name(name1), left(nullptr), right(nullptr) {}
+	Node(double x, movie name1, Node* left, Node* right) : val(x), name(name1), left(left), right(right) {}
 };
 
 //insert a node, by taking in a root node, a string for the name and an int for the id
@@ -490,6 +491,22 @@ Node* balance(Node* node) {
 	return node;
 }
 
+Node* insertNameId(Node* node, movie name, double id) {                           //insert a node, by taking in a root node, a string for the name and an int for the id
+	if (node == nullptr) {														//if node is nullptr, make a new node, else go to the left or right depending on how id compares to node value
+		Node* temp = new Node(id, name);										//then set node's left or right equal to the result of calling insert on the node->left or node->right
+		node = temp;
+		return node;
+		delete temp;
+	}
+	if (id <= node->val) {
+		node->left = insertNameId(node->left, name, id);
+	}
+	else if (id > node->val) {
+		node->right = insertNameId(node->right, name, id);
+	}
+	return balance(node);                                   //balance node and return resulting root
+}
+
 void recalcBalanceFactor(Node* node) {
 	if (node) {
 		calcBalanceFactor(node);
@@ -498,8 +515,16 @@ void recalcBalanceFactor(Node* node) {
 	}
 }
 
-//root = insertNameId(root, name, id);
-//recalcBalanceFactor(root);
+void printInorder(Node* node) {						//place the order of the nodes using In order traversal in a string
+	if (node == nullptr) {												//Right
+		return;														     //Node
+	}																	//Left
+	else {
+		printInorder(node->right);
+		cout << node->name.name << " | " << node->name.director << " | " << node->name.runtime << " minutes" << endl;
+		printInorder(node->left);
+	}
+}
 
 // prints the AVL Tree in inorder order
 string printTree(Node* node) {
@@ -516,7 +541,7 @@ int main() {
 	unordered_map<int, string> genre = { {97, "Action"}, {98, "Adventure"}, {99, "Animation"}, {100, "Biography"}, {101, "Comedy"}, {102, "Crime"}, {103, "Drama"}, {104, "Family"}, {105, "Fantasy"}, {106, "Horror"}, {107, "Musical"}, {108, "Mystery"}, {109, "Romance"}, {110, "Sci-Fi"}, {111, "Thriller"}, {112, "War"}, {113, "Western"} };
 	unordered_map<int, pair<int, int>> year = { {97, {1986, 1990}}, {98, {1991, 1995}}, {99, {1996, 2000}}, {100, {2001, 2005}}, {101, {2006, 2010}}, {102, {2011, 2016}}, {103, {1986, 2016}} };
 	unordered_multimap<string, movie> m1;
-
+	
 	//---------------------PRINTS INITIAL MENU---------------------------------------
 	cout << setfill('=') << setw(51);
 	cout << "\n";
@@ -542,6 +567,8 @@ int main() {
 				cout << "Here is a list of " << genre[choice] << " movies from the year " << year[choice2].first << " to " << year[choice2].second << "." << endl;
 				m1 = createMap(genre[choice], year[choice2].first, year[choice2].second);
 				printMap(m1);
+				tree = createTree(tree, genre[choice], year[choice2].first, year[choice2].second);
+				printInorder(tree);
 				/*cout << "How much time do you have? Enter in minutes: ";     //testing how to marathon?
 				cin >> mins;
 				vector<movie> movies;
