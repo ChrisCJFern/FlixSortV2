@@ -516,6 +516,7 @@ Node* insertNameId(Node* node, int year1, int year2, string genre) {
 	return balance(node);                             // idk if i need to include this in the for loop      
 }
 
+// prints the AVL Tree in inorder order
 void printInorder(Node* node) {						//place the order of the nodes using In order traversal in a string
 	if (node == nullptr) {												//Right
 		return;														     //Node
@@ -527,15 +528,6 @@ void printInorder(Node* node) {						//place the order of the nodes using In ord
 	}
 }
 
-// prints the AVL Tree in inorder order
-string printTree(Node* node) {
-	//your code here
-	if (node == nullptr) { return ""; }
-	string rightTree = printTree(node->right);
-	cout << node->name.name << "  rating: " << node->val << endl;
-	string leftTree = printTree(node->left);	
-	//return rightTree + node->name + ", " + node->val + " " + leftTree;
-}
 /*
 Node* createTree(Node* tree, string genre, int year1, int year2) {
 	Node* root = new Node;
@@ -643,7 +635,7 @@ int main() {
 			if (choice2 != 0) {
 				cout << "Here is a list of " << genre[choice] << " movies from the year " << year[choice2].first << " to " << year[choice2].second << "." << endl;
 				m1 = createMap(genre[choice], year[choice2].first, year[choice2].second);
-				//insertNameId(tree, year[choice2].first, year[choice2].second, genre[choice]);
+				insertNameId(tree, year[choice2].first, year[choice2].second, genre[choice]);
 				printMap(m1);
 				//printInorder(tree);
 				/*cout << "How much time do you have? Enter in minutes: ";     //testing how to marathon?
