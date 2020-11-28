@@ -564,8 +564,10 @@ Node* insertNameId(Node* node, int year1, int year2, string genre) {
 		if (_genre == genre && (stoi(_year) >= year1) && (stoi(_year) <= year2)) {
 			if (node == nullptr) {
 				// adds rating and movie name into node
-				Node* root = new Node(stod(_score), temp);
-				return root;
+				Node* tempNode = new Node(stod(_score), temp);
+				node = tempNode;
+				return node;
+				delete tempNode;
 			}
 			// if score is less than node's val, traverse through the tree on the left
 			if (stod(_score) <= node->val) {
@@ -576,11 +578,12 @@ Node* insertNameId(Node* node, int year1, int year2, string genre) {
 				node->right = insertNameId(node->right, year1, year2, genre);
 			}
 		}
+		return balance(node);
 	}
 	movieFile.close();
 	
 	//balance node and return resulting root
-	return balance(node);                             // idk if i need to include this in the for loop      
+	return node;                             // idk if i need to include this in the for loop      
 }
 
 // prints the AVL Tree in inorder order
