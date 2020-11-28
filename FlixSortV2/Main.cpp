@@ -285,6 +285,25 @@ vector<movie> marathon(double time, unordered_multimap<string, movie> m1) {
 	return v;
 }
 
+vector<movie> select_random(double time, unordered_multimap<string, movie> m1) {
+	vector<movie> v;
+	auto iter = m1.begin();
+	map<double, vector<movie>> m2;
+	int ct = 1;
+	for (iter; iter != m1.end(); iter++) {
+		m2[(iter->second.runtime)].push_back(iter->second);
+	}
+	auto iter2 = m2.rbegin();
+	for (iter2; iter2 != m2.rend(); iter2++) {
+		if (iter2->first < time) {
+			for (int i = 0; i < iter2->second.size(); i++) {
+				v.push_back(iter2->second[i]);
+				time -= iter2->first;
+			}
+		}
+	}
+	return v;
+}
 // AVL Tree
 
 struct Node {
@@ -390,7 +409,7 @@ Node* insertNameId(Node* node, string year, string genre, string name, int score
 }
 
 Node* rotateLeft(Node* node) {
-	Node* grandchild = node->right->left;               
+	Node* grandchild = node->right->left;
 	Node* newParent = node->right;
 	node->right = grandchild;
 	newParent->left = node;
@@ -399,7 +418,7 @@ Node* rotateLeft(Node* node) {
 
 //right rotation on node
 Node* rotateRight(Node* node) {
-	Node* grandchild = node->left->right;				 
+	Node* grandchild = node->left->right;
 	Node* newParent = node->left;
 	node->left = grandchild;
 	newParent->right = node;
@@ -408,12 +427,12 @@ Node* rotateRight(Node* node) {
 
 //left right rotation on node
 Node* rotateLeftRight(Node* node) {
-	node->left = rotateLeft(node->left);				 
+	node->left = rotateLeft(node->left);
 	return rotateRight(node);
 }
 
 //right left rotation on node
-Node* rotateRightLeft(Node* node) {                     
+Node* rotateRightLeft(Node* node) {
 	node->right = rotateRight(node->right);
 	return rotateLeft(node);
 }
@@ -422,10 +441,10 @@ Node* rotateRightLeft(Node* node) {
 //calculate the left height of a node by adding one for every 
 //left node that exists and do the same for the right side
 //return the max of the left or right value 
-int height(Node* node) {                                      
-	if (node == nullptr) {										
+int height(Node* node) {
+	if (node == nullptr) {
 		return 0;
-	}																		
+	}
 	if (node->left == nullptr && node->right == nullptr) {
 		return 1;
 	}
@@ -444,9 +463,9 @@ int height(Node* node) {
 //calculate the balance factor of a node by
 // calling the height function on node->left and node->right 
 // and taking the difference of left - right
-int calcBalanceFactor(Node* node) {						
-	if (node == nullptr) {								
-		return 0;										
+int calcBalanceFactor(Node* node) {
+	if (node == nullptr) {
+		return 0;
 	}
 	if (node->left == nullptr && node->right == nullptr) {
 		return 0;
@@ -462,15 +481,15 @@ int calcBalanceFactor(Node* node) {
 
 Node* balance(Node* node) {
 	//find the correct rotation to implement on the inputted node
-	node->balancefactor = calcBalanceFactor(node);                         
+	node->balancefactor = calcBalanceFactor(node);
 	if (node->balancefactor > 1) {
 		node->left->balancefactor = calcBalanceFactor(node->left);
 		//if both balance factor of node and node->left are (+), do a right rotation
 		if (node->left->balancefactor > 0) {
-			return rotateRight(node);                                           
+			return rotateRight(node);
 		}
 		//if balance factor of node is (+) and node->left is (-), do a left right rotation
-		else if (node->left->balancefactor < 0) {     
+		else if (node->left->balancefactor < 0) {
 			return rotateLeftRight(node);
 		}
 	}
@@ -478,11 +497,11 @@ Node* balance(Node* node) {
 		node->right->balancefactor = calcBalanceFactor(node->right);
 		//if balance factors of node and node->right are (-), do a left rotation
 		if (node->right->balancefactor < 0) {
-			return rotateLeft(node);                                            
+			return rotateLeft(node);
 		}
 		//if balance factor of node is (-) and node->right is (+), do a right left rotation
 		else if (node->right->balancefactor > 0) {
-			return rotateRightLeft(node);                                       
+			return rotateRightLeft(node);
 		}
 	}
 	return node;
@@ -504,7 +523,7 @@ int main() {
 	unordered_map<int, string> genre = { {97, "Action"}, {98, "Adventure"}, {99, "Animation"}, {100, "Biography"}, {101, "Comedy"}, {102, "Crime"}, {103, "Drama"}, {104, "Family"}, {105, "Fantasy"}, {106, "Horror"}, {107, "Musical"}, {108, "Mystery"}, {109, "Romance"}, {110, "Sci-Fi"}, {111, "Thriller"}, {112, "War"}, {113, "Western"} };
 	unordered_map<int, pair<int, int>> year = { {97, {1986, 1990}}, {98, {1991, 1995}}, {99, {1996, 2000}}, {100, {2001, 2005}}, {101, {2006, 2010}}, {102, {2011, 2016}}, {103, {1986, 2016}} };
 	unordered_multimap<string, movie> m1;
-	
+
 	//---------------------PRINTS INITIAL MENU---------------------------------------
 	cout << setfill('=') << setw(51);
 	cout << "\n";
