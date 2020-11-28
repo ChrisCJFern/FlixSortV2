@@ -571,8 +571,8 @@ Node* insertNameId(Node* node, int year1, int year2, string genre) {
 			else if (stod(_score) > node->val) {
 				node->right = insertNameId(node->right, year1, year2, genre);
 			}
+			return balance(node);
 		}
-		return balance(node);
 	}
 	movieFile.close();
 	
@@ -587,7 +587,7 @@ void printInorder(Node* node) {						//place the order of the nodes using In ord
 	}																	//Left
 	else {
 		printInorder(node->right);
-		cout << node->name.name << " | " << node->name.director << " | " << node->name.runtime << " minutes" << endl;
+		cout << "IN ORDER" << node->name.name << " | " << node->name.director << " | " << node->name.runtime << " minutes" << endl;
 		printInorder(node->left);
 	}
 }
