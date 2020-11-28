@@ -623,7 +623,7 @@ int main() {
 						cout << i << ". " << movies[i].name << " " << movies[i].runtime << endl;
 					}*/
 
-					cout << "World you like us to select a movie from this list?" << endl;
+					cout << "Would you like us to select a movie from this list?" << endl;
 		
 					cout << "Random Movie: " << select_random(m1).name << endl;
 
