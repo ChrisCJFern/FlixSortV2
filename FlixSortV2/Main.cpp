@@ -226,7 +226,7 @@ unordered_multimap<string, movie> createMap(string genre, int year1, int year2) 
 	return m;
 }
 
-unordered_multimap<string, movie> printMap(unordered_multimap<string, movie> m1) {
+void printMap(unordered_multimap<string, movie> m1) {
 	auto iter = m1.begin();
 	map<double, vector<movie>> m2;
 	cout << m1.size() << endl;
@@ -242,7 +242,6 @@ unordered_multimap<string, movie> printMap(unordered_multimap<string, movie> m1)
 			ct++;
 		}
 	}
-	return m1;
 }
 
 vector<movie> marathon(double time, unordered_multimap<string, movie> m1) {
