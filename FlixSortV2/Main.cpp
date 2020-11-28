@@ -10,7 +10,9 @@
 #include <map>
 #include <random>
 #include <ctime>
+#include <chrono>
 using namespace std;
+using namespace std::chrono;
 
 class Random // Taken from given random number generator in COP3503 //MAYBE FOR RANDOM MOVIE SELECTOR
 {
@@ -250,7 +252,7 @@ unordered_multimap<string, movie> createMap(string genre, int year1, int year2, 
 		d = movieFile.get();
 		if (char(d) == '"') {
 			getline(movieFile, _company, '"');
-			_company = _company.substr(0, _company.length() - 1);
+			_company = _company.substr(0, _company.length());
 			getline(movieFile, line, ',');
 		}
 		else {
@@ -266,7 +268,7 @@ unordered_multimap<string, movie> createMap(string genre, int year1, int year2, 
 		d = movieFile.get();
 		if (char(d) == '"') {
 			getline(movieFile, _name, '"');
-			_name = _name.substr(0, _name.length() - 2);
+			_name = _name.substr(0, _name.length());
 			getline(movieFile, line, ',');
 		}
 		else {
@@ -481,7 +483,6 @@ Node* insertNameId(Node* node, movie name, double id) {                         
 	return balance(node);                                   //balance node and return resulting root
 }
 
-
 void recalcBalanceFactor(Node* node) {
 	if (node) {
 		calcBalanceFactor(node);
@@ -517,7 +518,7 @@ Node* createTree(Node* tree, string genre, int year1, int year2, vector<string> 
 		d = movieFile.get();
 		if (char(d) == '"') {
 			getline(movieFile, _company, '"');
-			_company = _company.substr(0, _company.length() - 1);
+			_company = _company.substr(0, _company.length());
 			getline(movieFile, line, ',');
 		}
 		else {
@@ -531,7 +532,7 @@ Node* createTree(Node* tree, string genre, int year1, int year2, vector<string> 
 		d = movieFile.get();
 		if (char(d) == '"') {
 			getline(movieFile, _name, '"');
-			_name = _name.substr(0, _name.length() - 2);
+			_name = _name.substr(0, _name.length());
 			getline(movieFile, line, ',');
 		}
 		else {
@@ -610,11 +611,20 @@ int main() {
 			if (choice2 != 0) {
 				choice3 = chooseRating();
 				if (choice3 != 0) {
+					auto startMap = high_resolution_clock::now();
 					cout << "Here is a list of " << genre[choice] << " movies from the year " << year[choice2].first << " to " << year[choice2].second << "." << endl;
 					m1 = createMap(genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
 					printMap(m1);
+					auto stopMap = high_resolution_clock::now();
+					auto durationMap = duration_cast<microseconds>(stopMap - startMap);
+				    auto startTree = high_resolution_clock::now();
 					tree = createTree(tree, genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
 					printInorder(tree);
+					auto stopTree = high_resolution_clock::now();
+					auto durationTree = duration_cast<microseconds>(stopTree - startTree);
+					cout << "Time taken to create and print the map: " << durationMap.count() << " microseconds" << endl;
+					cout << "Time taken to create and print the tree: " << durationTree.count() << " microseconds" << endl;
+					cout << "The difference in time is " << abs(durationMap.count() - durationTree.count()) << " microseconds." << endl;
 					/*cout << "How much time do you have? Enter in minutes: ";     //testing how to marathon?
 					cin >> mins;
 					vector<movie> movies;
@@ -637,19 +647,19 @@ int main() {
 					getline(cin, throwaway);
 				}
 				else {
-					cout << "Goodbye!" << endl;
 					input = "n";
 				}
 			}
 			else {
-				cout << "Goodbye!" << endl;
 				input = "n";
 			}
 		}
 		else {
-			cout << "Goodbye!" << endl;
 			input = "n";
 		}
 	} while (input == "Y" || input == "y");
+	cout << "Goodbye!" << endl;
+
 	return 0;
 }
+
