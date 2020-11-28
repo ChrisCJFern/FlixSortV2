@@ -9,7 +9,6 @@
 #include <unordered_map>
 #include <map>
 #include <random>
-
 using namespace std;
 
 /*
@@ -239,7 +238,7 @@ unordered_multimap<string, movie> printMap(unordered_multimap<string, movie> m1)
 	auto iter2 = m2.rbegin();								//https://www.geeksforgeeks.org/how-to-traverse-a-stl-map-in-reverse-direction/
 	for (iter2; iter2 != m2.rend(); iter2++) {
 		for (int i = 0; i < iter2->second.size(); i++) {
-			cout << ct << ". " << iter2->second[i].name << " " << iter2->second[i].director << " " << iter2->second[i].runtime << endl;
+			cout << ct << ". " << iter2->second[i].name << " | " << iter2->second[i].director << " | " << iter2->second[i].runtime << " minutes" << endl;
 			ct++;
 		}
 	}
