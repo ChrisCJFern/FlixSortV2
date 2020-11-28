@@ -92,16 +92,34 @@ struct movie {
 	}
 };
 
-movie select_random(unordered_multimap<string, movie> m1) {
+movie selectRandomHelper(unordered_multimap<string, movie> m1) {
 	vector<movie> v;
 	auto iter = m1.begin();
 	int ct = 1;
 	for (iter; iter != m1.end(); iter++) {
 		v.push_back(iter->second);
 	}
-	int randomIndex = Random::Int(0, v.size()-1); // Generate a random number
+	int randomIndex = Random::Int(0, v.size() - 1); // Generate a random number
 	//cout << randomIndex << endl;
 	return v.at(randomIndex);
+}
+
+void selectRandom(unordered_multimap<string, movie> m1) {
+	string input;
+	string throwaway;
+	cout << endl;
+	cout << setfill('=') << setw(51);
+	cout << "\n";
+	cout << "Would you like us to select a movie from this list?" << endl;
+	cout << "Enter Y or N: ";
+	//cout << setfill('=') << setw(51);
+	cin >> input;
+	getline(cin, throwaway);
+	input = tolower(input[0]);
+	if (input == "y") {
+		//cout << endl;
+		cout << "\nRandom Movie: " << selectRandomHelper(m1).name << endl;
+	}
 }
 
 
@@ -569,6 +587,7 @@ Node* createTree(Node* tree, string genre, int year1, int year2, vector<string> 
 	return root;
 }
 
+
 void printInorder(Node* node) {
 	if (node == nullptr) {
 		return;
@@ -582,7 +601,7 @@ void printInorder(Node* node) {
 
 int main() {
 	unordered_map<int, string> genre = { {97, "Action"}, {98, "Adventure"}, {99, "Animation"}, {100, "Biography"}, {101, "Comedy"}, {102, "Crime"}, {103, "Drama"}, {104, "Family"}, {105, "Fantasy"}, {106, "Horror"}, {107, "Musical"}, {108, "Mystery"}, {109, "Romance"}, {110, "Sci-Fi"}, {111, "Thriller"}, {112, "War"}, {113, "Western"} };
-	unordered_map<int, vector<string>> rating = { {97, {"G"}}, {98, {"PG", "TV-PG"}}, {99, {"PG-13", "TV-14"}}, {100, {"TV-MA"}}, {101, {"R"}}, {102, {"NC-17"}}, { 103, {"UNRATED", "NOT RATED", "Not specified"}}, { 104, {"B", "B15"}}, {105, {}}};
+	unordered_map<int, vector<string>> rating = { {97, {"G"}}, {98, {"PG", "TV-PG"}}, {99, {"PG-13", "TV-14"}}, {100, {"TV-MA"}}, {101, {"R"}}, {102, {"NC-17"}}, { 103, {"UNRATED", "NOT RATED", "Not specified"}}, { 104, {"B", "B15"}}, {105, {}} };
 	unordered_map<int, pair<int, int>> year = { {97, {1986, 1990}}, {98, {1991, 1995}}, {99, {1996, 2000}}, {100, {2001, 2005}}, {101, {2006, 2010}}, {102, {2011, 2016}}, {103, {1986, 2016}} };
 	unordered_multimap<string, movie> m1;
 	Node* tree = new Node();
@@ -633,9 +652,7 @@ int main() {
 						cout << i << ". " << movies[i].name << " " << movies[i].runtime << endl;
 					}*/
 
-					cout << "Would you like us to select a movie from this list?" << endl;
-		
-					cout << "Random Movie: " << select_random(m1).name << endl;
+					selectRandom(m1); // Asks if user wants to select a random movie
 
 					cout << setfill('=') << setw(51);
 					cout << "\n";
