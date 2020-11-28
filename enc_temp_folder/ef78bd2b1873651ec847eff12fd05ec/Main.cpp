@@ -465,7 +465,7 @@ Node* balance(Node* node) {
 	return node;
 }
 
-/*
+
 Node* insertNameId(Node* node, movie name, double id) {                           //insert a node, by taking in a root node, a string for the name and an int for the id
 	if (node == nullptr) {														//if node is nullptr, make a new node, else go to the left or right depending on how id compares to node value
 		Node* temp = new Node(id, name);										//then set node's left or right equal to the result of calling insert on the node->left or node->right
@@ -480,7 +480,7 @@ Node* insertNameId(Node* node, movie name, double id) {                         
 		node->right = insertNameId(node->right, name, id);
 	}
 	return balance(node);                                   //balance node and return resulting root
-}*/
+}
 
 
 void recalcBalanceFactor(Node* node) {
@@ -495,7 +495,7 @@ void recalcBalanceFactor(Node* node) {
 //if node is nullptr, make a new node, else go to the left or right depending on how id compares to node value
 //then set node's left or right equal to the result of calling insert on the node->left or node->right
 // inserts if year and genre match, if they do, add in rating/score value and movie name
-Node* insertNameId(Node* node, int year1, int year2, string genre) {  
+/*Node* insertNameId(Node* node, int year1, int year2, string genre) {  
 	//Node* root = new Node();
 	// takes in movies.csv file
 	string line;
@@ -593,9 +593,9 @@ void printInorder(Node* node) {						//place the order of the nodes using In ord
 		cout << node->name.name << " | " << node->name.director << " | " << node->name.runtime << " minutes" << endl;
 		printInorder(node->left);
 	}
-}
+}*/
 
-/*
+
 Node* createTree(Node* tree, string genre, int year1, int year2, vector<string> ratings) {
 	Node* root = new Node;
 	string line;
@@ -680,7 +680,7 @@ void printInorder(Node* node) {
 		printInorder(node->left);
 	}
 }
-*/
+
 
 int main() {
 	unordered_map<int, string> genre = { {97, "Action"}, {98, "Adventure"}, {99, "Animation"}, {100, "Biography"}, {101, "Comedy"}, {102, "Crime"}, {103, "Drama"}, {104, "Family"}, {105, "Fantasy"}, {106, "Horror"}, {107, "Musical"}, {108, "Mystery"}, {109, "Romance"}, {110, "Sci-Fi"}, {111, "Thriller"}, {112, "War"}, {113, "Western"} };
@@ -716,8 +716,8 @@ int main() {
 					cout << "Here is a list of " << genre[choice] << " movies from the year " << year[choice2].first << " to " << year[choice2].second << "." << endl;
 					m1 = createMap(genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
 					printMap(m1);
-					//tree = createTree(tree, genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
-					//printInorder(tree);
+					tree = createTree(tree, genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
+					printInorder(tree);
 					/*cout << "How much time do you have? Enter in minutes: ";     //testing how to marathon?
 					cin >> mins;
 					vector<movie> movies;
