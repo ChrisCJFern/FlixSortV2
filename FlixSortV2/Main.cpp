@@ -304,6 +304,7 @@ vector<movie> select_random(double time, unordered_multimap<string, movie> m1) {
 	}
 	return v;
 }
+
 // AVL Tree
 
 struct Node {
@@ -322,7 +323,7 @@ public:
 //if node is nullptr, make a new node, else go to the left or right depending on how id compares to node value
 //then set node's left or right equal to the result of calling insert on the node->left or node->right
 // inserts if year and genre match, if they do, add in rating/score value and movie name
-Node* insertNameId(Node* node, string year, string genre, string name, int score) {  
+Node* insertNameId(Node* node, int year1, int year2, string genre, string name, int score) {  
 
 	// if year matches
 	// if genre matches
@@ -380,32 +381,29 @@ Node* insertNameId(Node* node, string year, string genre, string name, int score
 		getline(movieFile, _year);
 		movie temp(stoi(_budget), _company, _country, _director, _genre, stoi(_gross), _name, _rating, _released, stoi(_runtime),
 			stod(_score), _star, stoi(_votes), _writer, stoi(_year));
+		// begins inserting nodes into AVL Tree
+
+		// if there is no node, make new node
 		if (_genre == genre && (stoi(_year) >= year1) && (stoi(_year) <= year2)) {
-			m.insert({ _name, temp });
+			if (node == nullptr) {
+				// adds rating and movie name into node
+				Node* temp = new Node(score, name);
+				node = temp;
+				return node;
+				delete temp;
+			}
+			if (score < node->val) {
+				node->left = insertNameId(node->left, year1, year2, genre, name, score);
+			}
+			else if (score > node->val) {
+				node->right = insertNameId(node->right, year1, year2, genre, name, score);
+			}
 		}
 	}
 	movieFile.close();
-
-	// begins inserting nodes into AVL Tree
-
-	// if there is no node, make new node
-	if (_genre == genre && (stoi(_year) >= year1) && (stoi(_year) <= year2)) {
-		if (node == nullptr) {
-			// adds rating and movie name into node
-			Node* temp = new Node(score, name);
-			node = temp;
-			return node;
-			delete temp;
-		}
-		if (score < node->val) {
-			node->left = insertNameId(node->left, year, genre, name, score);
-		}
-		else if (score > node->val) {
-			node->right = insertNameId(node->right, year, genre, name, score);
-		}
-	}
+	
 	//balance node and return resulting root
-	return balance(node);                                   
+	return balance(node);                             // idk if i need to include this in the for loop      
 }
 
 Node* rotateLeft(Node* node) {
