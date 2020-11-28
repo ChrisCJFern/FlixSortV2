@@ -243,9 +243,10 @@ void printMap(unordered_multimap<string, movie> m1) {
 	}
 	cout << m2.size() << endl;
 	auto iter2 = m2.rbegin();								//https://www.geeksforgeeks.org/how-to-traverse-a-stl-map-in-reverse-direction/
+	cout << " Movie | Company | Director | Runtime (in mins)" << endl;
 	for (iter2; iter2 != m2.rend(); iter2++) {
 		for (int i = 0; i < iter2->second.size(); i++) {
-			cout << ct << ". " << iter2->second[i].name << " | " << iter2->second[i].director << " | " << iter2->second[i].runtime << " minutes" << endl;
+			cout <<  ct << ". " << iter2->second[i].name << " | " << iter2->second[i].company << " | " << iter2->second[i].director << " | " << iter2->second[i].runtime << " minutes" << endl;
 			ct++;
 		}
 	}
@@ -280,34 +281,18 @@ vector<movie> marathon(double time, unordered_multimap<string, movie> m1) {
 
 struct Node {
 public:
-	int val;
-	string name;
+	double val;
+	movie name;
 	Node* left;
 	Node* right;
 	int balancefactor = 0;
-	Node() : val(0), name(""), left(nullptr), right(nullptr) {}
-	Node(int x, string name1) : val(x), name(name1), left(nullptr), right(nullptr) {}
-	Node(int x, string name1, Node* left, Node* right) : val(x), name(name1), left(left), right(right) {}
+	Node() : val(0), name(), left(nullptr), right(nullptr) {}
+	Node(double x, movie name1) : val(x), name(name1), left(nullptr), right(nullptr) {}
+	Node(double x, movie name1, Node* left, Node* right) : val(x), name(name1), left(left), right(right) {}
 };
 
-Node* insertNameId(Node* node, string name, int id) {                           //insert a node, by taking in a root node, a string for the name and an int for the id
-	if (node == nullptr) {														//if node is nullptr, make a new node, else go to the left or right depending on how id compares to node value
-		Node* temp = new Node(id, name);										//then set node's left or right equal to the result of calling insert on the node->left or node->right
-		node = temp;
-		return node;
-		delete temp;
-	}
-	if (id < node->val) {
-		node->left = insertNameId(node->left, name, id);
-	}
-	else if (id > node->val) {
-		node->right = insertNameId(node->right, name, id);
-	}
-	return balance(node);                                   //balance node and return resulting root
-}
-
 Node* rotateLeft(Node* node) {
-	Node* grandchild = node->right->left;               
+	Node* grandchild = node->right->left;
 	Node* newParent = node->right;
 	node->right = grandchild;
 	newParent->left = node;
@@ -316,7 +301,7 @@ Node* rotateLeft(Node* node) {
 
 //right rotation on node
 Node* rotateRight(Node* node) {
-	Node* grandchild = node->left->right;				 
+	Node* grandchild = node->left->right;
 	Node* newParent = node->left;
 	node->left = grandchild;
 	newParent->right = node;
@@ -325,12 +310,12 @@ Node* rotateRight(Node* node) {
 
 //left right rotation on node
 Node* rotateLeftRight(Node* node) {
-	node->left = rotateLeft(node->left);				 
+	node->left = rotateLeft(node->left);
 	return rotateRight(node);
 }
 
 //right left rotation on node
-Node* rotateRightLeft(Node* node) {                     
+Node* rotateRightLeft(Node* node) {
 	node->right = rotateRight(node->right);
 	return rotateLeft(node);
 }
@@ -339,10 +324,10 @@ Node* rotateRightLeft(Node* node) {
 //calculate the left height of a node by adding one for every 
 //left node that exists and do the same for the right side
 //return the max of the left or right value 
-int height(Node* node) {                                      
-	if (node == nullptr) {										
+int height(Node* node) {
+	if (node == nullptr) {
 		return 0;
-	}																		
+	}
 	if (node->left == nullptr && node->right == nullptr) {
 		return 1;
 	}
@@ -361,9 +346,9 @@ int height(Node* node) {
 //calculate the balance factor of a node by
 // calling the height function on node->left and node->right 
 // and taking the difference of left - right
-int calcBalanceFactor(Node* node) {						
-	if (node == nullptr) {								
-		return 0;										
+int calcBalanceFactor(Node* node) {
+	if (node == nullptr) {
+		return 0;
 	}
 	if (node->left == nullptr && node->right == nullptr) {
 		return 0;
@@ -379,15 +364,15 @@ int calcBalanceFactor(Node* node) {
 
 Node* balance(Node* node) {
 	//find the correct rotation to implement on the inputted node
-	node->balancefactor = calcBalanceFactor(node);                         
+	node->balancefactor = calcBalanceFactor(node);
 	if (node->balancefactor > 1) {
 		node->left->balancefactor = calcBalanceFactor(node->left);
 		//if both balance factor of node and node->left are (+), do a right rotation
 		if (node->left->balancefactor > 0) {
-			return rotateRight(node);                                           
+			return rotateRight(node);
 		}
 		//if balance factor of node is (+) and node->left is (-), do a left right rotation
-		else if (node->left->balancefactor < 0) {     
+		else if (node->left->balancefactor < 0) {
 			return rotateLeftRight(node);
 		}
 	}
@@ -395,14 +380,30 @@ Node* balance(Node* node) {
 		node->right->balancefactor = calcBalanceFactor(node->right);
 		//if balance factors of node and node->right are (-), do a left rotation
 		if (node->right->balancefactor < 0) {
-			return rotateLeft(node);                                            
+			return rotateLeft(node);
 		}
 		//if balance factor of node is (-) and node->right is (+), do a right left rotation
 		else if (node->right->balancefactor > 0) {
-			return rotateRightLeft(node);                                       
+			return rotateRightLeft(node);
 		}
 	}
 	return node;
+}
+
+Node* insertNameId(Node* node, movie name, double id) {                           //insert a node, by taking in a root node, a string for the name and an int for the id
+	if (node == nullptr) {														//if node is nullptr, make a new node, else go to the left or right depending on how id compares to node value
+		Node* temp = new Node(id, name);										//then set node's left or right equal to the result of calling insert on the node->left or node->right
+		node = temp;
+		return node;
+		delete temp;
+	}
+	if (id <= node->val) {
+		node->left = insertNameId(node->left, name, id);
+	}
+	else if (id > node->val) {
+		node->right = insertNameId(node->right, name, id);
+	}
+	return balance(node);                                   //balance node and return resulting root
 }
 
 void recalcBalanceFactor(Node* node) {
@@ -413,15 +414,23 @@ void recalcBalanceFactor(Node* node) {
 	}
 }
 
-//root = insertNameId(root, name, id);
-//recalcBalanceFactor(root);
+void printInorder(Node* node) {						//place the order of the nodes using In order traversal in a string
+	if (node == nullptr) {												//Right
+		return;														     //Node
+	}																	//Left
+	else {
+		printInorder(node->right);
+		cout << node->name.name << " | " << node->name.director << " | " << node->name.runtime << " minutes" << endl;
+		printInorder(node->left);
+	}
+}
 
 
 int main() {
 	unordered_map<int, string> genre = { {97, "Action"}, {98, "Adventure"}, {99, "Animation"}, {100, "Biography"}, {101, "Comedy"}, {102, "Crime"}, {103, "Drama"}, {104, "Family"}, {105, "Fantasy"}, {106, "Horror"}, {107, "Musical"}, {108, "Mystery"}, {109, "Romance"}, {110, "Sci-Fi"}, {111, "Thriller"}, {112, "War"}, {113, "Western"} };
 	unordered_map<int, pair<int, int>> year = { {97, {1986, 1990}}, {98, {1991, 1995}}, {99, {1996, 2000}}, {100, {2001, 2005}}, {101, {2006, 2010}}, {102, {2011, 2016}}, {103, {1986, 2016}} };
 	unordered_multimap<string, movie> m1;
-	
+	Node* tree = new Node();
 	//---------------------PRINTS INITIAL MENU---------------------------------------
 	cout << setfill('=') << setw(51);
 	cout << "\n";
@@ -447,6 +456,8 @@ int main() {
 				cout << "Here is a list of " << genre[choice] << " movies from the year " << year[choice2].first << " to " << year[choice2].second << "." << endl;
 				m1 = createMap(genre[choice], year[choice2].first, year[choice2].second);
 				printMap(m1);
+				tree = createTree(tree, genre[choice], year[choice2].first, year[choice2].second);
+				printInorder(tree);
 				/*cout << "How much time do you have? Enter in minutes: ";     //testing how to marathon?
 				cin >> mins;
 				vector<movie> movies;
