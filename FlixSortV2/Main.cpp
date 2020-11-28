@@ -283,37 +283,43 @@ public:
 	Node(int x, string name1, Node* left, Node* right) : val(x), name(name1), left(left), right(right) {}
 };
 
-
+//left rotation on node
 Node* rotateLeft(Node* node) {
-	Node* grandchild = node->right->left;               //left rotation on node
+	Node* grandchild = node->right->left;               
 	Node* newParent = node->right;
 	node->right = grandchild;
 	newParent->left = node;
 	return newParent;
 }
 
+//right rotation on node
 Node* rotateRight(Node* node) {
-	Node* grandchild = node->left->right;				 //right rotation on node
+	Node* grandchild = node->left->right;				 
 	Node* newParent = node->left;
 	node->left = grandchild;
 	newParent->right = node;
 	return newParent;
 }
 
+//left right rotation on node
 Node* rotateLeftRight(Node* node) {
-	node->left = rotateLeft(node->left);				 //left right rotation on node
+	node->left = rotateLeft(node->left);				 
 	return rotateRight(node);
 }
 
-Node* rotateRightLeft(Node* node) {                     //right left rotation on node
+//right left rotation on node
+Node* rotateRightLeft(Node* node) {                     
 	node->right = rotateRight(node->right);
 	return rotateLeft(node);
 }
 
-int height(Node* node) {                                      //calculate the left height of a node by adding one for every 
-	if (node == nullptr) {										//left node that exists and do the same for the right side
+//calculate the left height of a node by adding one for every 
+//left node that exists and do the same for the right side
+//return the max of the left or right value 
+int height(Node* node) {                                      
+	if (node == nullptr) {										
 		return 0;
-	}																		//return the max of the left or right value 
+	}																		
 	if (node->left == nullptr && node->right == nullptr) {
 		return 1;
 	}
@@ -329,9 +335,12 @@ int height(Node* node) {                                      //calculate the le
 	}
 }
 
-int calcBalanceFactor(Node* node) {						//calculate the balance factor of a node by
-	if (node == nullptr) {								// calling the height function on node->left and node->right 
-		return 0;										// and taking the difference of left - right
+//calculate the balance factor of a node by
+// calling the height function on node->left and node->right 
+// and taking the difference of left - right
+int calcBalanceFactor(Node* node) {						
+	if (node == nullptr) {								
+		return 0;										
 	}
 	if (node->left == nullptr && node->right == nullptr) {
 		return 0;
@@ -346,23 +355,28 @@ int calcBalanceFactor(Node* node) {						//calculate the balance factor of a nod
 }
 
 Node* balance(Node* node) {
-	node->balancefactor = calcBalanceFactor(node);                         //find the correct rotation to implement on the inputted node
+	//find the correct rotation to implement on the inputted node
+	node->balancefactor = calcBalanceFactor(node);                         
 	if (node->balancefactor > 1) {
 		node->left->balancefactor = calcBalanceFactor(node->left);
+		//if both balance factor of node and node->left are (+), do a right rotation
 		if (node->left->balancefactor > 0) {
-			return rotateRight(node);                                           //if both balance factor of node and node->left  are (+), do a right rotation
+			return rotateRight(node);                                           
 		}
-		else if (node->left->balancefactor < 0) {     //if balance factor of node is (+) and node->left is (-), do a left right rotation
+		//if balance factor of node is (+) and node->left is (-), do a left right rotation
+		else if (node->left->balancefactor < 0) {     
 			return rotateLeftRight(node);
 		}
 	}
 	if (node->balancefactor < -1) {
 		node->right->balancefactor = calcBalanceFactor(node->right);
+		//if balance factors of node and node->right are (-), do a left rotation
 		if (node->right->balancefactor < 0) {
-			return rotateLeft(node);                                            //if balance factors of node and node->right are (-), do a left rotation
+			return rotateLeft(node);                                            
 		}
+		//if balance factor of node is (-) and node->right is (+), do a right left rotation
 		else if (node->right->balancefactor > 0) {
-			return rotateRightLeft(node);                                       //if balance factor of node is (-) and node->right is (+), do a right left rotation
+			return rotateRightLeft(node);                                       
 		}
 	}
 	return node;
