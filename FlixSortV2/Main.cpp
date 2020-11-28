@@ -574,7 +574,7 @@ void printInorder(Node* node) {
 	}
 	else {
 		printInorder(node->right);
-		cout << node->name.name << " | " << node->name.company << " | " << node->name.director << " | " << node->name.runtime << endl;
+		cout << node->name.name << " | " << node->name.company << " | " << node->name.director << " | " << node->name.runtime << " minutes" << endl;
 		printInorder(node->left);
 	}
 }
