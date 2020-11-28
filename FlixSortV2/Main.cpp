@@ -31,6 +31,18 @@ public:
 	}
 };
 
+movie select_random(unordered_multimap<string, movie> m1) {
+	vector<movie> v;
+	auto iter = m1.begin();
+	int ct = 1;
+	for (iter; iter != m1.end(); iter++) {
+		v.push_back(iter->second);
+	}
+	Random rand;
+	int randomIndex = rand.Int(0, v.size() - 1); // Generate a random number
+	return v.at(randomIndex);
+}
+
 // movie structure
 struct movie {
 	unsigned int budget = 0;
@@ -277,26 +289,6 @@ vector<movie> marathon(double time, unordered_multimap<string, movie> m1) {
 				else {
 					break;
 				}
-			}
-		}
-	}
-	return v;
-}
-
-vector<movie> select_random(double time, unordered_multimap<string, movie> m1) {
-	vector<movie> v;
-	auto iter = m1.begin();
-	map<double, vector<movie>> m2;
-	int ct = 1;
-	for (iter; iter != m1.end(); iter++) {
-		m2[(iter->second.runtime)].push_back(iter->second);
-	}
-	auto iter2 = m2.rbegin();
-	for (iter2; iter2 != m2.rend(); iter2++) {
-		if (iter2->first < time) {
-			for (int i = 0; i < iter2->second.size(); i++) {
-				v.push_back(iter2->second[i]);
-				time -= iter2->first;
 			}
 		}
 	}
