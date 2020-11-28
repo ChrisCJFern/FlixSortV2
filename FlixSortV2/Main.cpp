@@ -568,13 +568,18 @@ Node* createTree(Node* tree, string genre, int year1, int year2, vector<string> 
 	return root;
 }
 
+int count() {
+	int x = 1;
+	return 1;
+}
+
 void printInorder(Node* node) {
 	if (node == nullptr) {
 		return;
 	}
 	else {
 		printInorder(node->right);
-		cout << node->name.name << " | " << node->name.company << " | " << node->name.director << " | " << node->name.runtime << " minutes" << endl;
+		cout << count() << ". " << node->name.name << " | " << node->name.company << " | " << node->name.director << " | " << node->name.runtime << " minutes" << endl;
 		printInorder(node->left);
 	}
 }
@@ -614,7 +619,9 @@ int main() {
 					m1 = createMap(genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
 					printMap(m1);
 					tree = createTree(tree, genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
+					//int x = 0;
 					printInorder(tree);
+					//x = 0;
 					/*cout << "How much time do you have? Enter in minutes: ";     //testing how to marathon?
 					cin >> mins;
 					vector<movie> movies;
