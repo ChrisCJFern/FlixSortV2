@@ -32,6 +32,7 @@ public:
 	}
 };
 
+// creates movie structure
 struct movie {
 	unsigned int budget = 0;
 	string company = "";
@@ -49,6 +50,7 @@ struct movie {
 	string writer = "";
 	int year = 0;
 
+	// default constructor
 	movie() {
 		unsigned int budget = 0;
 		string company = "";
@@ -66,6 +68,8 @@ struct movie {
 		string writer = "";
 		int year = 0;
 	}
+
+	// constructor
 	movie(unsigned int _budget, string _company, string _country, string _director, string _genre, unsigned int _gross, string _name,
 		string _rating, string _releaseDate, int _runtime, double _score, string _star, int _votes, string _writer, int _year) {
 		budget = _budget;
