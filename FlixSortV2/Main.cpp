@@ -428,7 +428,7 @@ void recalcBalanceFactor(Node* node) {
 //if node is nullptr, make a new node, else go to the left or right depending on how id compares to node value
 //then set node's left or right equal to the result of calling insert on the node->left or node->right
 // inserts if year and genre match, if they do, add in rating/score value and movie name
-Node* insertNameId(Node* node, int year1, int year2, string genre, string name, int score) {  
+Node* insertNameId(Node* node, int year1, int year2, string genre) {  
 	Node* root = new Node();
 	// takes in movies.csv file
 	string line;
@@ -502,11 +502,11 @@ Node* insertNameId(Node* node, int year1, int year2, string genre, string name, 
 			}
 			// if score is less than node's val, traverse through the tree on the left
 			if (score <= node->val) {
-				node->left = insertNameId(node->left, year1, year2, genre, name, score);
+				node->left = insertNameId(node->left, year1, year2, genre);
 			}
 			// if score is greater than node's val, traverse through the tree on the right
 			else if (score > node->val) {
-				node->right = insertNameId(node->right, year1, year2, genre, name, score);
+				node->right = insertNameId(node->right, year1, year2, genre);
 			}
 		}
 	}
@@ -643,7 +643,7 @@ int main() {
 			if (choice2 != 0) {
 				cout << "Here is a list of " << genre[choice] << " movies from the year " << year[choice2].first << " to " << year[choice2].second << "." << endl;
 				m1 = createMap(genre[choice], year[choice2].first, year[choice2].second);
-				//insertNameId(tree, year[choice2].first, year[choice2].second, genre[choice], );
+				insertNameId(tree, year[choice2].first, year[choice2].second, genre[choice]);
 				printMap(m1);
 				printInorder(tree);
 				/*cout << "How much time do you have? Enter in minutes: ";     //testing how to marathon?
