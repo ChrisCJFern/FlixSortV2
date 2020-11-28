@@ -129,6 +129,45 @@ int chooseGenre() {
 	return val;
 }
 
+// chooses movies based on user's preferred rating PG, G 
+int chooseRating() {
+	cin.clear();
+	cout << setfill('=') << setw(51);
+	cout << "\n";
+	cout << "|      What movie rating were you thinking?      |" << endl;
+	cout << "|   (a) G               (e) R                    |" << endl;
+	cout << "|   (b) PG / TV-PG      (f) NC-17                |" << endl;
+	cout << "|   (c) PG-13 / TV-14   (g) Unrated / Not rated  |" << endl;          //what genre are you thinking 
+	cout << "|   (d) TV-MA           (h) B / B15              |" << endl;
+	cout << "|   (0) Enter 0 to Exit                          |" << endl;
+	cout << setfill('=') << setw(51);
+	cout << "\n";
+	cout << "Please input the letter of the selected rating: ";
+	string choice;
+	bool chosen = false;
+	int val = 0;
+	while (!chosen) {
+		getline(cin, choice);
+		if (choice == "0") {
+			val = 0;
+			chosen = true;
+		}
+		else {
+			if (choice.length() != 1 || choice[0] < 'A' || (choice[0] < 'a' && choice[0] > 'Q') || choice[0] > 'q') {
+				cout << choice << " is an invalid input." << endl;
+				cout << "Please enter your input in the correct format: ";
+				choice.clear();
+			}
+			else {
+				chosen = true;
+				val = tolower(int(choice[0]));
+				break;
+			}
+		}
+	}
+	return val;
+}
+
 // chooses movies based on user's preferred year range
 int chooseYear() {
 	string input;
@@ -168,7 +207,7 @@ int chooseYear() {
 }
 
 // creates a multimap based on user's preferences with greatest to lowest rank
-unordered_multimap<string, movie> createMap(string genre, int year1, int year2) {
+unordered_multimap<string, movie> createMap(string genre, int year1, int year2, vector<string> ratings) {
 	unordered_multimap<string, movie> m;              //https://www.cplusplus.com/reference/map/multimap/
 	string line;
 	ifstream movieFile;
@@ -232,7 +271,11 @@ unordered_multimap<string, movie> createMap(string genre, int year1, int year2) 
 			stod(_score), _star, stoi(_votes), _writer, stoi(_year));
 		// only inserts movies based on the preferred genre and year range
 		if (_genre == genre && (stoi(_year) >= year1) && (stoi(_year) <= year2)) {
-			m.insert({ _name, temp });
+			for (int i = 0; i < ratings.size(); i++) {
+				if (_rating == ratings[i]) {
+					m.insert({ _name, temp });
+				}
+			}
 		}
 	}
 	movieFile.close();
@@ -243,18 +286,21 @@ unordered_multimap<string, movie> createMap(string genre, int year1, int year2) 
 void printMap(unordered_multimap<string, movie> m1) {
 	auto iter = m1.begin();
 	map<double, vector<movie>> m2;
-	cout << m1.size() << endl; // For debugging purposes
 	int ct = 1;
-	for (iter; iter != m1.end(); iter++) {
-		m2[(iter->second.score)].push_back(iter->second);
+	if (m1.size() == 0) {
+		cout << "There are no movies that fit your selections." << endl;
 	}
-	cout << m2.size() << endl;
-	auto iter2 = m2.rbegin();								//https://www.geeksforgeeks.org/how-to-traverse-a-stl-map-in-reverse-direction/
-	cout << " Movie | Company | Director | Runtime (in mins)" << endl;
-	for (iter2; iter2 != m2.rend(); iter2++) {
-		for (int i = 0; i < iter2->second.size(); i++) {
-			cout <<  ct << ". " << iter2->second[i].name << " | " << iter2->second[i].company << " | " << iter2->second[i].director << " | " << iter2->second[i].runtime << " minutes" << endl;
-			ct++;
+	else {
+		for (iter; iter != m1.end(); iter++) {
+			m2[(iter->second.score)].push_back(iter->second);
+		}
+		auto iter2 = m2.rbegin();								//https://www.geeksforgeeks.org/how-to-traverse-a-stl-map-in-reverse-direction/
+		cout << " Movie | Company | Director | Runtime (in mins)" << endl;
+		for (iter2; iter2 != m2.rend(); iter2++) {
+			for (int i = 0; i < iter2->second.size(); i++) {
+				cout << ct << ". " << iter2->second[i].name << " | " << iter2->second[i].company << " | " << iter2->second[i].director << " | " << iter2->second[i].runtime << " minutes" << endl;
+				ct++;
+			}
 		}
 	}
 }
@@ -614,6 +660,7 @@ void printInorder(Node* node) {
 
 int main() {
 	unordered_map<int, string> genre = { {97, "Action"}, {98, "Adventure"}, {99, "Animation"}, {100, "Biography"}, {101, "Comedy"}, {102, "Crime"}, {103, "Drama"}, {104, "Family"}, {105, "Fantasy"}, {106, "Horror"}, {107, "Musical"}, {108, "Mystery"}, {109, "Romance"}, {110, "Sci-Fi"}, {111, "Thriller"}, {112, "War"}, {113, "Western"} };
+	unordered_map<int, vector<string>> rating = { {97, {"G"}}, {98, {"PG", "TV-PG"}}, {99, {"PG-13", "TV-14"}}, {100, {"TV-MA"}}, {101, {"R"}}, {102, {"NC-17"}}, { 103, {"UNRATED", "NOT RATED", "Not specified"}}, { 104, {"B", "B15"}} };
 	unordered_map<int, pair<int, int>> year = { {97, {1986, 1990}}, {98, {1991, 1995}}, {99, {1996, 2000}}, {100, {2001, 2005}}, {101, {2006, 2010}}, {102, {2011, 2016}}, {103, {1986, 2016}} };
 	unordered_multimap<string, movie> m1;
 	Node* tree = new Node();
@@ -632,6 +679,7 @@ int main() {
 	string input;
 	int choice;
 	int choice2;
+	int choice3;
 	string throwaway;
 	do {
 		double mins = 0.0;
@@ -639,28 +687,35 @@ int main() {
 		if (choice != 0) {
 			choice2 = chooseYear();
 			if (choice2 != 0) {
-				cout << "Here is a list of " << genre[choice] << " movies from the year " << year[choice2].first << " to " << year[choice2].second << "." << endl;
-				m1 = createMap(genre[choice], year[choice2].first, year[choice2].second);
-				printMap(m1);
-				//tree = createTree(tree, genre[choice], year[choice2].first, year[choice2].second);
-			    //printInorder(tree);
-				/*cout << "How much time do you have? Enter in minutes: ";     //testing how to marathon?
-				cin >> mins;
-				vector<movie> movies;
-				movies = marathon(mins, m1);
-				for (int i = 1; i < movies.size()+1; i++) {
-					cout << i << ". " << movies[i].name << " " << movies[i].runtime << endl;
-				}*/
+				choice3 = chooseRating();
+				if (choice3 != 0) {
+					cout << "Here is a list of " << genre[choice] << " movies from the year " << year[choice2].first << " to " << year[choice2].second << "." << endl;
+					m1 = createMap(genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
+					printMap(m1);
+					//tree = createTree(tree, genre[choice], year[choice2].first, year[choice2].second);
+					//printInorder(tree);
+					/*cout << "How much time do you have? Enter in minutes: ";     //testing how to marathon?
+					cin >> mins;
+					vector<movie> movies;
+					movies = marathon(mins, m1);
+					for (int i = 1; i < movies.size()+1; i++) {
+						cout << i << ". " << movies[i].name << " " << movies[i].runtime << endl;
+					}*/
 
-				
-				cout << setfill('=') << setw(51);
-				cout << "\n";
-				cout << "|        Would you like to search again?         |" << endl;
-				cout << setfill('=') << setw(51);
-				cout << "\n";
-				cout << "Enter Y or N: ";
-				cin >> input;
-				getline(cin, throwaway);
+
+					cout << setfill('=') << setw(51);
+					cout << "\n";
+					cout << "|        Would you like to search again?         |" << endl;
+					cout << setfill('=') << setw(51);
+					cout << "\n";
+					cout << "Enter Y or N: ";
+					cin >> input;
+					getline(cin, throwaway);
+				}
+				else {
+					cout << "Goodbye!" << endl;
+					input = "n";
+				}
 			}
 			else {
 				cout << "Goodbye!" << endl;
