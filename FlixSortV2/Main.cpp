@@ -11,7 +11,6 @@
 #include <random>
 using namespace std;
 
-/*
 class Random // Taken from given random number generator in COP3503 //MAYBE FOR RANDOM MOVIE SELECTOR
 {
 	// One instance of the x variable, and all instances SHARE this variable
@@ -31,7 +30,6 @@ public:
 		return dist(random);
 	}
 };
-*/
 
 // movie structure
 struct movie {
