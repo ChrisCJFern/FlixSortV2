@@ -315,7 +315,7 @@ public:
 //then set node's left or right equal to the result of calling insert on the node->left or node->right
 // inserts if year and genre match, if they do, add in rating/score value and movie name
 Node* insertNameId(Node* node, int year1, int year2, string genre, string name, int score) {  
-
+	Node* root = new Node();
 	// takes in movies.csv file
 	string line;
 	ifstream movieFile;
@@ -383,13 +383,12 @@ Node* insertNameId(Node* node, int year1, int year2, string genre, string name, 
 		if (_genre == genre && (stoi(_year) >= year1) && (stoi(_year) <= year2)) {
 			if (node == nullptr) {
 				// adds rating and movie name into node
-				Node* temp = new Node(score, name);
-				node = temp;
-				return node;
+				Node* root = new Node(stod(_score), temp);
+				return root;
 				delete temp;
 			}
 			// if score is less than node's val, traverse through the tree on the left
-			if (score < node->val) {
+			if (score <= node->val) {
 				node->left = insertNameId(node->left, year1, year2, genre, name, score);
 			}
 			// if score is greater than node's val, traverse through the tree on the right
@@ -553,7 +552,7 @@ int main() {
 	unordered_map<int, string> genre = { {97, "Action"}, {98, "Adventure"}, {99, "Animation"}, {100, "Biography"}, {101, "Comedy"}, {102, "Crime"}, {103, "Drama"}, {104, "Family"}, {105, "Fantasy"}, {106, "Horror"}, {107, "Musical"}, {108, "Mystery"}, {109, "Romance"}, {110, "Sci-Fi"}, {111, "Thriller"}, {112, "War"}, {113, "Western"} };
 	unordered_map<int, pair<int, int>> year = { {97, {1986, 1990}}, {98, {1991, 1995}}, {99, {1996, 2000}}, {100, {2001, 2005}}, {101, {2006, 2010}}, {102, {2011, 2016}}, {103, {1986, 2016}} };
 	unordered_multimap<string, movie> m1;
-	
+	Node* tree = new Node();
 	//---------------------PRINTS INITIAL MENU---------------------------------------
 	cout << setfill('=') << setw(51);
 	cout << "\n";
@@ -579,8 +578,8 @@ int main() {
 				cout << "Here is a list of " << genre[choice] << " movies from the year " << year[choice2].first << " to " << year[choice2].second << "." << endl;
 				m1 = createMap(genre[choice], year[choice2].first, year[choice2].second);
 				printMap(m1);
-				tree = createTree(tree, genre[choice], year[choice2].first, year[choice2].second);
-				printInorder(tree);
+				//tree = createTree(tree, genre[choice], year[choice2].first, year[choice2].second);
+			    //printInorder(tree);
 				/*cout << "How much time do you have? Enter in minutes: ";     //testing how to marathon?
 				cin >> mins;
 				vector<movie> movies;
