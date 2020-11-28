@@ -298,97 +298,6 @@ public:
 	Node(double x, movie name1, Node* left, Node* right) : val(x), name(name1), left(left), right(right) {}
 };
 
-//insert a node, by taking in a root node, a string for the name and an int for the id
-//if node is nullptr, make a new node, else go to the left or right depending on how id compares to node value
-//then set node's left or right equal to the result of calling insert on the node->left or node->right
-// inserts if year and genre match, if they do, add in rating/score value and movie name
-Node* insertNameId(Node* node, int year1, int year2, string genre, string name, int score) {  
-	Node* root = new Node();
-	// takes in movies.csv file
-	string line;
-	ifstream movieFile;
-	movieFile.open("movies.csv", ios::in);
-	int numLine = 0;
-	if (movieFile.is_open()) {
-		getline(movieFile, line);
-		while (getline(movieFile, line)) {
-			numLine++;
-		}
-		movieFile.close();
-	}
-	string _budget, _company, _country, _director, _genre, _gross, _name, _rating;
-	string _released, _runtime, _score, _star, _votes, _writer, _year;
-	movieFile.open("movies.csv", ios::in);
-	getline(movieFile, line);
-	for (int i = 0; i < numLine; i++) {
-		// first take in the budget
-		getline(movieFile, _budget, ',');
-		// then the company name
-		char d;
-		d = movieFile.get();
-		if (char(d) == '"') {
-			getline(movieFile, _company, '"');
-			_company = _company.substr(0, _company.length() - 1);
-			getline(movieFile, line, ',');
-		}
-		else {
-			movieFile.putback(d);
-			getline(movieFile, _company, ',');
-		}
-		// then the country, director, genre, and gross
-		getline(movieFile, _country, ',');
-		getline(movieFile, _director, ',');
-		getline(movieFile, _genre, ',');
-		getline(movieFile, _gross, ',');
-		// then the name
-		d = movieFile.get();
-		if (char(d) == '"') {
-			getline(movieFile, _name, '"');
-			_name = _name.substr(0, _name.length() - 2);
-			getline(movieFile, line, ',');
-		}
-		else {
-			movieFile.putback(d);
-			getline(movieFile, _name, ',');
-		}
-		// then the rating, released date, runtime, score, star, votes, writer, year
-		getline(movieFile, _rating, ',');
-		getline(movieFile, _released, ',');
-		getline(movieFile, _runtime, ',');
-		getline(movieFile, _score, ',');
-		getline(movieFile, _star, ',');
-		getline(movieFile, _votes, ',');
-		getline(movieFile, _writer, ',');
-		getline(movieFile, _year);
-		// adds values into movie structure
-		movie temp(stoi(_budget), _company, _country, _director, _genre, stoi(_gross), _name, _rating, _released, stoi(_runtime),
-			stod(_score), _star, stoi(_votes), _writer, stoi(_year));
-
-		// begins inserting nodes into AVL Tree
-
-		// only inserts movies based on the preferred genre and year range
-		// if there is no node, make new node
-		if (_genre == genre && (stoi(_year) >= year1) && (stoi(_year) <= year2)) {
-			if (node == nullptr) {
-				// adds rating and movie name into node
-				Node* root = new Node(stod(_score), temp);
-				return root;
-			}
-			// if score is less than node's val, traverse through the tree on the left
-			if (score <= node->val) {
-				node->left = insertNameId(node->left, year1, year2, genre, name, score);
-			}
-			// if score is greater than node's val, traverse through the tree on the right
-			else if (score > node->val) {
-				node->right = insertNameId(node->right, year1, year2, genre, name, score);
-			}
-		}
-	}
-	movieFile.close();
-	
-	//balance node and return resulting root
-	return balance(node);                             // idk if i need to include this in the for loop      
-}
 
 Node* rotateLeft(Node* node) {
 	Node* grandchild = node->right->left;
@@ -511,6 +420,98 @@ void recalcBalanceFactor(Node* node) {
 		calcBalanceFactor(node->left);
 		calcBalanceFactor(node->right);
 	}
+}
+
+//insert a node, by taking in a root node, a string for the name and an int for the id
+//if node is nullptr, make a new node, else go to the left or right depending on how id compares to node value
+//then set node's left or right equal to the result of calling insert on the node->left or node->right
+// inserts if year and genre match, if they do, add in rating/score value and movie name
+Node* insertNameId(Node* node, int year1, int year2, string genre, string name, int score) {  
+	Node* root = new Node();
+	// takes in movies.csv file
+	string line;
+	ifstream movieFile;
+	movieFile.open("movies.csv", ios::in);
+	int numLine = 0;
+	if (movieFile.is_open()) {
+		getline(movieFile, line);
+		while (getline(movieFile, line)) {
+			numLine++;
+		}
+		movieFile.close();
+	}
+	string _budget, _company, _country, _director, _genre, _gross, _name, _rating;
+	string _released, _runtime, _score, _star, _votes, _writer, _year;
+	movieFile.open("movies.csv", ios::in);
+	getline(movieFile, line);
+	for (int i = 0; i < numLine; i++) {
+		// first take in the budget
+		getline(movieFile, _budget, ',');
+		// then the company name
+		char d;
+		d = movieFile.get();
+		if (char(d) == '"') {
+			getline(movieFile, _company, '"');
+			_company = _company.substr(0, _company.length() - 1);
+			getline(movieFile, line, ',');
+		}
+		else {
+			movieFile.putback(d);
+			getline(movieFile, _company, ',');
+		}
+		// then the country, director, genre, and gross
+		getline(movieFile, _country, ',');
+		getline(movieFile, _director, ',');
+		getline(movieFile, _genre, ',');
+		getline(movieFile, _gross, ',');
+		// then the name
+		d = movieFile.get();
+		if (char(d) == '"') {
+			getline(movieFile, _name, '"');
+			_name = _name.substr(0, _name.length() - 2);
+			getline(movieFile, line, ',');
+		}
+		else {
+			movieFile.putback(d);
+			getline(movieFile, _name, ',');
+		}
+		// then the rating, released date, runtime, score, star, votes, writer, year
+		getline(movieFile, _rating, ',');
+		getline(movieFile, _released, ',');
+		getline(movieFile, _runtime, ',');
+		getline(movieFile, _score, ',');
+		getline(movieFile, _star, ',');
+		getline(movieFile, _votes, ',');
+		getline(movieFile, _writer, ',');
+		getline(movieFile, _year);
+		// adds values into movie structure
+		movie temp(stoi(_budget), _company, _country, _director, _genre, stoi(_gross), _name, _rating, _released, stoi(_runtime),
+			stod(_score), _star, stoi(_votes), _writer, stoi(_year));
+
+		// begins inserting nodes into AVL Tree
+
+		// only inserts movies based on the preferred genre and year range
+		// if there is no node, make new node
+		if (_genre == genre && (stoi(_year) >= year1) && (stoi(_year) <= year2)) {
+			if (node == nullptr) {
+				// adds rating and movie name into node
+				Node* root = new Node(stod(_score), temp);
+				return root;
+			}
+			// if score is less than node's val, traverse through the tree on the left
+			if (score <= node->val) {
+				node->left = insertNameId(node->left, year1, year2, genre, name, score);
+			}
+			// if score is greater than node's val, traverse through the tree on the right
+			else if (score > node->val) {
+				node->right = insertNameId(node->right, year1, year2, genre, name, score);
+			}
+		}
+	}
+	movieFile.close();
+	
+	//balance node and return resulting root
+	return balance(node);                             // idk if i need to include this in the for loop      
 }
 
 void printInorder(Node* node) {						//place the order of the nodes using In order traversal in a string
