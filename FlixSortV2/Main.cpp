@@ -398,6 +398,7 @@ Node* balance(Node* node) {
 	return node;
 }
 
+/*
 Node* insertNameId(Node* node, movie name, double id) {                           //insert a node, by taking in a root node, a string for the name and an int for the id
 	if (node == nullptr) {														//if node is nullptr, make a new node, else go to the left or right depending on how id compares to node value
 		Node* temp = new Node(id, name);										//then set node's left or right equal to the result of calling insert on the node->left or node->right
@@ -413,6 +414,7 @@ Node* insertNameId(Node* node, movie name, double id) {                         
 	}
 	return balance(node);                                   //balance node and return resulting root
 }
+*/
 
 void recalcBalanceFactor(Node* node) {
 	if (node) {
