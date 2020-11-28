@@ -523,6 +523,16 @@ void recalcBalanceFactor(Node* node) {
 //root = insertNameId(root, name, id);
 //recalcBalanceFactor(root);
 
+// prints the AVL Tree in inorder order
+string printTree(Node* node) {
+	//your code here
+	if (node == nullptr) { return ""; }
+	string rightTree = printTree(node->right);
+	cout << node->name << "  rating: " << node->val << endl;
+	string leftTree = printTree(node->left);	
+	//return rightTree + node->name + ", " + node->val + " " + leftTree;
+}
+
 
 int main() {
 	unordered_map<int, string> genre = { {97, "Action"}, {98, "Adventure"}, {99, "Animation"}, {100, "Biography"}, {101, "Comedy"}, {102, "Crime"}, {103, "Drama"}, {104, "Family"}, {105, "Fantasy"}, {106, "Horror"}, {107, "Musical"}, {108, "Mystery"}, {109, "Romance"}, {110, "Sci-Fi"}, {111, "Thriller"}, {112, "War"}, {113, "Western"} };
