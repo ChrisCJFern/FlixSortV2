@@ -98,7 +98,7 @@ movie select_random(unordered_multimap<string, movie> m1) {
 		v.push_back(iter->second);
 	}
 	int randomIndex = Random::Int(0, v.size()-1); // Generate a random number
-	cout << randomIndex << endl;
+	//cout << randomIndex << endl;
 	return v.at(randomIndex);
 }
 
@@ -623,6 +623,9 @@ int main() {
 						cout << i << ". " << movies[i].name << " " << movies[i].runtime << endl;
 					}*/
 
+					cout << "World you like us to select a movie from this list?" << endl;
+		
+					cout << "Random Movie: " << select_random(m1).name << endl;
 
 					cout << setfill('=') << setw(51);
 					cout << "\n";
