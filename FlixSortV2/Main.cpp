@@ -325,9 +325,6 @@ public:
 // inserts if year and genre match, if they do, add in rating/score value and movie name
 Node* insertNameId(Node* node, int year1, int year2, string genre, string name, int score) {  
 
-	// if year matches
-	// if genre matches
-
 	// takes in movies.csv file
 	string line;
 	ifstream movieFile;
@@ -345,7 +342,9 @@ Node* insertNameId(Node* node, int year1, int year2, string genre, string name, 
 	movieFile.open("movies.csv", ios::in);
 	getline(movieFile, line);
 	for (int i = 0; i < numLine; i++) {
+		// first take in the budget
 		getline(movieFile, _budget, ',');
+		// then the company name
 		char d;
 		d = movieFile.get();
 		if (char(d) == '"') {
@@ -357,10 +356,12 @@ Node* insertNameId(Node* node, int year1, int year2, string genre, string name, 
 			movieFile.putback(d);
 			getline(movieFile, _company, ',');
 		}
+		// then the country, director, genre, and gross
 		getline(movieFile, _country, ',');
 		getline(movieFile, _director, ',');
 		getline(movieFile, _genre, ',');
 		getline(movieFile, _gross, ',');
+		// then the name
 		d = movieFile.get();
 		if (char(d) == '"') {
 			getline(movieFile, _name, '"');
@@ -371,6 +372,7 @@ Node* insertNameId(Node* node, int year1, int year2, string genre, string name, 
 			movieFile.putback(d);
 			getline(movieFile, _name, ',');
 		}
+		// then the rating, released date, runtime, score, star, votes, writer, year
 		getline(movieFile, _rating, ',');
 		getline(movieFile, _released, ',');
 		getline(movieFile, _runtime, ',');
@@ -379,9 +381,12 @@ Node* insertNameId(Node* node, int year1, int year2, string genre, string name, 
 		getline(movieFile, _votes, ',');
 		getline(movieFile, _writer, ',');
 		getline(movieFile, _year);
+		// adds values into movie structure
 		movie temp(stoi(_budget), _company, _country, _director, _genre, stoi(_gross), _name, _rating, _released, stoi(_runtime),
 			stod(_score), _star, stoi(_votes), _writer, stoi(_year));
+
 		// begins inserting nodes into AVL Tree
+		// only inserts movies based on the preferred genre and year range
 
 		// if there is no node, make new node
 		if (_genre == genre && (stoi(_year) >= year1) && (stoi(_year) <= year2)) {
