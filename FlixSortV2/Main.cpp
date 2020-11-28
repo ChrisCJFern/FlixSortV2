@@ -176,6 +176,162 @@ unordered_multimap<string, movie> createMap(string genre, int year1, int year2) 
 	ifstream movieFile;
 	movieFile.open("movies.csv", ios::in);
 	int numLine = 0;
+	// checks how many lines are in the csv file
+	if (movieFile.is_open()) {
+		getline(movieFile, line);
+		while (getline(movieFile, line)) {
+			numLine++;
+		}
+		movieFile.close();
+	}
+	string _budget, _company, _country, _director, _genre, _gross, _name, _rating;
+	string _released, _runtime, _score, _star, _votes, _writer, _year;
+	movieFile.open("movies.csv", ios::in);
+	getline(movieFile, line);
+	// loop for the amount of lines in file
+	for (int i = 0; i < numLine; i++) {
+		// first take in the budget
+		getline(movieFile, _budget, ',');
+		// then the company name
+		char d;
+		d = movieFile.get();
+		if (char(d) == '"') {
+			getline(movieFile, _company, '"');
+			_company = _company.substr(0, _company.length() - 1);
+			getline(movieFile, line, ',');
+		}
+		else {
+			movieFile.putback(d);
+			getline(movieFile, _company, ',');
+		}
+		// then the country, director, genre, and gross
+		getline(movieFile, _country, ',');
+		getline(movieFile, _director, ',');
+		getline(movieFile, _genre, ',');
+		getline(movieFile, _gross, ',');
+		// then the name
+		d = movieFile.get();
+		if (char(d) == '"') {
+			getline(movieFile, _name, '"');
+			_name = _name.substr(0, _name.length() - 2);
+			getline(movieFile, line, ',');
+		}
+		else {
+			movieFile.putback(d);
+			getline(movieFile, _name, ',');
+		}
+		// then the rating, released date, runtime, score, star, votes, writer, year
+		getline(movieFile, _rating, ',');
+		getline(movieFile, _released, ',');
+		getline(movieFile, _runtime, ',');
+		getline(movieFile, _score, ',');
+		getline(movieFile, _star, ',');
+		getline(movieFile, _votes, ',');
+		getline(movieFile, _writer, ',');
+		getline(movieFile, _year);
+		// adds values into movie structure
+		movie temp(stoi(_budget), _company, _country, _director, _genre, stoi(_gross), _name, _rating, _released, stoi(_runtime),
+			stod(_score), _star, stoi(_votes), _writer, stoi(_year));
+		// only inserts movies based on the preferred genre and year range
+		if (_genre == genre && (stoi(_year) >= year1) && (stoi(_year) <= year2)) {
+			m.insert({ _name, temp });
+		}
+	}
+	movieFile.close();
+	return m;
+}
+
+// prints the Map
+void printMap(unordered_multimap<string, movie> m1) {
+	auto iter = m1.begin();
+	map<double, vector<movie>> m2;
+	cout << m1.size() << endl; // For debugging purposes
+	int ct = 1;
+	for (iter; iter != m1.end(); iter++) {
+		m2[(iter->second.score)].push_back(iter->second);
+	}
+	cout << m2.size() << endl;
+	auto iter2 = m2.rbegin();								//https://www.geeksforgeeks.org/how-to-traverse-a-stl-map-in-reverse-direction/
+	for (iter2; iter2 != m2.rend(); iter2++) {
+		for (int i = 0; i < iter2->second.size(); i++) {
+			cout << ct << ". " << iter2->second[i].name << " | " << iter2->second[i].director << " | " << iter2->second[i].runtime << " minutes" << endl;
+			ct++;
+		}
+	}
+}
+
+vector<movie> marathon(double time, unordered_multimap<string, movie> m1) {
+	vector<movie> v;
+	auto iter = m1.begin();
+	map<double, vector<movie>> m2;
+	int ct = 1;
+	for (iter; iter != m1.end(); iter++) {
+		m2[(iter->second.runtime)].push_back(iter->second);
+	}
+	auto iter2 = m2.rbegin();
+	for (iter2; iter2 != m2.rend(); iter2++) {
+		if (iter2->first < time) {
+			for (int i = 0; i < iter2->second.size(); i++) {
+				if (iter2->second[i].runtime < time) {
+					v.push_back(iter2->second[i]);
+					time -= iter2->first;
+				}
+				else {
+					break;
+				}
+			}
+		}
+	}
+	return v;
+}
+
+vector<movie> select_random(double time, unordered_multimap<string, movie> m1) {
+	vector<movie> v;
+	auto iter = m1.begin();
+	map<double, vector<movie>> m2;
+	int ct = 1;
+	for (iter; iter != m1.end(); iter++) {
+		m2[(iter->second.runtime)].push_back(iter->second);
+	}
+	auto iter2 = m2.rbegin();
+	for (iter2; iter2 != m2.rend(); iter2++) {
+		if (iter2->first < time) {
+			for (int i = 0; i < iter2->second.size(); i++) {
+				v.push_back(iter2->second[i]);
+				time -= iter2->first;
+			}
+		}
+	}
+	return v;
+}
+// AVL Tree
+
+struct Node {
+public:
+	int val;
+	string name;
+	Node* left;
+	Node* right;
+	int balancefactor = 0;
+	Node() : val(0), name(""), left(nullptr), right(nullptr) {}
+	Node(int x, string name1) : val(x), name(name1), left(nullptr), right(nullptr) {}
+	Node(int x, string name1, Node* left, Node* right) : val(x), name(name1), left(left), right(right) {}
+};
+
+//insert a node, by taking in a root node, a string for the name and an int for the id
+//if node is nullptr, make a new node, else go to the left or right depending on how id compares to node value
+//then set node's left or right equal to the result of calling insert on the node->left or node->right
+// inserts if year and genre match, if they do, add in rating/score value and movie name
+Node* insertNameId(Node* node, string year, string genre, string name, int score) {  
+
+	// if year matches
+	// if genre matches
+
+	// takes in movies.csv file
+	string line;
+	ifstream movieFile;
+	movieFile.open("movies.csv", ios::in);
+	int numLine = 0;
 	if (movieFile.is_open()) {
 		getline(movieFile, line);
 		while (getline(movieFile, line)) {
@@ -229,100 +385,27 @@ unordered_multimap<string, movie> createMap(string genre, int year1, int year2) 
 		}
 	}
 	movieFile.close();
-	return m;
-}
 
-// prints the Map
-void printMap(unordered_multimap<string, movie> m1) {
-	auto iter = m1.begin();
-	map<double, vector<movie>> m2;
-	cout << m1.size() << endl; // For debugging purposes
-	int ct = 1;
-	for (iter; iter != m1.end(); iter++) {
-		m2[(iter->second.score)].push_back(iter->second);
-	}
-	cout << m2.size() << endl;
-	auto iter2 = m2.rbegin();								//https://www.geeksforgeeks.org/how-to-traverse-a-stl-map-in-reverse-direction/
-	for (iter2; iter2 != m2.rend(); iter2++) {
-		for (int i = 0; i < iter2->second.size(); i++) {
-			cout << ct << ". " << iter2->second[i].name << " | " << iter2->second[i].director << " | " << iter2->second[i].runtime << " minutes" << endl;
-			ct++;
+	// begins inserting nodes into AVL Tree
+
+	// if there is no node, make new node
+	if (_genre == genre && (stoi(_year) >= year1) && (stoi(_year) <= year2)) {
+		if (node == nullptr) {
+			// adds rating and movie name into node
+			Node* temp = new Node(score, name);
+			node = temp;
+			return node;
+			delete temp;
+		}
+		if (score < node->val) {
+			node->left = insertNameId(node->left, year, genre, name, score);
+		}
+		else if (score > node->val) {
+			node->right = insertNameId(node->right, year, genre, name, score);
 		}
 	}
-}
-
-vector<movie> marathon(double time, unordered_multimap<string, movie> m1) {
-	vector<movie> v;
-	auto iter = m1.begin();
-	map<double, vector<movie>> m2;
-	int ct = 1;
-	for (iter; iter != m1.end(); iter++) {
-		m2[(iter->second.runtime)].push_back(iter->second);
-	}
-	auto iter2 = m2.rbegin();
-	for (iter2; iter2 != m2.rend(); iter2++) {
-		if (iter2->first < time) {
-			for (int i = 0; i < iter2->second.size(); i++) {
-				if (iter2->second[i].runtime < time) {
-					v.push_back(iter2->second[i]);
-					time -= iter2->first;
-				}
-				else {
-					break;
-				}
-			}
-		}
-	}
-	return v;
-}
-
-vector<movie> createMovieVector(double time, unordered_multimap<string, movie> m1) {
-	vector<movie> v;
-	auto iter = m1.begin();
-	map<double, vector<movie>> m2;
-	int ct = 1;
-	for (iter; iter != m1.end(); iter++) {
-		m2[(iter->second.runtime)].push_back(iter->second);
-	}
-	auto iter2 = m2.rbegin();
-	for (iter2; iter2 != m2.rend(); iter2++) {
-		if (iter2->first < time) {
-			for (int i = 0; i < iter2->second.size(); i++) {
-				v.push_back(iter2->second[i]);
-				time -= iter2->first;
-			}
-		}
-	}
-	return v;
-}
-// AVL Tree
-
-struct Node {
-public:
-	int val;
-	string name;
-	Node* left;
-	Node* right;
-	int balancefactor = 0;
-	Node() : val(0), name(""), left(nullptr), right(nullptr) {}
-	Node(int x, string name1) : val(x), name(name1), left(nullptr), right(nullptr) {}
-	Node(int x, string name1, Node* left, Node* right) : val(x), name(name1), left(left), right(right) {}
-};
-
-Node* insertNameId(Node* node, string name, int id) {                           //insert a node, by taking in a root node, a string for the name and an int for the id
-	if (node == nullptr) {														//if node is nullptr, make a new node, else go to the left or right depending on how id compares to node value
-		Node* temp = new Node(id, name);										//then set node's left or right equal to the result of calling insert on the node->left or node->right
-		node = temp;
-		return node;
-		delete temp;
-	}
-	if (id < node->val) {
-		node->left = insertNameId(node->left, name, id);
-	}
-	else if (id > node->val) {
-		node->right = insertNameId(node->right, name, id);
-	}
-	return balance(node);                                   //balance node and return resulting root
+	//balance node and return resulting root
+	return balance(node);                                   
 }
 
 Node* rotateLeft(Node* node) {
