@@ -176,7 +176,6 @@ unordered_multimap<string, movie> createMap(string genre, int year1, int year2) 
 	ifstream movieFile;
 	movieFile.open("movies.csv", ios::in);
 	int numLine = 0;
-	// checks how many lines are in the csv file
 	if (movieFile.is_open()) {
 		getline(movieFile, line);
 		while (getline(movieFile, line)) {
@@ -188,11 +187,8 @@ unordered_multimap<string, movie> createMap(string genre, int year1, int year2) 
 	string _released, _runtime, _score, _star, _votes, _writer, _year;
 	movieFile.open("movies.csv", ios::in);
 	getline(movieFile, line);
-	// loop for the amount of lines in file
 	for (int i = 0; i < numLine; i++) {
-		// first take in the budget
 		getline(movieFile, _budget, ',');
-		// then the company name
 		char d;
 		d = movieFile.get();
 		if (char(d) == '"') {
@@ -204,12 +200,10 @@ unordered_multimap<string, movie> createMap(string genre, int year1, int year2) 
 			movieFile.putback(d);
 			getline(movieFile, _company, ',');
 		}
-		// then the country, director, genre, and gross
 		getline(movieFile, _country, ',');
 		getline(movieFile, _director, ',');
 		getline(movieFile, _genre, ',');
 		getline(movieFile, _gross, ',');
-		// then the name
 		d = movieFile.get();
 		if (char(d) == '"') {
 			getline(movieFile, _name, '"');
@@ -220,7 +214,6 @@ unordered_multimap<string, movie> createMap(string genre, int year1, int year2) 
 			movieFile.putback(d);
 			getline(movieFile, _name, ',');
 		}
-		// then the rating, released date, runtime, score, star, votes, writer, year
 		getline(movieFile, _rating, ',');
 		getline(movieFile, _released, ',');
 		getline(movieFile, _runtime, ',');
@@ -229,10 +222,8 @@ unordered_multimap<string, movie> createMap(string genre, int year1, int year2) 
 		getline(movieFile, _votes, ',');
 		getline(movieFile, _writer, ',');
 		getline(movieFile, _year);
-		// adds values into movie structure
 		movie temp(stoi(_budget), _company, _country, _director, _genre, stoi(_gross), _name, _rating, _released, stoi(_runtime),
 			stod(_score), _star, stoi(_votes), _writer, stoi(_year));
-		// only inserts movies based on the preferred genre and year range
 		if (_genre == genre && (stoi(_year) >= year1) && (stoi(_year) <= year2)) {
 			m.insert({ _name, temp });
 		}
@@ -285,7 +276,7 @@ vector<movie> marathon(double time, unordered_multimap<string, movie> m1) {
 	return v;
 }
 
-vector<movie> select_random(double time, unordered_multimap<string, movie> m1) {
+vector<movie> createMovieVector(double time, unordered_multimap<string, movie> m1) {
 	vector<movie> v;
 	auto iter = m1.begin();
 	map<double, vector<movie>> m2;
@@ -318,88 +309,20 @@ public:
 	Node(int x, string name1, Node* left, Node* right) : val(x), name(name1), left(left), right(right) {}
 };
 
-//insert a node, by taking in a root node, a string for the name and an int for the id
-//if node is nullptr, make a new node, else go to the left or right depending on how id compares to node value
-//then set node's left or right equal to the result of calling insert on the node->left or node->right
-// inserts if year and genre match, if they do, add in rating/score value and movie name
-Node* insertNameId(Node* node, string year, string genre, string name, int score) {  
-
-	// if year matches
-	// if genre matches
-
-	// takes in movies.csv file
-	string line;
-	ifstream movieFile;
-	movieFile.open("movies.csv", ios::in);
-	int numLine = 0;
-	if (movieFile.is_open()) {
-		getline(movieFile, line);
-		while (getline(movieFile, line)) {
-			numLine++;
-		}
-		movieFile.close();
-	}
-	string _budget, _company, _country, _director, _genre, _gross, _name, _rating;
-	string _released, _runtime, _score, _star, _votes, _writer, _year;
-	movieFile.open("movies.csv", ios::in);
-	getline(movieFile, line);
-	for (int i = 0; i < numLine; i++) {
-		getline(movieFile, _budget, ',');
-		char d;
-		d = movieFile.get();
-		if (char(d) == '"') {
-			getline(movieFile, _company, '"');
-			_company = _company.substr(0, _company.length() - 1);
-			getline(movieFile, line, ',');
-		}
-		else {
-			movieFile.putback(d);
-			getline(movieFile, _company, ',');
-		}
-		getline(movieFile, _country, ',');
-		getline(movieFile, _director, ',');
-		getline(movieFile, _genre, ',');
-		getline(movieFile, _gross, ',');
-		d = movieFile.get();
-		if (char(d) == '"') {
-			getline(movieFile, _name, '"');
-			_name = _name.substr(0, _name.length() - 2);
-			getline(movieFile, line, ',');
-		}
-		else {
-			movieFile.putback(d);
-			getline(movieFile, _name, ',');
-		}
-		getline(movieFile, _rating, ',');
-		getline(movieFile, _released, ',');
-		getline(movieFile, _runtime, ',');
-		getline(movieFile, _score, ',');
-		getline(movieFile, _star, ',');
-		getline(movieFile, _votes, ',');
-		getline(movieFile, _writer, ',');
-		getline(movieFile, _year);
-		movie temp(stoi(_budget), _company, _country, _director, _genre, stoi(_gross), _name, _rating, _released, stoi(_runtime),
-			stod(_score), _star, stoi(_votes), _writer, stoi(_year));
-		if (_genre == genre && (stoi(_year) >= year1) && (stoi(_year) <= year2)) {
-			m.insert({ _name, temp });
-		}
-	}
-	movieFile.close();
-
-	if (node == nullptr) {														
-		Node* temp = new Node(score, name);										
+Node* insertNameId(Node* node, string name, int id) {                           //insert a node, by taking in a root node, a string for the name and an int for the id
+	if (node == nullptr) {														//if node is nullptr, make a new node, else go to the left or right depending on how id compares to node value
+		Node* temp = new Node(id, name);										//then set node's left or right equal to the result of calling insert on the node->left or node->right
 		node = temp;
 		return node;
 		delete temp;
 	}
-	if (score < node->val) {
+	if (id < node->val) {
 		node->left = insertNameId(node->left, name, id);
 	}
-	else if (score > node->val) {
+	else if (id > node->val) {
 		node->right = insertNameId(node->right, name, id);
 	}
-	//balance node and return resulting root
-	return balance(node);                                   
+	return balance(node);                                   //balance node and return resulting root
 }
 
 Node* rotateLeft(Node* node) {
