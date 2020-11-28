@@ -11,7 +11,6 @@
 #include <random>
 using namespace std;
 
-/*
 class Random // Taken from given random number generator in COP3503 //MAYBE FOR RANDOM MOVIE SELECTOR
 {
 	// One instance of the x variable, and all instances SHARE this variable
@@ -31,7 +30,18 @@ public:
 		return dist(random);
 	}
 };
-*/
+
+movie select_random(unordered_multimap<string, movie> m1) {
+	vector<movie> v;
+	auto iter = m1.begin();
+	int ct = 1;
+	for (iter; iter != m1.end(); iter++) {
+		v.push_back(iter->second);
+	}
+	Random rand;
+	int randomIndex = rand.Int(0, v.size() - 1); // Generate a random number
+	return v.at(randomIndex);
+}
 
 // movie structure
 struct movie {
@@ -176,6 +186,7 @@ unordered_multimap<string, movie> createMap(string genre, int year1, int year2) 
 	ifstream movieFile;
 	movieFile.open("movies.csv", ios::in);
 	int numLine = 0;
+	// checks how many lines are in the csv file
 	if (movieFile.is_open()) {
 		getline(movieFile, line);
 		while (getline(movieFile, line)) {
@@ -187,8 +198,11 @@ unordered_multimap<string, movie> createMap(string genre, int year1, int year2) 
 	string _released, _runtime, _score, _star, _votes, _writer, _year;
 	movieFile.open("movies.csv", ios::in);
 	getline(movieFile, line);
+	// loop for the amount of lines in file
 	for (int i = 0; i < numLine; i++) {
+		// first take in the budget
 		getline(movieFile, _budget, ',');
+		// then the company name
 		char d;
 		d = movieFile.get();
 		if (char(d) == '"') {
@@ -200,10 +214,12 @@ unordered_multimap<string, movie> createMap(string genre, int year1, int year2) 
 			movieFile.putback(d);
 			getline(movieFile, _company, ',');
 		}
+		// then the country, director, genre, and gross
 		getline(movieFile, _country, ',');
 		getline(movieFile, _director, ',');
 		getline(movieFile, _genre, ',');
 		getline(movieFile, _gross, ',');
+		// then the name
 		d = movieFile.get();
 		if (char(d) == '"') {
 			getline(movieFile, _name, '"');
@@ -214,6 +230,7 @@ unordered_multimap<string, movie> createMap(string genre, int year1, int year2) 
 			movieFile.putback(d);
 			getline(movieFile, _name, ',');
 		}
+		// then the rating, released date, runtime, score, star, votes, writer, year
 		getline(movieFile, _rating, ',');
 		getline(movieFile, _released, ',');
 		getline(movieFile, _runtime, ',');
@@ -222,8 +239,10 @@ unordered_multimap<string, movie> createMap(string genre, int year1, int year2) 
 		getline(movieFile, _votes, ',');
 		getline(movieFile, _writer, ',');
 		getline(movieFile, _year);
+		// adds values into movie structure
 		movie temp(stoi(_budget), _company, _country, _director, _genre, stoi(_gross), _name, _rating, _released, stoi(_runtime),
 			stod(_score), _star, stoi(_votes), _writer, stoi(_year));
+		// only inserts movies based on the preferred genre and year range
 		if (_genre == genre && (stoi(_year) >= year1) && (stoi(_year) <= year2)) {
 			m.insert({ _name, temp });
 		}
@@ -290,6 +309,100 @@ public:
 	Node(double x, movie name1) : val(x), name(name1), left(nullptr), right(nullptr) {}
 	Node(double x, movie name1, Node* left, Node* right) : val(x), name(name1), left(left), right(right) {}
 };
+
+//insert a node, by taking in a root node, a string for the name and an int for the id
+//if node is nullptr, make a new node, else go to the left or right depending on how id compares to node value
+//then set node's left or right equal to the result of calling insert on the node->left or node->right
+// inserts if year and genre match, if they do, add in rating/score value and movie name
+Node* insertNameId(Node* node, int year1, int year2, string genre, string name, int score) {  
+
+	// takes in movies.csv file
+	string line;
+	ifstream movieFile;
+	movieFile.open("movies.csv", ios::in);
+	int numLine = 0;
+	if (movieFile.is_open()) {
+		getline(movieFile, line);
+		while (getline(movieFile, line)) {
+			numLine++;
+		}
+		movieFile.close();
+	}
+	string _budget, _company, _country, _director, _genre, _gross, _name, _rating;
+	string _released, _runtime, _score, _star, _votes, _writer, _year;
+	movieFile.open("movies.csv", ios::in);
+	getline(movieFile, line);
+	for (int i = 0; i < numLine; i++) {
+		// first take in the budget
+		getline(movieFile, _budget, ',');
+		// then the company name
+		char d;
+		d = movieFile.get();
+		if (char(d) == '"') {
+			getline(movieFile, _company, '"');
+			_company = _company.substr(0, _company.length() - 1);
+			getline(movieFile, line, ',');
+		}
+		else {
+			movieFile.putback(d);
+			getline(movieFile, _company, ',');
+		}
+		// then the country, director, genre, and gross
+		getline(movieFile, _country, ',');
+		getline(movieFile, _director, ',');
+		getline(movieFile, _genre, ',');
+		getline(movieFile, _gross, ',');
+		// then the name
+		d = movieFile.get();
+		if (char(d) == '"') {
+			getline(movieFile, _name, '"');
+			_name = _name.substr(0, _name.length() - 2);
+			getline(movieFile, line, ',');
+		}
+		else {
+			movieFile.putback(d);
+			getline(movieFile, _name, ',');
+		}
+		// then the rating, released date, runtime, score, star, votes, writer, year
+		getline(movieFile, _rating, ',');
+		getline(movieFile, _released, ',');
+		getline(movieFile, _runtime, ',');
+		getline(movieFile, _score, ',');
+		getline(movieFile, _star, ',');
+		getline(movieFile, _votes, ',');
+		getline(movieFile, _writer, ',');
+		getline(movieFile, _year);
+		// adds values into movie structure
+		movie temp(stoi(_budget), _company, _country, _director, _genre, stoi(_gross), _name, _rating, _released, stoi(_runtime),
+			stod(_score), _star, stoi(_votes), _writer, stoi(_year));
+
+		// begins inserting nodes into AVL Tree
+
+		// only inserts movies based on the preferred genre and year range
+		// if there is no node, make new node
+		if (_genre == genre && (stoi(_year) >= year1) && (stoi(_year) <= year2)) {
+			if (node == nullptr) {
+				// adds rating and movie name into node
+				Node* temp = new Node(score, name);
+				node = temp;
+				return node;
+				delete temp;
+			}
+			// if score is less than node's val, traverse through the tree on the left
+			if (score < node->val) {
+				node->left = insertNameId(node->left, year1, year2, genre, name, score);
+			}
+			// if score is greater than node's val, traverse through the tree on the right
+			else if (score > node->val) {
+				node->right = insertNameId(node->right, year1, year2, genre, name, score);
+			}
+		}
+	}
+	movieFile.close();
+	
+	//balance node and return resulting root
+	return balance(node);                             // idk if i need to include this in the for loop      
+}
 
 Node* rotateLeft(Node* node) {
 	Node* grandchild = node->right->left;
@@ -425,12 +538,22 @@ void printInorder(Node* node) {						//place the order of the nodes using In ord
 	}
 }
 
+// prints the AVL Tree in inorder order
+string printTree(Node* node) {
+	//your code here
+	if (node == nullptr) { return ""; }
+	string rightTree = printTree(node->right);
+	cout << node->name << "  rating: " << node->val << endl;
+	string leftTree = printTree(node->left);	
+	//return rightTree + node->name + ", " + node->val + " " + leftTree;
+}
+
 
 int main() {
 	unordered_map<int, string> genre = { {97, "Action"}, {98, "Adventure"}, {99, "Animation"}, {100, "Biography"}, {101, "Comedy"}, {102, "Crime"}, {103, "Drama"}, {104, "Family"}, {105, "Fantasy"}, {106, "Horror"}, {107, "Musical"}, {108, "Mystery"}, {109, "Romance"}, {110, "Sci-Fi"}, {111, "Thriller"}, {112, "War"}, {113, "Western"} };
 	unordered_map<int, pair<int, int>> year = { {97, {1986, 1990}}, {98, {1991, 1995}}, {99, {1996, 2000}}, {100, {2001, 2005}}, {101, {2006, 2010}}, {102, {2011, 2016}}, {103, {1986, 2016}} };
 	unordered_multimap<string, movie> m1;
-	Node* tree = new Node();
+	
 	//---------------------PRINTS INITIAL MENU---------------------------------------
 	cout << setfill('=') << setw(51);
 	cout << "\n";
