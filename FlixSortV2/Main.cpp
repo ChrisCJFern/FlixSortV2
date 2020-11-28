@@ -429,7 +429,7 @@ void recalcBalanceFactor(Node* node) {
 //then set node's left or right equal to the result of calling insert on the node->left or node->right
 // inserts if year and genre match, if they do, add in rating/score value and movie name
 Node* insertNameId(Node* node, int year1, int year2, string genre) {  
-	Node* root = new Node();
+	//Node* root = new Node();
 	// takes in movies.csv file
 	string line;
 	ifstream movieFile;
