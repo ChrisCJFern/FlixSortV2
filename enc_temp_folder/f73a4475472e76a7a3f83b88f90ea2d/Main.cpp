@@ -9,10 +9,10 @@
 #include <unordered_map>
 #include <map>
 #include <random>
+
 using namespace std;
 
-/*
-class Random // Taken from given random number generator in COP3503 //MAYBE FOR RANDOM MOVIE SELECTOR
+class Random // Taken from given random number generator in COP3503
 {
 	// One instance of the x variable, and all instances SHARE this variable
 	// static variables/functions exist for the lifetime of your program
@@ -31,9 +31,7 @@ public:
 		return dist(random);
 	}
 };
-*/
 
-// creates movie structure
 struct movie {
 	unsigned int budget = 0;
 	string company = "";
@@ -51,7 +49,6 @@ struct movie {
 	string writer = "";
 	int year = 0;
 
-	// default constructor
 	movie() {
 		unsigned int budget = 0;
 		string company = "";
@@ -69,8 +66,6 @@ struct movie {
 		string writer = "";
 		int year = 0;
 	}
-
-	// constructor
 	movie(unsigned int _budget, string _company, string _country, string _director, string _genre, unsigned int _gross, string _name,
 		string _rating, string _releaseDate, int _runtime, double _score, string _star, int _votes, string _writer, int _year) {
 		budget = _budget;
@@ -230,7 +225,7 @@ unordered_multimap<string, movie> createMap(string genre, int year1, int year2) 
 	return m;
 }
 
-void printMap(unordered_multimap<string, movie> m1) {
+unordered_multimap<string, movie> printMap(unordered_multimap<string, movie> m1) {
 	auto iter = m1.begin();
 	map<double, vector<movie>> m2;
 	cout << m1.size() << endl;
@@ -242,10 +237,11 @@ void printMap(unordered_multimap<string, movie> m1) {
 	auto iter2 = m2.rbegin();								//https://www.geeksforgeeks.org/how-to-traverse-a-stl-map-in-reverse-direction/
 	for (iter2; iter2 != m2.rend(); iter2++) {
 		for (int i = 0; i < iter2->second.size(); i++) {
-			cout << ct << ". " << iter2->second[i].name << " | " << iter2->second[i].director << " | " << iter2->second[i].runtime << " minutes" << endl;
+			cout << ct << ". " << iter2->second[i].name << " " << iter2->second[i].director << " " << iter2->second[i].runtime << endl;
 			ct++;
 		}
 	}
+	return m1;
 }
 
 vector<movie> marathon(double time, unordered_multimap<string, movie> m1) {
