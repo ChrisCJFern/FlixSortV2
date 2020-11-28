@@ -373,7 +373,6 @@ Node* insertNameId(Node* node, int year1, int year2, string genre, string name, 
 				// adds rating and movie name into node
 				Node* root = new Node(stod(_score), temp);
 				return root;
-				delete temp;
 			}
 			// if score is less than node's val, traverse through the tree on the left
 			if (score <= node->val) {
@@ -530,7 +529,7 @@ string printTree(Node* node) {
 	//your code here
 	if (node == nullptr) { return ""; }
 	string rightTree = printTree(node->right);
-	cout << node->name << "  rating: " << node->val << endl;
+	cout << node->name.name << "  rating: " << node->val << endl;
 	string leftTree = printTree(node->left);	
 	//return rightTree + node->name + ", " + node->val + " " + leftTree;
 }
