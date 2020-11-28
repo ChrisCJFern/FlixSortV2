@@ -272,6 +272,116 @@ vector<movie> marathon(double time, unordered_multimap<string, movie> m1) {
 	return v;
 }
 
+
+struct Node {
+public:
+	int val;
+	string name;
+	Node* left;
+	Node* right;
+	int balancefactor = 0;
+	Node() : val(0), name(""), left(nullptr), right(nullptr) {}
+	Node(int x, string name1) : val(x), name(name1), left(nullptr), right(nullptr) {}
+	Node(int x, string name1, Node* left, Node* right) : val(x), name(name1), left(left), right(right) {}
+};
+
+
+Node* rotateLeft(Node* node) {
+	Node* grandchild = node->right->left;               //left rotation on node
+	Node* newParent = node->right;
+	node->right = grandchild;
+	newParent->left = node;
+	return newParent;
+}
+
+Node* rotateRight(Node* node) {
+	Node* grandchild = node->left->right;				 //right rotation on node
+	Node* newParent = node->left;
+	node->left = grandchild;
+	newParent->right = node;
+	return newParent;
+}
+
+Node* rotateLeftRight(Node* node) {
+	node->left = rotateLeft(node->left);				 //left right rotation on node
+	return rotateRight(node);
+}
+
+Node* rotateRightLeft(Node* node) {                     //right left rotation on node
+	node->right = rotateRight(node->right);
+	return rotateLeft(node);
+}
+
+int height(Node* node) {                                      //calculate the left height of a node by adding one for every 
+	if (node == nullptr) {										//left node that exists and do the same for the right side
+		return 0;
+	}																		//return the max of the left or right value 
+	if (node->left == nullptr && node->right == nullptr) {
+		return 1;
+	}
+	else {
+		int leftHeight = 1 + height(node->left);
+		int rightHeight = 1 + height(node->right);
+		if (leftHeight >= rightHeight) {
+			return leftHeight;
+		}
+		else {
+			return rightHeight;
+		}
+	}
+}
+
+int calcBalanceFactor(Node* node) {						//calculate the balance factor of a node by
+	if (node == nullptr) {								// calling the height function on node->left and node->right 
+		return 0;										// and taking the difference of left - right
+	}
+	if (node->left == nullptr && node->right == nullptr) {
+		return 0;
+	}
+	else {
+		int left = height(node->left);
+		int right = height(node->right);
+		int balance = left - right;
+		node->balancefactor = balance;
+		return balance;
+	}
+}
+
+Node* balance(Node* node) {
+	node->balancefactor = calcBalanceFactor(node);                         //find the correct rotation to implement on the inputted node
+	if (node->balancefactor > 1) {
+		node->left->balancefactor = calcBalanceFactor(node->left);
+		if (node->left->balancefactor > 0) {
+			return rotateRight(node);                                           //if both balance factor of node and node->left  are (+), do a right rotation
+		}
+		else if (node->left->balancefactor < 0) {     //if balance factor of node is (+) and node->left is (-), do a left right rotation
+			return rotateLeftRight(node);
+		}
+	}
+	if (node->balancefactor < -1) {
+		node->right->balancefactor = calcBalanceFactor(node->right);
+		if (node->right->balancefactor < 0) {
+			return rotateLeft(node);                                            //if balance factors of node and node->right are (-), do a left rotation
+		}
+		else if (node->right->balancefactor > 0) {
+			return rotateRightLeft(node);                                       //if balance factor of node is (-) and node->right is (+), do a right left rotation
+		}
+	}
+	return node;
+}
+
+void recalcBalanceFactor(Node* node) {
+	if (node) {
+		calcBalanceFactor(node);
+		calcBalanceFactor(node->left);
+		calcBalanceFactor(node->right);
+	}
+}
+
+//root = insertNameId(root, name, id);
+//recalcBalanceFactor(root);
+
+
 int main() {
 	unordered_map<int, string> genre = { {97, "Action"}, {98, "Adventure"}, {99, "Animation"}, {100, "Biography"}, {101, "Comedy"}, {102, "Crime"}, {103, "Drama"}, {104, "Family"}, {105, "Fantasy"}, {106, "Horror"}, {107, "Musical"}, {108, "Mystery"}, {109, "Romance"}, {110, "Sci-Fi"}, {111, "Thriller"}, {112, "War"}, {113, "Western"} };
 	unordered_map<int, pair<int, int>> year = { {97, {1986, 1990}}, {98, {1991, 1995}}, {99, {1996, 2000}}, {100, {2001, 2005}}, {101, {2006, 2010}}, {102, {2011, 2016}}, {103, {1986, 2016}} };
@@ -330,225 +440,3 @@ int main() {
 	} while (input == "Y" || input == "y");
 	return 0;
 }
-
-
-/*for (int i = 0; i < choices.size(); i++) {
-	cout << choices[i] << ". ";
-	switch (choices[i]) {
-	case 1:
-		cout << "How much time do you have? (in minutes)" << endl;
-		break;
-	case 2:
-		cout << "Production Company" << endl;
-					//list of options from a map or set?									//made into a method
-		break;
-	case 3:
-		cout << "Genre: " << endl;
-					//menu list of options from a set ?
-		break;
-	case 4:
-		cout << "Rating" << endl;
-		break;
-	case 5:
-		cout << "Release Year" << endl;
-		break;
-	case 6:
-		cout << "Director" << endl;
-		break;
-	case 7:
-		cout << "Starring actor" << endl;
-		break;
-	}
-}*/
-/*------------------------SEARCH AGAIN---------------------------------------------
-//cout << endl;
-cout << setfill('=') << setw(51);																		//made into function but here just in case
-cout << "\n";
-cout << "|        Would you like to search again?         |" << endl;
-cout << "|                 Enter: Y or N                  |" << endl;
-cout << setfill('=') << setw(51);
-cout << "\n";
-string input;
-cin >> input;
-while (input == "Y" || input == "y") {
-	choices = menuPrint();
-	runChoices(choices);
-	cout << endl;
-	cout << setfill('=') << setw(51);
-	cout << "\n";
-	cout << "|        Would you like to search again?         |" << endl;
-	cout << "|                 Enter: Y or N                  |" << endl;
-	cout << setfill('=') << setw(51);
-	cout << "\n";
-	cin >> input;
-}
-cout << "Enjoy the movie!" << endl;*/
-////////////////////////////////////////////////////////////////////////////////////
-
-
-
-//graph of genre to a vector of movie objects.
-
-// genre's
-// a. Action
-// b. Adventure
-// c. Animation
-// d. Biography
-// e. Comedy
-// f. Crime
-// g. Drama
-// h. Family
-// i. Fantasy
-// j. Horror
-// k. Musical
-// l. Mystery
-// m. Romance
-// n. Sci-Fi
-// o. Thriller
-// p. War
-// q. Western
-
-/*
-
-vector<int> menuPrint() {
-	cout << setfill('=') << setw(51);
-	cout << "\n";
-	cout << "|     How would you like to base your search?    |" << endl;
-	cout << "|Enter the numbers of the choices you would like |" << endl;
-	cout << "|to search by in the following format: # # # ..  |" << endl;
-	cout << "|1. Company                                      |" << endl;          //what genre are you thinking
-	cout << "|2. Genre                                        |" << endl;           //indexed list
-	cout << "|3. Rating                                       |" << endl;
-	cout << "|4. Release year (search by decade)              |" << endl;
-	cout << "|5. Director                                     |" << endl;
-	cout << "|6. Starring actor/actress                       |" << endl;
-	cout << "|7. Exit                                         |" << endl;
-	cout << setfill('=') << setw(51);
-	cout << "\n";
-	string choice;
-	vector<int> choices;
-	while (true) {
-		cin >> choice;
-		try {
-			if (stoi(choice)) {
-				int num = stoi(choice);
-				if (num == 7) {
-					choices.clear();
-					choices.push_back(7);
-					break;
-				}
-				if (find(choices.begin(), choices.end(), num) == choices.end()) {
-					choices.push_back(num);
-				}
-			}
-		}
-		catch (const invalid_argument&) {
-			cout << choice << " is an invalid input." << endl;
-			cout << "Please enter your input in the format: # # #" << endl;
-			choices.clear();
-			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');          //found information about cin.ignore() -> http://www.cplusplus.com/reference/istream/istream/ignore/
-		}
-		if (cin.peek() == '\n') {
-			break;
-		}
-	}
-	sort(choices.begin(), choices.end());
-	return choices;
-}
-
-bool runChoices(vector<int> choices) {
-	for (int i = 0; i < choices.size(); i++) {
-		cout << choices[i] << ". ";
-		switch (choices[i]) {
-		case 1:
-			cout << "hi";
-			//cout << "How much time do you have? (in minutes)" << endl;
-			break;
-		case 1:
-			cout << "Production Company" << endl;
-			//list of options from a map or set?									//do methods for each here?
-			break;
-		case 2:
-			cout << "Genre: " << endl;
-			//menu list of options from a set ?
-			break;
-		case 3:
-			cout << "Rating" << endl;
-			break;
-		case 4:
-			cout << "Release Year" << endl;
-			break;
-		case 5:
-			cout << "Director" << endl;
-			break;
-		case 7:
-			cout << "goodbye" << endl;
-			return false;
-			break;
-		default:
-			cout << "===";
-			break;
-		}
-	}
-	return true;
-}
-
-void searchAgain() {
-	string input;
-	vector<int> choices;
-	do {
-		cout << setfill('=') << setw(51);
-		cout << "\n";
-		cout << "|        Would you like to search again?         |" << endl;
-		cout << "|                 Enter: Y or N                  |" << endl;
-		cout << setfill('=') << setw(51);
-		cout << "\n";
-		cin >> input;
-		if (input == "Y" || input == "y") {
-			choices = menuPrint();
-			runChoices(choices);
-		}
-	} while (input == "Y" || input == "y");
-	cout << "Enjoy the movie!" << endl;
-}
-
-
-
-cout << setfill('=') << setw(51);
-	cout << "\n";
-	cout << "|      What genre movie were you thinking?       |" << endl;
-	cout << "|a. Action                                       |" << endl;
-	cout << "|b. Adventure                                    |" << endl;
-	cout << "|c. Animation                                    |" << endl;          //what genre are you thinking
-	cout << "|d. Biography                                    |" << endl;           //indexed list
-	cout << "|e. Comedy                                       |" << endl;
-	cout << "|f. Crime                                        |" << endl;
-	cout << "|g. Drama                                        |" << endl;
-	cout << "|h. Family                                       |" << endl;
-	cout << "|i. Fantasy                                      |" << endl;
-	cout << "|j. Horror                                       |" << endl;
-	cout << "|k. Musical                                      |" << endl;
-	cout << "|l. Mystery                                      |" << endl;
-	cout << "|m. Romance                                      |" << endl;
-	cout << "|n. Sci-Fi                                       |" << endl;
-	cout << "|o. Thriller                                     |" << endl;
-	cout << "|p. War                                          |" << endl;
-	cout << "|q. Western                                      |" << endl;
-	cout << "|1. Exit                                         |" << endl;
-	cout << setfill('=') << setw(51);
-	cout << "\n";
-
-	-------------------
-	cout << setfill('=') << setw(51);
-	cout << "\n";
-	cout << "|      What genre movie were you thinking?       |" << endl;
-	cout << "|   a. Action     b. Adventure   c. Animation    |" << endl;
-	cout << "|   d. Biography  e. Comedy      f. Crime        |" << endl;
-	cout << "|   g. Drama      h. Family      i. Fantasy      |" << endl;          //what genre are you thinking
-	cout << "|   j. Horror     k. Musical     l. Mystery      |" << endl;           //indexed list
-	cout << "|   m. Romance    n. Sci-Fi      o. Thriller     |" << endl;
-	cout << "|   p. War        q. Western                     |" << endl;
-	cout << "|1. Exit                                         |" << endl;
-	cout << setfill('=') << setw(51);
-	cout << "\n";
-*/
