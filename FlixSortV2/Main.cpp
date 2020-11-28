@@ -282,6 +282,21 @@ public:
 	Node(int x, string name1, Node* left, Node* right) : val(x), name(name1), left(left), right(right) {}
 };
 
+Node* insertNameId(Node* node, string name, int id) {                           //insert a node, by taking in a root node, a string for the name and an int for the id
+	if (node == nullptr) {														//if node is nullptr, make a new node, else go to the left or right depending on how id compares to node value
+		Node* temp = new Node(id, name);										//then set node's left or right equal to the result of calling insert on the node->left or node->right
+		node = temp;
+		return node;
+		delete temp;
+	}
+	if (id < node->val) {
+		node->left = insertNameId(node->left, name, id);
+	}
+	else if (id > node->val) {
+		node->right = insertNameId(node->right, name, id);
+	}
+	return balance(node);                                   //balance node and return resulting root
+}
 
 Node* rotateLeft(Node* node) {
 	Node* grandchild = node->right->left;               //left rotation on node
