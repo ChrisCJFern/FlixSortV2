@@ -594,7 +594,7 @@ void printInorder(Node* node) {
 	}
 	else {
 		printInorder(node->right);
-		cout << node->name.name << " | " << node->name.company << " | " << node->name.director << " | " << node->name.runtime << " minutes" << endl;
+		cout << node->name.score << node->name.name << " | " << node->name.company << " | " << node->name.director << " | " << node->name.runtime << " minutes" << endl;
 		printInorder(node->left);
 	}
 }
@@ -652,7 +652,8 @@ int main() {
 						cout << i << ". " << movies[i].name << " " << movies[i].runtime << endl;
 					}*/
 
-					selectRandom(m1); // Asks if user wants to select a random movie
+					if (m1.size() == 0)
+						selectRandom(m1); // Asks if user wants to select a random movie
 
 					cout << setfill('=') << setw(51);
 					cout << "\n";
