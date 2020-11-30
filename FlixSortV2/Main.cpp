@@ -242,6 +242,40 @@ int chooseYear() {
 	return choice;
 }
 
+int chooseOutput() {
+	string input;
+	int choice = 0;
+	bool chosen = false;
+	cout << setfill('=') << setw(51);
+	cout << "\n";
+	cout << "|   Which data structure would you like to use?  |" << endl;
+	cout << "|      (a) Binary Search Tree  (c) Both          |" << endl;
+	cout << "|      (b) Multimap            (0) Exit          |" << endl;
+	cout << setfill('=') << setw(51);
+	cout << "\n";
+	cout << "Please input the letter of the selected structure: ";
+	while (!chosen) {
+		getline(cin, input);
+		if (input == "0") {
+			choice = 0;
+			chosen = true;
+		}
+		else {
+			if (input.length() != 1 || input[0] < 'A' || (input[0] < 'a' && input[0] > 'C') || input[0] > 'c') {
+				cout << input << " is an invalid input." << endl;
+				cout << "Please enter your input in the correct format: ";
+				input.clear();
+			}
+			else {
+				chosen = true;
+				choice = tolower(int(input[0]));
+				break;
+			}
+		}
+	}
+	return choice;
+}
+
 // creates a multimap based on user's preferences with greatest to lowest rank
 unordered_multimap<string, movie> createMap(string genre, int year1, int year2, vector<string> ratings) {
 	unordered_multimap<string, movie> m;              //https://www.cplusplus.com/reference/map/multimap/
@@ -626,6 +660,7 @@ int main() {
 	int choice;
 	int choice2;
 	int choice3;
+	int choice4;
 	string throwaway;
 	int count = 1;
 	do {
@@ -636,57 +671,86 @@ int main() {
 			if (choice2 != 0) {
 				choice3 = chooseRating();
 				if (choice3 != 0) {
-					auto startMap = high_resolution_clock::now();
-					// prints out map options
-					cout << "Here is a list of " << genre[choice] << " movies from the year " << year[choice2].first << " to " << year[choice2].second << "." << endl;
-					cout << "Movies from the map: " << endl;
-					m1 = createMap(genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
-					printMap(m1);
-					auto stopMap = high_resolution_clock::now();
-					auto durationMap = duration_cast<microseconds>(stopMap - startMap);
-				    auto startTree = high_resolution_clock::now();
-					// prints out tree options
-					cout << endl << "Movies from the AVL tree: " << endl;
-					tree = createTree(tree, genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
-					printInorder(tree, count);
-					auto stopTree = high_resolution_clock::now();
-					auto durationTree = duration_cast<microseconds>(stopTree - startTree);
-					// outputs times
-					cout << endl << "Time stats: " << endl;
-					cout << "Time taken to create and print the map: " << durationMap.count() << " microseconds" << endl;
-					cout << "Time taken to create and print the tree: " << durationTree.count() << " microseconds" << endl;
-					cout << "The difference in time is " << abs(durationMap.count() - durationTree.count()) << " microseconds." << endl;
-					if (durationMap.count() > durationTree.count()) { // if map was faster
-						cout << "It was " << abs(durationMap.count() - durationTree.count()) << " microseconds faster to use a map than to use a tree." << endl;
-					}
-					else if (durationMap.count() < durationTree.count()) { // if tree was faster
-						cout << "It was " << abs(durationMap.count() - durationTree.count()) << " microseconds faster to use a tree than to use a map." << endl;
-					}
-					else { // if both took the same amount of time
-						cout << "Both the tree and map took the same amount of time to create and print." << endl;
-					}
-					cout << "How much time do you have? Enter in minutes: ";     //testing how to marathon?
-					cin >> mins;
-					vector<movie> movies;
-					movies = marathon(mins, m1);
-					int counter = 1;
-					for (int i = 0; i < movies.size(); i++) {
-						cout << counter << ". " << movies[i].name << " " << movies[i].runtime << endl;
-						counter++;
-					}
-					
+					choice4 = chooseOutput();
+					if (choice4 != 0) {
+						if (choice4 == 97) {
+							auto startMap = high_resolution_clock::now();
+							// prints out map options
+							cout << "Here is a list of " << genre[choice] << " movies from the year " << year[choice2].first << " to " << year[choice2].second << "." << endl;
+							cout << "Movies from the map: " << endl;
+							m1 = createMap(genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
+							printMap(m1);
+							auto stopMap = high_resolution_clock::now();
+							auto durationMap = duration_cast<microseconds>(stopMap - startMap);
+							cout << "Time taken to create and print the map: " << durationMap.count() << " microseconds" << endl;
+						}
+						else if (choice4 == 98) {
+							auto startTree = high_resolution_clock::now();
+							// prints out tree options
+							cout << endl << "Movies from the AVL tree: " << endl;
+							tree = createTree(tree, genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
+							printInorder(tree, count);
+							auto stopTree = high_resolution_clock::now();
+							auto durationTree = duration_cast<microseconds>(stopTree - startTree);
+							cout << "Time taken to create and print the tree: " << durationTree.count() << " microseconds" << endl;
+						}
+						else {
+							auto startMap = high_resolution_clock::now();
+							// prints out map options
+							cout << "Here is a list of " << genre[choice] << " movies from the year " << year[choice2].first << " to " << year[choice2].second << "." << endl;
+							cout << "Movies from the map: " << endl;
+							m1 = createMap(genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
+							printMap(m1);
+							auto stopMap = high_resolution_clock::now();
+							auto durationMap = duration_cast<microseconds>(stopMap - startMap);
+							auto startTree = high_resolution_clock::now();
+							// prints out tree options
+							cout << endl << "Movies from the AVL tree: " << endl;
+							tree = createTree(tree, genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
+							printInorder(tree, count);
+							auto stopTree = high_resolution_clock::now();
+							auto durationTree = duration_cast<microseconds>(stopTree - startTree);
+							// outputs times
+							cout << endl << "Time stats: " << endl;
+							cout << "Time taken to create and print the map: " << durationMap.count() << " microseconds" << endl;
+							cout << "Time taken to create and print the tree: " << durationTree.count() << " microseconds" << endl;
+							if (durationMap.count() > durationTree.count()) { // if map was faster
+								cout << "It was " << abs(durationMap.count() - durationTree.count()) << " microseconds faster to use a map than to use a tree." << endl;
+							}
+							else if (durationMap.count() < durationTree.count()) { // if tree was faster
+								cout << "It was " << abs(durationMap.count() - durationTree.count()) << " microseconds faster to use a tree than to use a map." << endl;
+							}
+							else { // if both took the same amount of time
+								cout << "Both the tree and map took the same amount of time to create and print." << endl;
+							}
+						}
 
-					if (m1.size() == 0)
-						selectRandom(m1); // Asks if user wants to select a random movie
+						cout << "How much time do you have? Enter in minutes: ";     //testing how to marathon?
+						cin >> mins;
+						vector<movie> movies;
+						movies = marathon(mins, m1);
+						int counter = 1;
+						for (int i = 0; i < movies.size(); i++) {
+							cout << counter << ". " << movies[i].name << " " << movies[i].runtime << endl;
+							counter++;
+						}
 
-					cout << setfill('=') << setw(51);
-					cout << "\n";
-					cout << "|        Would you like to search again?         |" << endl;
-					cout << setfill('=') << setw(51);
-					cout << "\n";
-					cout << "Enter Y or N: ";
-					cin >> input;
-					getline(cin, throwaway);
+
+						if (m1.size() == 0)
+							selectRandom(m1); // Asks if user wants to select a random movie
+
+						cout << setfill('=') << setw(51);
+						cout << "\n";
+						cout << "|        Would you like to search again?         |" << endl;
+						cout << setfill('=') << setw(51);
+						cout << "\n";
+						cout << "Enter Y or N: ";
+						cin >> input;
+						getline(cin, throwaway);
+					}
+					else {
+						input = "n";
+					}
 				}
 				else {
 					input = "n";
