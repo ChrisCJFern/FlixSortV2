@@ -761,6 +761,7 @@ int main() {
 							}
 						}
 
+						/*
 						cout << "How much time do you have? Enter in minutes: ";     //testing how to marathon?
 						cin >> mins;
 						vector<movie> movies;
@@ -770,6 +771,7 @@ int main() {
 							cout << counter << ". " << movies[i].name << " " << movies[i].runtime << endl;
 							counter++;
 						}
+						*/
 
 
 					if (m1.size() != 0) {
