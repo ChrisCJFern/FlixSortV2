@@ -139,7 +139,6 @@ void selectRandom(unordered_multimap<string, movie> m1) {
 	cout << "\n";
 	cout << "Would you like us to select a movie from this list?" << endl;
 	cout << "Enter Y or N: ";
-	//cout << setfill('=') << setw(51);
 	cin >> input;
 	getline(cin, throwaway);
 	input = tolower(input[0]);
@@ -147,6 +146,8 @@ void selectRandom(unordered_multimap<string, movie> m1) {
 		//cout << endl;
 		cout << "\nRandom Movie: " << selectRandomHelper(m1).name << endl;
 	}
+	cout << setfill('=') << setw(51);
+	cout << "\n";
 }
 
 
@@ -824,6 +825,7 @@ int main() {
 							selectRandom(m1); // Asks if user wants to select a random movie
 							printMarathon(m1);
 						}
+
 						cout << endl;
 						cout << setfill('=') << setw(51);
 						cout << "\n";
