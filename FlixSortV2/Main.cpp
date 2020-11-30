@@ -638,6 +638,42 @@ void printInorder(Node* node, int& counter) {
 	}
 }
 
+void printMarathon(unordered_multimap<string, movie> m1) {
+	cout << "Would you like to binge watch some movies? [Y or N]" << endl;
+	string yesOrNoStr = "";
+	bool isMarathon = false;
+	while (isMarathon == false) {
+		isMarathon = false;
+		cin >> yesOrNoStr;
+		try {
+			yesOrNoStr = tolower(yesOrNoStr[0]);
+			if (yesOrNoStr == "y" || yesOrNoStr == "n") {
+				if (yesOrNoStr == "n")
+					return;
+				isMarathon = true;
+			}
+			else {
+				throw yesOrNoStr;
+			}
+		}
+		catch (...) {
+			isMarathon = false;
+			cout << "Invalid input. Please enter Y or N." << endl;
+		}
+	}
+
+	int mins;
+		cout << "How much time do you have? Enter in minutes: ";     //testing how to marathon?
+		cin >> mins;
+	vector<movie> movies;
+	movies = marathon(mins, m1);
+	int counter = 1;
+	for (int i = 0; i < movies.size(); i++) {
+		cout << counter << ". " << movies[i].name << " " << movies[i].runtime << endl;
+		counter++;
+	}
+}
+
 int main() {
 	unordered_map<int, string> genre = { {97, "Action"}, {98, "Adventure"}, {99, "Animation"}, {100, "Biography"}, {101, "Comedy"}, {102, "Crime"}, {103, "Drama"}, {104, "Family"}, {105, "Fantasy"}, {106, "Horror"}, {107, "Musical"}, {108, "Mystery"}, {109, "Romance"}, {110, "Sci-Fi"}, {111, "Thriller"}, {112, "War"}, {113, "Western"} };
 	unordered_map<int, vector<string>> rating = { {97, {"G"}}, {98, {"PG", "TV-PG"}}, {99, {"PG-13", "TV-14"}}, {100, {"TV-MA"}}, {101, {"R"}}, {102, {"NC-17"}}, { 103, {"UNRATED", "NOT RATED", "Not specified"}}, { 104, {"B", "B15"}}, {105, {}} };
@@ -725,6 +761,7 @@ int main() {
 							}
 						}
 
+						/*
 						cout << "How much time do you have? Enter in minutes: ";     //testing how to marathon?
 						cin >> mins;
 						vector<movie> movies;
@@ -734,10 +771,13 @@ int main() {
 							cout << counter << ". " << movies[i].name << " " << movies[i].runtime << endl;
 							counter++;
 						}
+						*/
 
 
-						if (m1.size() == 0)
-							selectRandom(m1); // Asks if user wants to select a random movie
+					if (m1.size() != 0) {
+						printMarathon(m1);
+						selectRandom(m1); // Asks if user wants to select a random movie
+					}
 
 						cout << setfill('=') << setw(51);
 						cout << "\n";
