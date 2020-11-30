@@ -104,6 +104,12 @@ movie selectRandomHelper(unordered_multimap<string, movie> m1) {
 	return v.at(randomIndex);
 }
 
+void minutesToHours(int minutes) {
+	int hours = minutes / 60;
+	minutes %= 60;
+	cout << hours << " hour(s) " << minutes << " minute(s)" << endl;
+}
+
 void selectRandom(unordered_multimap<string, movie> m1) {
 	string input;
 	string throwaway;
@@ -373,8 +379,8 @@ void printMap(unordered_multimap<string, movie> m1) {
 		cout << "#. Movie | Company | Director | Runtime (in mins)" << endl;
 		for (iter2; iter2 != m2.rend(); iter2++) {
 			for (int i = 0; i < iter2->second.size(); i++) {
-				cout << ct << ". ";
-				cout << iter2->second[i].name << " | " << iter2->second[i].company << " | " << iter2->second[i].director << " | " << iter2->second[i].runtime << " minutes" << endl;
+				cout << ct << ". " << iter2->second[i].name << " | " << iter2->second[i].company << " | " << iter2->second[i].director << " | ";
+				minutesToHours(iter2->second[i].runtime);
 				ct++;
 			}
 		}
@@ -634,7 +640,8 @@ void printInorder(Node* node, int& counter) {
 	else {
 		printInorder(node->right, counter);
 		cout << count(counter) << ". ";
-		cout << node->name.name << " | " << node->name.company << " | " << node->name.director << " | " << node->name.runtime << " minutes" << endl;
+		cout << node->name.name << " | " << node->name.company << " | " << node->name.director << " | ";
+		minutesToHours(node->name.runtime);
 		printInorder(node->left, counter);
 	}
 }
@@ -725,7 +732,8 @@ int main() {
 				if (choice3 != 0) {
 					choice4 = chooseOutput();
 					if (choice4 != 0) {
-						if (choice4 == 97) {
+						m1 = createMap(genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
+						if (choice4 == 97) { // 97 = 'a'
 							auto startMap = high_resolution_clock::now();
 							// prints out map options
 							cout << "Here is a list of " << genre[choice] << " movies from the year " << year[choice2].first << " to " << year[choice2].second << "." << endl;
