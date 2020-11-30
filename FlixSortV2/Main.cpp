@@ -508,16 +508,6 @@ void recalcBalanceFactor(Node* node) {
 		calcBalanceFactor(node->right);
 	}
 }
-void printInorder(Node* node) {
-	if (!node) {
-		return;
-	}
-	else {
-		printInorder(node->right);
-		cout << node->name.name <<  " | " << node->name.company << " | " << node->name.director << " | " << node->name.runtime << " minutes" << endl;
-		printInorder(node->left);
-	}
-}
 
 //insert a node, by taking in a root node, a string for the name and an int for the id
 //if node is nullptr, make a new node, else go to the left or right depending on how id compares to node value
@@ -669,7 +659,7 @@ int main() {
 					else { // if both took the same amount of time
 						cout << "Both the tree and map took the same amount of time to create and print." << endl;
 					}
-					/*cout << "How much time do you have? Enter in minutes: ";     //testing how to marathon?
+					cout << "How much time do you have? Enter in minutes: ";     //testing how to marathon?
 					cin >> mins;
 					vector<movie> movies;
 					movies = marathon(mins, m1);
@@ -678,6 +668,7 @@ int main() {
 						cout << counter << ". " << movies[i].name << " " << movies[i].runtime << endl;
 						counter++;
 					}
+					
 
 					if (m1.size() == 0)
 						selectRandom(m1); // Asks if user wants to select a random movie
