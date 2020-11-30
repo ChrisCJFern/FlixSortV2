@@ -370,10 +370,11 @@ void printMap(unordered_multimap<string, movie> m1) {
 			m2[(iter->second.score)].push_back(iter->second);
 		}
 		auto iter2 = m2.rbegin();								//https://www.geeksforgeeks.org/how-to-traverse-a-stl-map-in-reverse-direction/
-		cout << " Movie | Company | Director | Runtime (in mins)" << endl;
+		cout << "#. Movie | Company | Director | Runtime (in mins)" << endl;
 		for (iter2; iter2 != m2.rend(); iter2++) {
 			for (int i = 0; i < iter2->second.size(); i++) {
-				cout << ct << ". " << iter2->second[i].name << " | " << iter2->second[i].company << " | " << iter2->second[i].director << " | " << iter2->second[i].runtime << " minutes" << endl;
+				cout << ct << ". ";
+				cout << iter2->second[i].name << " | " << iter2->second[i].company << " | " << iter2->second[i].director << " | " << iter2->second[i].runtime << " minutes" << endl;
 				ct++;
 			}
 		}
@@ -639,7 +640,7 @@ void printInorder(Node* node, int& counter) {
 }
 
 void printMarathon(unordered_multimap<string, movie> m1) {
-	cout << "Would you like to binge watch some movies? [Y or N]" << endl;
+	cout << "Would you like to binge watch some movies? [Y or N] ";
 	string yesOrNoStr = "";
 	bool isMarathon = false;
 	while (isMarathon == false) {
@@ -658,20 +659,35 @@ void printMarathon(unordered_multimap<string, movie> m1) {
 		}
 		catch (...) {
 			isMarathon = false;
-			cout << "Invalid input. Please enter Y or N." << endl;
+			cout << "Invalid input. Please enter Y or N: ";
 		}
 	}
-
-	int mins;
-		cout << "How much time do you have? Enter in minutes: ";     //testing how to marathon?
+	bool output = false;
+	string mins;
+	cout << "How much time do you have? Enter in minutes: ";     
+	while (output == false) {
 		cin >> mins;
-	vector<movie> movies;
-	movies = marathon(mins, m1);
-	int counter = 1;
-	for (int i = 0; i < movies.size(); i++) {
-		cout << counter << ". " << movies[i].name << " " << movies[i].runtime << endl;
-		counter++;
+		try {
+			if (stod(mins)) {
+				vector<movie> movies;
+				movies = marathon(stod(mins), m1);
+				double time = 0;
+				int counter = 1;
+				for (int i = 0; i < movies.size(); i++) {
+					cout << counter << ". " << movies[i].name << endl;
+					counter++;
+					time += movies[i].runtime;
+				}
+				cout << "The total time it will take you to watch these movies is: " << time << endl;
+				output = true;
+			}
+		}
+		catch (...) {
+			output = false;
+			cout << "Invalid input. Please enter Y or N: ";
+		}
 	}
+	
 }
 
 int main() {
@@ -713,7 +729,6 @@ int main() {
 							auto startMap = high_resolution_clock::now();
 							// prints out map options
 							cout << "Here is a list of " << genre[choice] << " movies from the year " << year[choice2].first << " to " << year[choice2].second << "." << endl;
-							cout << "Movies from the map: " << endl;
 							m1 = createMap(genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
 							printMap(m1);
 							auto stopMap = high_resolution_clock::now();
@@ -723,7 +738,8 @@ int main() {
 						else if (choice4 == 98) {
 							auto startTree = high_resolution_clock::now();
 							// prints out tree options
-							cout << endl << "Movies from the AVL tree: " << endl;
+							cout << "Here is a list of " << genre[choice] << " movies from the year " << year[choice2].first << " to " << year[choice2].second << "." << endl;
+							cout << "#. Movie | Company | Director | Runtime (in mins)" << endl;
 							tree = createTree(tree, genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
 							printInorder(tree, count);
 							auto stopTree = high_resolution_clock::now();
@@ -742,6 +758,7 @@ int main() {
 							auto startTree = high_resolution_clock::now();
 							// prints out tree options
 							cout << endl << "Movies from the AVL tree: " << endl;
+							cout << "#. Movie | Company | Director | Runtime (in mins)" << endl;
 							tree = createTree(tree, genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
 							printInorder(tree, count);
 							auto stopTree = high_resolution_clock::now();
