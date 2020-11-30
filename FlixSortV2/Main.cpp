@@ -587,15 +587,20 @@ Node* createTree(Node* tree, string genre, int year1, int year2, vector<string> 
 	return root;
 }
 
+int count(int &ctr) {
+	ctr++;
+	return ctr-1;
+}
 
-void printInorder(Node* node) {
+void printInorder(Node* node, int& counter) {
 	if (node == nullptr) {
 		return;
 	}
 	else {
-		printInorder(node->right);
+		printInorder(node->right, counter);
+		cout << count(counter) << ". ";
 		cout << node->name.name << " | " << node->name.company << " | " << node->name.director << " | " << node->name.runtime << " minutes" << endl;
-		printInorder(node->left);
+		printInorder(node->left, counter);
 	}
 }
 
@@ -622,6 +627,7 @@ int main() {
 	int choice2;
 	int choice3;
 	string throwaway;
+	int count = 1;
 	do {
 		double mins = 0.0;
 		choice = chooseGenre();
@@ -642,7 +648,7 @@ int main() {
 					// prints out tree options
 					cout << endl << "Movies from the AVL tree: " << endl;
 					tree = createTree(tree, genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
-					printInorder(tree);
+					printInorder(tree, count);
 					auto stopTree = high_resolution_clock::now();
 					auto durationTree = duration_cast<microseconds>(stopTree - startTree);
 					// outputs times
