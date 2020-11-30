@@ -249,8 +249,8 @@ int chooseOutput() {
 	cout << setfill('=') << setw(51);
 	cout << "\n";
 	cout << "|   Which data structure would you like to use?  |" << endl;
-	cout << "|      (a) Binary Search Tree  (c) Both          |" << endl;
-	cout << "|      (b) Multimap            (0) Exit          |" << endl;
+	cout << "|      (a) Multimap            (c) Both          |" << endl;
+	cout << "|      (b) Binary Search Tree  (0) Exit          |" << endl;
 	cout << setfill('=') << setw(51);
 	cout << "\n";
 	cout << "Please input the letter of the selected structure: ";
@@ -405,18 +405,18 @@ vector<movie> marathon(double time, unordered_multimap<string, movie> m1) {
 	return v;
 }
 
-// AVL Tree
 
+// AVL Tree
 struct Node {
-public:
-	double val;
-	movie name;
-	Node* left;
-	Node* right;
-	int balancefactor = 0;
-	Node() : val(0), name(), left(nullptr), right(nullptr) {}
-	Node(double x, movie name1) : val(x), name(name1), left(nullptr), right(nullptr) {}
-	Node(double x, movie name1, Node* left, Node* right) : val(x), name(name1), left(left), right(right) {}
+	public:
+		double val;
+		movie name;
+		Node* left;
+		Node* right;
+		int balancefactor = 0;
+		Node() : val(0), name(), left(nullptr), right(nullptr) {}
+		Node(double x, movie name1) : val(x), name(name1), left(nullptr), right(nullptr) {}
+		Node(double x, movie name1, Node* left, Node* right) : val(x), name(name1), left(left), right(right) {}
 };
 
 
@@ -682,7 +682,7 @@ int main() {
 							printMap(m1);
 							auto stopMap = high_resolution_clock::now();
 							auto durationMap = duration_cast<microseconds>(stopMap - startMap);
-							cout << "Time taken to create and print the map: " << durationMap.count() << " microseconds" << endl;
+							cout << "\n" << "Time taken to create and print the map: " << durationMap.count() << " microseconds" << endl;
 						}
 						else if (choice4 == 98) {
 							auto startTree = high_resolution_clock::now();
@@ -692,7 +692,7 @@ int main() {
 							printInorder(tree, count);
 							auto stopTree = high_resolution_clock::now();
 							auto durationTree = duration_cast<microseconds>(stopTree - startTree);
-							cout << "Time taken to create and print the tree: " << durationTree.count() << " microseconds" << endl;
+							cout << "\n" << "Time taken to create and print the tree: " << durationTree.count() << " microseconds" << endl;
 						}
 						else {
 							auto startMap = high_resolution_clock::now();
@@ -712,8 +712,8 @@ int main() {
 							auto durationTree = duration_cast<microseconds>(stopTree - startTree);
 							// outputs times
 							cout << endl << "Time stats: " << endl;
-							cout << "Time taken to create and print the map: " << durationMap.count() << " microseconds" << endl;
-							cout << "Time taken to create and print the tree: " << durationTree.count() << " microseconds" << endl;
+							cout << "\n" << "Time taken to create and print the map: " << durationMap.count() << " microseconds" << endl;
+							cout << "\n" << "Time taken to create and print the tree: " << durationTree.count() << " microseconds" << endl;
 							if (durationMap.count() > durationTree.count()) { // if map was faster
 								cout << "It was " << abs(durationMap.count() - durationTree.count()) << " microseconds faster to use a map than to use a tree." << endl;
 							}
