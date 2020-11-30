@@ -694,14 +694,14 @@ void printMarathon(unordered_multimap<string, movie> m1) {
 		try {
 			if (stod(hour)) {
 				int mins = 60 * stod(hour);
-				vector<movie*> movies;
+				vector<movie> movies;
 				movies = marathon(mins, m1);
 				int time = 0;
 				int counter = 1;
 				for (int i = 0; i < movies.size(); i++) {
-					cout << counter << ". " << movies[i]->name << endl;
+					cout << counter << ". " << movies[i].name << endl;
 					counter++;
-					time += movies[i]->runtime;
+					time += movies[i].runtime;
 				}
 				cout << "The total time it will take you to watch these movies is: ";
 				minutesToHours(time);
@@ -821,8 +821,8 @@ int main() {
 						}
 
 						if (m1.size() != 0) {
-							printMarathon(m1);
 							selectRandom(m1); // Asks if user wants to select a random movie
+							printMarathon(m1);
 						}
 						cout << endl;
 						cout << setfill('=') << setw(51);
