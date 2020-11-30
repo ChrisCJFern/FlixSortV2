@@ -508,13 +508,23 @@ void recalcBalanceFactor(Node* node) {
 		calcBalanceFactor(node->right);
 	}
 }
+void printInorder(Node* node) {
+	if (!node) {
+		return;
+	}
+	else {
+		printInorder(node->right);
+		cout << node->name.name <<  " | " << node->name.company << " | " << node->name.director << " | " << node->name.runtime << " minutes" << endl;
+		printInorder(node->left);
+	}
+}
 
 //insert a node, by taking in a root node, a string for the name and an int for the id
 //if node is nullptr, make a new node, else go to the left or right depending on how id compares to node value
 //then set node's left or right equal to the result of calling insert on the node->left or node->right
 // inserts if year and genre match, if they do, add in rating/score value and movie name
 Node* createTree(Node* tree, string genre, int year1, int year2, vector<string> ratings) {
-	Node* root = new Node;
+	Node* root = nullptr;
 	string line;
 	ifstream movieFile;
 	movieFile.open("movies.csv", ios::in);
@@ -588,17 +598,6 @@ Node* createTree(Node* tree, string genre, int year1, int year2, vector<string> 
 }
 
 
-void printInorder(Node* node) {
-	if (node == nullptr) {
-		return;
-	}
-	else {
-		printInorder(node->right);
-		cout << node->name.name << " | " << node->name.company << " | " << node->name.director << " | " << node->name.runtime << " minutes" << endl;
-		printInorder(node->left);
-	}
-}
-
 int main() {
 	unordered_map<int, string> genre = { {97, "Action"}, {98, "Adventure"}, {99, "Animation"}, {100, "Biography"}, {101, "Comedy"}, {102, "Crime"}, {103, "Drama"}, {104, "Family"}, {105, "Fantasy"}, {106, "Horror"}, {107, "Musical"}, {108, "Mystery"}, {109, "Romance"}, {110, "Sci-Fi"}, {111, "Thriller"}, {112, "War"}, {113, "Western"} };
 	unordered_map<int, vector<string>> rating = { {97, {"G"}}, {98, {"PG", "TV-PG"}}, {99, {"PG-13", "TV-14"}}, {100, {"TV-MA"}}, {101, {"R"}}, {102, {"NC-17"}}, { 103, {"UNRATED", "NOT RATED", "Not specified"}}, { 104, {"B", "B15"}}, {105, {}} };
@@ -644,13 +643,16 @@ int main() {
 					cout << "Time taken to create and print the map: " << durationMap.count() << " microseconds" << endl;
 					cout << "Time taken to create and print the tree: " << durationTree.count() << " microseconds" << endl;
 					cout << "The difference in time is " << abs(durationMap.count() - durationTree.count()) << " microseconds." << endl;
-					/*cout << "How much time do you have? Enter in minutes: ";     //testing how to marathon?
+					
+					cout << "How much time do you have? Enter in minutes: ";     //testing how to marathon?
 					cin >> mins;
 					vector<movie> movies;
 					movies = marathon(mins, m1);
-					for (int i = 1; i < movies.size()+1; i++) {
-						cout << i << ". " << movies[i].name << " " << movies[i].runtime << endl;
-					}*/
+					int counter = 1;
+					for (int i = 0; i < movies.size(); i++) {
+						cout << counter << ". " << movies[i].name << " " << movies[i].runtime << endl;
+						counter++;
+					}
 
 					selectRandom(m1); // Asks if user wants to select a random movie
 
