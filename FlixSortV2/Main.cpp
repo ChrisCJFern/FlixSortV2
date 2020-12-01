@@ -767,7 +767,7 @@ vector<movie*> randomMarathon(int mins, priority_queue<pair<int, movie*>> m1) {
 	while (!done) {
 		movie* temp = selectRandomHelper(m1);
 		if (time + temp->runtime < mins) {
-]			p.push({ temp->runtime,temp });
+			p.push({ temp->runtime,temp });
 			time += temp->runtime;
 		}
 		else {
@@ -782,7 +782,6 @@ vector<movie*> randomMarathon(int mins, priority_queue<pair<int, movie*>> m1) {
 
 	return mov;
 }
-
 
 // clears the priority queue
 void clearPQ(priority_queue<pair<int, movie*>>& pq) {
