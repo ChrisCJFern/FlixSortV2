@@ -847,7 +847,7 @@ int main() {
 								auto startTree = high_resolution_clock::now();
 								// prints out tree options
 								cout << endl;
-							    cout << "Movies from the AVL tree: " << endl;
+							    cout << "Movies from the Binary Search AVL tree: " << endl;
 								cout << "#. Movie | Company | Director | Runtime " << endl;
 								tree = createTree(tree, genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
 								printInorder(tree, count);
