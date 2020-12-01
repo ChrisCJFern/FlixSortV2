@@ -872,11 +872,10 @@ void printMarathon(priority_queue<pair<int, movie*>>& m1) {
 }
 
 vector<movie> saveMovie(unordered_multimap<string, movie> m1, vector<movie>& movieSaves) {
-	// menu to store or show list of movies
-	int movieFound = 0;
-	bool chosen = false;
-	string input;
+	// menu to store or show list of movies	
+	bool chosen = false;	
 	while (!chosen) {
+		int movieFound = 0;
 		string option = "";
 		cout << endl;
 		cout << setfill('=') << setw(71);
@@ -890,6 +889,7 @@ vector<movie> saveMovie(unordered_multimap<string, movie> m1, vector<movie>& mov
 		// store movie
 		if (option == "a") {
 			while (movieFound == 0) {
+				string input = "";
 				cout << "What movie would you like to store?: ";
 				getline(cin, input);
 				for (auto iter = m1.begin(); iter != m1.end(); ++iter) {
@@ -916,9 +916,9 @@ vector<movie> saveMovie(unordered_multimap<string, movie> m1, vector<movie>& mov
 				for (auto iter = movieSaves.begin(); iter != movieSaves.end(); ++iter) {
 					cout << iter->name << " | " << iter->company << " | " << iter->director << " | ";
 					minutesToHours(iter->runtime);
-					cout << endl;
 				}
 			}
+			cout << endl;
 		}
 		else { // if input is invalid
 			cout << "invalid input" << endl << endl;
