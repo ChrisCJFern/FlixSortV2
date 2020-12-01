@@ -875,7 +875,8 @@ vector<movie> saveMovie(unordered_multimap<string, movie> m1, vector<movie>& mov
 	// menu to store or show list of movies	
 	bool chosen = false;	
 	while (!chosen) {
-		int movieFound = 0;
+		bool movieFound = false;
+		bool duplicateMovie = false;
 		string option = "";
 		cout << endl;
 		cout << setfill('=') << setw(71);
@@ -888,22 +889,33 @@ vector<movie> saveMovie(unordered_multimap<string, movie> m1, vector<movie>& mov
 		getline(cin, option);
 		// store movie
 		if (option == "a") {
-			while (movieFound == 0) {
+			while (!movieFound) {
+				duplicateMovie = false;
 				string input = "";
 				cout << "What movie would you like to store?: ";
 				getline(cin, input);
-				for (auto iter = m1.begin(); iter != m1.end(); ++iter) {
-					// if movie is found in list
-					if (input == iter->first) {
-						movieSaves.push_back(iter->second);
-						movieFound = 1;
-						cout << input << " has been successfully saved!" << endl << endl;
+
+				for (auto iter = movieSaves.begin(); iter != movieSaves.end(); ++iter) {
+					if (iter->name == input) {
+						cout << input << " has already been added." << endl;
+						duplicateMovie = true;
 					}
 				}
-				// if movie was not found in the list
-				if (movieFound == 0) {
-					cout << input << " was not found. Try again. " << endl << endl;
-				}
+				if (!duplicateMovie) {
+					for (auto iter = m1.begin(); iter != m1.end(); ++iter) {
+						// if movie is found in list
+						if (input == iter->first) {
+							movieSaves.push_back(iter->second);
+							movieFound = true;
+							cout << input << " has been successfully saved!" << endl << endl;
+						}
+					}
+					// if movie was not found in the list
+					if (!movieFound) {
+						cout << input << " was not found. Try again. " << endl << endl;
+					}
+				}				
+				
 			}
 		}
 		else if (option == "b") {
@@ -933,8 +945,7 @@ vector<movie> saveMovie(unordered_multimap<string, movie> m1, vector<movie>& mov
 		cout << "Please input the letter of the selected option: ";
 		getline(cin, option2);
 		if (option2 == "a") { chosen = true; }
-	}
-	
+	}	
 
 	return movieSaves;
 }
