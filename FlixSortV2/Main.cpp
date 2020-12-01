@@ -123,7 +123,7 @@ void minutesToHours(int minutes) {
 	}
 	else {
 		cout << hours << " hour ";
-		if (minutes > 1){
+		if (minutes > 1) {
 			cout << minutes << " minutes" << endl;
 		}
 		else {
@@ -467,15 +467,15 @@ void printMap(unordered_multimap<string, movie> m1) {
 
 // AVL Tree
 struct Node {
-	public:
-		double val;
-		movie name;
-		Node* left;
-		Node* right;
-		int balancefactor = 0;
-		Node() : val(0), name(), left(nullptr), right(nullptr) {}
-		Node(double x, movie name1) : val(x), name(name1), left(nullptr), right(nullptr) {}
-		Node(double x, movie name1, Node* left, Node* right) : val(x), name(name1), left(left), right(right) {}
+public:
+	double val;
+	movie name;
+	Node* left;
+	Node* right;
+	int balancefactor = 0;
+	Node() : val(0), name(), left(nullptr), right(nullptr) {}
+	Node(double x, movie name1) : val(x), name(name1), left(nullptr), right(nullptr) {}
+	Node(double x, movie name1, Node* left, Node* right) : val(x), name(name1), left(left), right(right) {}
 };
 
 
@@ -681,9 +681,9 @@ Node* createTree(Node* tree, string genre, int year1, int year2, vector<string> 
 }
 
 // keeps count of movies in the tree
-int count(int &ctr) {
+int count(int& ctr) {
 	ctr++;
-	return ctr-1;
+	return ctr - 1;
 }
 
 // prints movies in tree
@@ -709,13 +709,13 @@ void multimapToPQ(unordered_multimap<string, movie>& m1, priority_queue<pair<int
 	}
 }
 
-void treeToPQ(Node* node, priority_queue<pair<int,movie*>> &pq) {
+void treeToPQ(Node* node, priority_queue<pair<int, movie*>>& pq) {
 	if (node == nullptr) {
 		return;
 	}
 	else {
 		treeToPQ(node->left, pq);
-		pq.push({node->name.runtime, &node->name});
+		pq.push({ node->name.runtime, &node->name });
 		treeToPQ(node->right, pq);
 	}
 }
@@ -738,7 +738,7 @@ vector<movie*> marathon(double time, priority_queue<pair<int, movie*>> m1) {
 	return v;
 }
 */
-
+/*
 vector<movie*> marathon(double time, priority_queue<pair<int, movie*>> m1) {
 	vector<movie*> v;
 	unordered_set<string> alreadyChecked;
@@ -758,16 +758,41 @@ vector<movie*> marathon(double time, priority_queue<pair<int, movie*>> m1) {
 	}
 	return v;
 }
+*/
+
+vector<movie*> randomMarathon(int mins, priority_queue<pair<int, movie*>> m1) {
+	priority_queue<pair<int, movie*>> p;
+	int time = 0;
+	bool done = false;
+	while (!done) {
+		movie* temp = selectRandomHelper(m1);
+		if (time + temp->runtime < mins) {
+]			p.push({ temp->runtime,temp });
+			time += temp->runtime;
+		}
+		else {
+			done = true;
+		}
+	}
+	vector<movie*> mov;
+	while(!p.empty()) {
+		mov.push_back(p.top().second);
+		p.pop();
+	}
+
+	return mov;
+}
+
 
 // clears the priority queue
-void clearPQ(priority_queue<pair<int, movie*>> &pq) {
+void clearPQ(priority_queue<pair<int, movie*>>& pq) {
 	while (!pq.empty()) {
 		pq.pop();
 	}
 }
 
 // output for binge watching (marathoning) movies
-void printMarathon(priority_queue<pair<int, movie*>> &m1) {
+void printMarathon(priority_queue<pair<int, movie*>>& m1) {
 	bool output = false;
 	string hour;
 	cout << setfill('=') << setw(51);
@@ -783,14 +808,14 @@ void printMarathon(priority_queue<pair<int, movie*>> &m1) {
 			if (stod(hour)) {
 				int mins = 60 * stod(hour);
 				vector<movie*> movies;
-				movies = marathon(mins, m1);
+				movies = randomMarathon(mins, m1);
 				int time = 0;
 				int counter = 1;
 				if (movies.size() != 0) {
-					
+
 					cout << "Here is a list of movies from longest to shortest runtime." << endl;
 					for (int i = 0; i < movies.size(); i++) {
-						cout << counter << ". " << movies[i]->name << " | " << movies[i]->company << " | " << movies[i]->director << " | " ;
+						cout << counter << ". " << movies[i]->name << " | " << movies[i]->company << " | " << movies[i]->director << " | ";
 						minutesToHours(movies[i]->runtime);
 						counter++;
 						time += movies[i]->runtime;
@@ -841,7 +866,7 @@ int main() {
 	int choice3;
 	int choice4;
 	string throwaway;
-	priority_queue<pair<int,movie*>> m;
+	priority_queue<pair<int, movie*>> m;
 	int count = 1;
 	do {
 		double mins = 0.0;
@@ -894,7 +919,7 @@ int main() {
 							auto startMap = high_resolution_clock::now();
 							// prints out map options
 							m1 = createMap(genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
-							if(m1.size() != 0){
+							if (m1.size() != 0) {
 								cout << "Here is a list of " << genre[choice] << " movies from the year " << year[choice2].first << " to " << year[choice2].second << "." << endl;
 								cout << "Movies from the map: " << endl;
 								printMap(m1);
@@ -903,7 +928,7 @@ int main() {
 								auto startTree = high_resolution_clock::now();
 								// prints out tree options
 								cout << endl;
-							    cout << "Movies from the Binary Search AVL tree: " << endl;
+								cout << "Movies from the Binary Search AVL tree: " << endl;
 								cout << "#. Movie | Company | Director | Runtime " << endl;
 								tree = createTree(tree, genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
 								printInorder(tree, count);
@@ -986,4 +1011,3 @@ int main() {
 
 	return 0;
 }
-
