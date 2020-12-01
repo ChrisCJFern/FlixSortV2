@@ -871,14 +871,16 @@ void printMarathon(priority_queue<pair<int, movie*>>& m1) {
 	}
 }
 
+// gives user option to store movie and to look at list of saved movies
 vector<movie> saveMovie(unordered_multimap<string, movie> m1, vector<movie>& movieSaves) {
-	// menu to store or show list of movies	
+	
 	bool chosen = false;	
 	while (!chosen) {
 		bool movieFound = false;
 		bool duplicateMovie = false;
 		string option = "";
 		cout << endl;
+		// menu to store or show list of movies	
 		cout << setfill('=') << setw(71);
 		cout << "\n";
 		cout << "| Would you like to store a movie or show your list of saved movies? |" << endl;
@@ -887,7 +889,7 @@ vector<movie> saveMovie(unordered_multimap<string, movie> m1, vector<movie>& mov
 		cout << "\n";
 		cout << "Please input the letter of the selected option: ";
 		getline(cin, option);
-		// store movie
+		// stores movie
 		if (option == "a") {
 			while (!movieFound) {
 				duplicateMovie = false;
@@ -918,6 +920,7 @@ vector<movie> saveMovie(unordered_multimap<string, movie> m1, vector<movie>& mov
 				
 			}
 		}
+		// show list of saved movies
 		else if (option == "b") {
 			// if the list of movies is empty
 			if (movieSaves.size() <= 0) {
