@@ -848,42 +848,47 @@ vector<movie> saveMovie(unordered_multimap<string, movie> m1, vector<movie>& mov
 	int movieFound = 0;
 	string option;
 	string input;
-	cout << setfill('=') << setw(51);
+	cout << setfill('=') << setw(71);
 	cout << "\n";
-	cout << "| Would u like to store a movie or show your list of saved movies? |" << endl;
-	cout << "|       (a) Store a movie     (b) Show list of saved movies        |" << endl;
-	cout << setfill('=') << setw(51);
+	cout << "| Would you like to store a movie or show your list of saved movies? |" << endl;
+	cout << "|          (a) Store a movie     (b) Show list of saved movies       |" << endl;
+	cout << setfill('=') << setw(71);
 	cout << "\n";
-	getline(cin, option);
-
+	cout << "Please input the letter of the selected option: ";
+	getline(cin, option);	
 	// store movie
 	if (option == "a") {
 		//find movie in list of map bc map is <movie name, movie object>
 		// find movie name as map.first, and
 		// push_back movie object (map.second) into vector
-		cout << "What movie would you like to store?: " << endl;
+		cout << "What movie would you like to store?: ";
 		getline(cin, input);
 		for (auto iter = m1.begin(); iter != m1.end(); ++iter) {
 			// if movie is found in list
 			if (input == iter->first) {
 				movieSaves.push_back(iter->second);
 				movieFound = 1;
-				cout << input << " has been successfully saved!" << endl;
+				cout << endl << input << " has been successfully saved!" << endl;
 			}
 		}
 		// if movie was not found in the list
 		if (movieFound == 0) {
 			// try again?
-			cout << input << " was not found." << endl;
+			cout << endl << input << " was not found." << endl;
 		}
 	}
 	else if (option == "b") {
-		// cout the list of saved movies
-		for (auto iter = movieSaves.begin(); iter != movieSaves.end(); ++iter) {
-			cout << iter->name << " | " << iter->company << " | " << iter->director << " | ";
-			minutesToHours(iter->runtime);
-		}
 		// if the list of movies is empty
+		if (movieSaves.size() <= 0) {
+			cout << "You have not saved any movies." << endl;
+		}
+		else {
+			// cout the list of saved movies
+			for (auto iter = movieSaves.begin(); iter != movieSaves.end(); ++iter) {
+				cout << iter->name << " | " << iter->company << " | " << iter->director << " | ";
+				minutesToHours(iter->runtime);
+			}
+		}	
 	}
 	else { // if input is invalid
 		cout << "invalid input" << endl;
