@@ -339,8 +339,9 @@ int chooseOption() {
 	cout << setfill('=') << setw(51);
 	cout << "\n";
 	cout << "|          How would you like to continue?       |" << endl;
-	cout << "| (a) Movie Marathon       (c) Random & Marathon |" << endl;
-	cout << "| (b) Select Random        (0) Exit              |" << endl;
+	cout << "| (a) Movie Marathon     (d) Save or View Movies |" << endl;
+	cout << "| (b) Select Random      (0) Exit                |" << endl;
+	cout << "| (c) Random & Marathon                          |" << endl;
 	cout << setfill('=') << setw(51);
 	cout << "\n";
 	cout << "Please input the letter of the selected option: ";
@@ -351,7 +352,7 @@ int chooseOption() {
 			chosen = true;
 		}
 		else {
-			if (input.length() != 1 || input[0] < 'A' || (input[0] < 'a' && input[0] > 'C') || input[0] > 'c') {
+			if (input.length() != 1 || input[0] < 'A' || (input[0] < 'a' && input[0] > 'D') || input[0] > 'd') {
 				cout << input << " is an invalid input." << endl;
 				cout << "Please enter your input in the correct format: ";
 				input.clear();
@@ -842,11 +843,61 @@ void printMarathon(priority_queue<pair<int, movie*>>& m1) {
 	}
 }
 
+vector<movie> saveMovie(unordered_multimap<string, movie> m1, vector<movie>& movieSaves) {
+	// menu to store or show list of movies
+	int movieFound = 0;
+	string option;
+	string input;
+	cout << setfill('=') << setw(51);
+	cout << "\n";
+	cout << "| Would u like to store a movie or show your list of saved movies? |" << endl;
+	cout << "|       (a) Store a movie     (b) Show list of saved movies        |" << endl;
+	cout << setfill('=') << setw(51);
+	cout << "\n";
+	getline(cin, option);
+
+	// store movie
+	if (option == "a") {
+		//find movie in list of map bc map is <movie name, movie object>
+		// find movie name as map.first, and
+		// push_back movie object (map.second) into vector
+		cout << "What movie would you like to store?: " << endl;
+		getline(cin, input);
+		for (auto iter = m1.begin(); iter != m1.end(); ++iter) {
+			// if movie is found in list
+			if (input == iter->first) {
+				movieSaves.push_back(iter->second);
+				movieFound = 1;
+				cout << input << " has been successfully saved!" << endl;
+			}
+		}
+		// if movie was not found in the list
+		if (movieFound == 0) {
+			// try again?
+			cout << input << " was not found." << endl;
+		}
+	}
+	else if (option == "b") {
+		// cout the list of saved movies
+		for (auto iter = movieSaves.begin(); iter != movieSaves.end(); ++iter) {
+			cout << iter->name << " | " << iter->company << " | " << iter->director << " | ";
+			minutesToHours(iter->runtime);
+		}
+		// if the list of movies is empty
+	}
+	else { // if input is invalid
+		cout << "invalid input" << endl;
+	}
+
+	return movieSaves;
+}
+
 int main() {
 	unordered_map<int, string> genre = { {97, "Action"}, {98, "Adventure"}, {99, "Animation"}, {100, "Biography"}, {101, "Comedy"}, {102, "Crime"}, {103, "Drama"}, {104, "Family"}, {105, "Fantasy"}, {106, "Horror"}, {107, "Musical"}, {108, "Mystery"}, {109, "Romance"}, {110, "Sci-Fi"}, {111, "Thriller"}, {112, "War"}, {113, "Western"} };
 	unordered_map<int, vector<string>> rating = { {97, {"G"}}, {98, {"PG", "TV-PG"}}, {99, {"PG-13", "TV-14"}}, {100, {"TV-MA"}}, {101, {"R"}}, {102, {"NC-17"}}, { 103, {"UNRATED", "NOT RATED", "Not specified"}}, { 104, {"B", "B15"}}, {105, {}} };
 	unordered_map<int, pair<int, int>> year = { {97, {1986, 1990}}, {98, {1991, 1995}}, {99, {1996, 2000}}, {100, {2001, 2005}}, {101, {2006, 2010}}, {102, {2011, 2016}}, {103, {1986, 2016}} };
 	unordered_multimap<string, movie> m1;
+	vector<movie> movieSaves;
 	Node* tree = new Node();
 
 	//---------------------PRINTS INITIAL MENU---------------------------------------
@@ -969,6 +1020,10 @@ int main() {
 								case 99:
 									selectRandom(m);
 									printMarathon(m);
+									break;
+								case 100:
+									m1 = createMap(genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
+									saveMovie(m1, movieSaves);
 									break;
 								default:
 									break;
