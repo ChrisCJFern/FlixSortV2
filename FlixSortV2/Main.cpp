@@ -133,24 +133,49 @@ void minutesToHours(int minutes) {
 	}
 }
 
-void selectRandom(priority_queue<pair<int,movie*>> pq) {
+void selectRandom(priority_queue<pair<int, movie*>> pq) {
 	string input;
 	string throwaway;
 	cout << endl;
-	cout << setfill('=') << setw(51);
-	cout << "\n";
-	cout << "Would you like us to select a movie from this list?" << endl;
-	cout << "Enter Y or N: ";
-	cin >> input;
-	getline(cin, throwaway);
-	input = tolower(input[0]);
-	if (input == "y") {
-		cout << "\nRandom Movie: " << selectRandomHelper(pq)->name << endl;
+	movie* mov = selectRandomHelper(pq);
+	cout << "Random Movie: " << mov->name << " | " << mov->company << " | " << mov->director << " | ";
+	minutesToHours(mov->runtime);
+	bool exit = false;
+	int val = 0;
+	while (!exit) {
+		cout << setfill('=') << setw(51);
+		cout << "\n";
+		cout << "|      Would you like us to pick a different     |" << endl;
+		cout << "|            random movie for you ?              |" << endl;
+		cout << "|      (a) New Movie          (b) No thanks      |" << endl;
+		cout << setfill('=') << setw(51);
+		cout << "\n";
+		cout << "Please enter the letter of your selected option: ";
+		getline(cin, input);
+		if (input == "0") {
+			val = 0;
+			exit = true;
+		}
+		else {
+			if (input.length() != 1 || input[0] < 'A' || (input[0] < 'a' && input[0] > 'B') || input[0] > 'b') {
+				cout << input << " is an invalid input." << endl;
+				cout << "Please enter your input in the correct format: ";
+				input.clear();
+			}
+			else {
+				if (tolower(input[0]) == 97) {
+					cout << endl;
+					movie* mov = selectRandomHelper(pq);
+					cout << "Random Movie: " << mov->name << " | " << mov->company << " | " << mov->director << " | ";
+					minutesToHours(mov->runtime);
+				}
+				else {
+					exit = true;
+				}
+			}
+		}
 	}
-	cout << setfill('=') << setw(51);
-	cout << "\n";
 }
-
 
 // chooses movies based on user's preferred genre
 int chooseGenre() {
@@ -283,6 +308,40 @@ int chooseOutput() {
 	cout << setfill('=') << setw(51);
 	cout << "\n";
 	cout << "Please input the letter of the selected structure: ";
+	while (!chosen) {
+		getline(cin, input);
+		if (input == "0") {
+			choice = 0;
+			chosen = true;
+		}
+		else {
+			if (input.length() != 1 || input[0] < 'A' || (input[0] < 'a' && input[0] > 'C') || input[0] > 'c') {
+				cout << input << " is an invalid input." << endl;
+				cout << "Please enter your input in the correct format: ";
+				input.clear();
+			}
+			else {
+				chosen = true;
+				choice = tolower(int(input[0]));
+				break;
+			}
+		}
+	}
+	return choice;
+}
+
+int chooseOption() {
+	string input;
+	int choice = 0;
+	bool chosen = false;
+	cout << setfill('=') << setw(51);
+	cout << "\n";
+	cout << "|          How would you like to continue?       |" << endl;
+	cout << "| (a) Movie Marathon       (c) Random & Marathon |" << endl;
+	cout << "| (b) Select Random        (0) Exit              |" << endl;
+	cout << setfill('=') << setw(51);
+	cout << "\n";
+	cout << "Please input the letter of the selected option: ";
 	while (!chosen) {
 		getline(cin, input);
 		if (input == "0") {
@@ -640,6 +699,7 @@ void printInorder(Node* node, int& counter) {
 	}
 }
 
+//convert multimap to priority queue for marathoning && random
 void multimapToPQ(unordered_multimap<string, movie>& m1, priority_queue<pair<int, movie*>>& pq) {
 	vector<movie> v;
 	auto iter = m1.begin();
@@ -676,34 +736,6 @@ vector<movie*> marathon(double time, priority_queue<pair<int, movie*>> m1) {
 	return v;
 }
 
-// handles user's input for the option to marathon
-bool chooseMarathon() {
-	cout << "Would you like to binge watch some movies? Enter Y or N: ";
-	string yesOrNoStr = "";
-	bool isMarathon = false;
-	while (isMarathon == false) {
-		isMarathon = false;
-		cin >> yesOrNoStr;
-		try {
-			yesOrNoStr = tolower(yesOrNoStr[0]);
-			if (yesOrNoStr == "y" || yesOrNoStr == "n") {
-				if (yesOrNoStr == "n")
-					return false;
-				isMarathon = true;
-				return true;
-			}
-			else {
-				throw yesOrNoStr;
-			}
-		}
-		catch (...) {
-			isMarathon = false;
-			cout << "Invalid input. Please enter Y or N: ";
-		}
-	}
-	return false;
-}
-
 // clears the priority queue
 void clearPQ(priority_queue<pair<int, movie*>> &pq) {
 	while (!pq.empty()) {
@@ -713,47 +745,50 @@ void clearPQ(priority_queue<pair<int, movie*>> &pq) {
 
 // output for binge watching (marathoning) movies
 void printMarathon(priority_queue<pair<int, movie*>> &m1) {
-	if (chooseMarathon()) {
-		bool output = false;
-		string hour;
-		cout << "How much time do you have? " << endl;
-		cout << "Enter the max number of hours: ";
-		while (output == false) {
-			cin >> hour;
-			cout << endl;
-			try {
-				if (stod(hour)) {
-					int mins = 60 * stod(hour);
-					vector<movie*> movies;
-					movies = marathon(mins, m1);
-					int time = 0;
-					int counter = 1;
-					if (movies.size() != 0) {
-						cout << "Here is a list of movies from longest to shortest runtime." << endl;
-						for (int i = 0; i < movies.size(); i++) {
-							cout << counter << ". " << movies[i]->name << " | " << movies[i]->company << " | " << movies[i]->director << " | " ;
-							minutesToHours(movies[i]->runtime);
-							counter++;
-							time += movies[i]->runtime;
-						}
-						cout << "The total time it will take you to watch these movies is: ";
-						minutesToHours(time);
-						cout << endl;
+	bool output = false;
+	string hour;
+	cout << setfill('=') << setw(51);
+	cout << "\n";
+	cout << "|      Your Personal Movie Marathon Planner      |" << endl;
+	cout << setfill('=') << setw(51);
+	cout << "\n";
+	cout << "Enter the max number of hours: ";
+	while (output == false) {
+		cin >> hour;
+		cout << endl;
+		try {
+			if (stod(hour)) {
+				int mins = 60 * stod(hour);
+				vector<movie*> movies;
+				movies = marathon(mins, m1);
+				int time = 0;
+				int counter = 1;
+				if (movies.size() != 0) {
+					
+					cout << "Here is a list of movies from longest to shortest runtime." << endl;
+					for (int i = 0; i < movies.size(); i++) {
+						cout << counter << ". " << movies[i]->name << " | " << movies[i]->company << " | " << movies[i]->director << " | " ;
+						minutesToHours(movies[i]->runtime);
+						counter++;
+						time += movies[i]->runtime;
 					}
-					else {
-						cout << "No movies fit in your selected time frame." << endl;
-					}
-					output = true;
+					cout << "The total time it will take you to watch these movies is: ";
+					minutesToHours(time);
+					cout << endl;
 				}
-				else if (hour == "0") {
+				else {
 					cout << "No movies fit in your selected time frame." << endl;
-					output = true;
 				}
+				output = true;
 			}
-			catch (...) {
-				output = false;
-				cout << "Invalid input. Please enter Y or N: ";
+			else if (hour == "0") {
+				cout << "No movies fit in your selected time frame." << endl;
+				output = true;
 			}
+		}
+		catch (...) {
+			output = false;
+			cout << "Invalid input. Please enter Y or N: ";
 		}
 	}
 }
@@ -873,21 +908,40 @@ int main() {
 						}
 
 						if (!m.empty()) {
-							selectRandom(m); // Asks if user wants to select a random movie
-							printMarathon(m);
+							int choice5 = chooseOption();
+							if (choice5 != 0) {
+								switch (choice5) {
+								case 97:
+									printMarathon(m);
+									break;
+								case 98:
+									selectRandom(m);
+									break;
+								case 99:
+									selectRandom(m);
+									printMarathon(m);
+									break;
+								default:
+									break;
+								}
+							}
+							else {
+								input = "n";
+							}
 						}
-
-						cout << setfill('=') << setw(51);
-						cout << "\n";
-						cout << "|   Would you like to start your search again?   |" << endl;
-						cout << setfill('=') << setw(51);
-						cout << "\n";
-						cout << "Enter Y or N: ";
-						cin >> input;
-						m1.clear();
-						clearPQ(m);
-						tree = nullptr;
-						getline(cin, throwaway);
+						if (input != "n") {
+							cout << setfill('=') << setw(51);
+							cout << "\n";
+							cout << "|   Would you like to start your search again?   |" << endl;
+							cout << setfill('=') << setw(51);
+							cout << "\n";
+							cout << "Enter Y or N: ";
+							cin >> input;
+							m1.clear();
+							clearPQ(m);
+							tree = nullptr;
+							getline(cin, throwaway);
+						}
 					}
 					else {
 						input = "n";
