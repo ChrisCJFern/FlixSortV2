@@ -11,6 +11,7 @@
 #include <random>
 #include <ctime>
 #include <chrono>
+#include <queue>
 using namespace std;
 using namespace std::chrono;
 
@@ -92,16 +93,14 @@ struct movie {
 	}
 };
 
-movie selectRandomHelper(unordered_multimap<string, movie> m1) {
-	vector<movie> v;
-	auto iter = m1.begin();
-	int ct = 1;
-	for (iter; iter != m1.end(); iter++) {
-		v.push_back(iter->second);
+movie* selectRandomHelper(priority_queue<pair<int, movie*>> pq) {
+	int randomIndex = Random::Int(0, pq.size() - 1); // Generate a random number
+	int count = 0;
+	while (count < randomIndex && !pq.empty()) {
+		pq.pop();
+		count++;
 	}
-	int randomIndex = Random::Int(0, v.size() - 1); // Generate a random number
-	//cout << randomIndex << endl;
-	return v.at(randomIndex);
+	return pq.top().second;
 }
 
 void minutesToHours(int minutes) {
@@ -115,6 +114,9 @@ void minutesToHours(int minutes) {
 		else {
 			if (minutes != 0) {
 				cout << minutes << "minute" << endl;
+			}
+			else {
+				cout << endl;
 			}
 		}
 	}
@@ -131,7 +133,7 @@ void minutesToHours(int minutes) {
 	}
 }
 
-void selectRandom(unordered_multimap<string, movie> m1) {
+void selectRandom(priority_queue<pair<int,movie*>> pq) {
 	string input;
 	string throwaway;
 	cout << endl;
@@ -143,8 +145,7 @@ void selectRandom(unordered_multimap<string, movie> m1) {
 	getline(cin, throwaway);
 	input = tolower(input[0]);
 	if (input == "y") {
-		//cout << endl;
-		cout << "\nRandom Movie: " << selectRandomHelper(m1).name << endl;
+		cout << "\nRandom Movie: " << selectRandomHelper(pq)->name << endl;
 	}
 	cout << setfill('=') << setw(51);
 	cout << "\n";
@@ -388,47 +389,21 @@ unordered_multimap<string, movie> createMap(string genre, int year1, int year2, 
 // prints the Map
 void printMap(unordered_multimap<string, movie> m1) {
 	auto iter = m1.begin();
-	map<double, vector<movie>> m2;
+	map<double, vector<movie*>> m2;
 	int ct = 1;
 	for (iter; iter != m1.end(); iter++) {
-		m2[(iter->second.score)].push_back(iter->second);
+		m2[(iter->second.score)].push_back(&iter->second);
 	}
 	auto iter2 = m2.rbegin();								//https://www.geeksforgeeks.org/how-to-traverse-a-stl-map-in-reverse-direction/
-	cout << "#. Movie | Company | Director | Runtime (in mins)" << endl;
+	cout << "#. Movie | Company | Director | Runtime " << endl;
 	for (iter2; iter2 != m2.rend(); iter2++) {
 		for (int i = 0; i < iter2->second.size(); i++) {
-			cout << ct << ". " << iter2->second[i].name << " | " << iter2->second[i].company << " | " << iter2->second[i].director << " | ";
-			minutesToHours(iter2->second[i].runtime);
+			cout << ct << ". " << iter2->second[i]->name << " | " << iter2->second[i]->company << " | " << iter2->second[i]->director << " | ";
+			minutesToHours(iter2->second[i]->runtime);
 			ct++;
 		}
 	}
 }
-
-vector<movie> marathon(double time, unordered_multimap<string, movie> m1) {
-	vector<movie> v;
-	auto iter = m1.begin();
-	map<double, vector<movie>> m2;
-	int ct = 1;
-	for (iter; iter != m1.end(); iter++) {
-		m2[(iter->second.runtime)].push_back(iter->second);
-	}
-	auto iter2 = m2.rbegin();
-	for (iter2; iter2 != m2.rend(); iter2++) {
-		if (iter2->first < time) {
-			for (int i = 0; i < iter2->second.size(); i++) {
-				if (iter2->second[i].runtime < time) {
-					v.push_back(iter2->second[i]);
-					time -= iter2->first;
-				}
-				else {
-					break;
-				}
-			}
-		}
-	}
-	return v;
-}
-
 
 // AVL Tree
 struct Node {
@@ -663,8 +638,43 @@ void printInorder(Node* node, int& counter) {
 	}
 }
 
-void printMarathon(unordered_multimap<string, movie> m1) {
-	cout << "Would you like to binge watch some movies? [Y or N] ";
+void multimapToPQ(unordered_multimap<string, movie>& m1, priority_queue<pair<int, movie*>>& pq) {
+	vector<movie> v;
+	auto iter = m1.begin();
+	for (iter; iter != m1.end(); iter++) {
+		pq.push({ iter->second.runtime, &iter->second });
+	}
+}
+
+void treeToPQ(Node* node, priority_queue<pair<int,movie*>> &pq) {
+	if (node == nullptr) {
+		return;
+	}
+	else {
+		treeToPQ(node->left, pq);
+		pq.push({node->name.runtime, &node->name});
+		treeToPQ(node->right, pq);
+	}
+}
+
+vector<movie*> marathon(double time, priority_queue<pair<int, movie*>> m1) {
+	vector<movie*> v;
+	while (time > 0 && !m1.empty()) {
+		int temp = m1.top().first;
+		if (time - temp > 0) {
+			v.push_back(m1.top().second);
+			m1.pop();
+			time -= temp;
+		}
+		else {
+			m1.pop();
+		}
+	}
+	return v;
+}
+
+bool chooseMarathon() {
+	cout << "Would you like to binge watch some movies? Enter Y or N: ";
 	string yesOrNoStr = "";
 	bool isMarathon = false;
 	while (isMarathon == false) {
@@ -674,8 +684,9 @@ void printMarathon(unordered_multimap<string, movie> m1) {
 			yesOrNoStr = tolower(yesOrNoStr[0]);
 			if (yesOrNoStr == "y" || yesOrNoStr == "n") {
 				if (yesOrNoStr == "n")
-					return;
+					return false;
 				isMarathon = true;
+				return true;
 			}
 			else {
 				throw yesOrNoStr;
@@ -686,32 +697,56 @@ void printMarathon(unordered_multimap<string, movie> m1) {
 			cout << "Invalid input. Please enter Y or N: ";
 		}
 	}
-	bool output = false;
-	string hour;
-	cout << "How much time do you have? " << endl;
-	cout << "Enter the time to the nearest whole number of hours: ";
-	while (output == false) {
-		cin >> hour;
-		try {
-			if (stod(hour)) {
-				int mins = 60 * stod(hour);
-				vector<movie> movies;
-				movies = marathon(mins, m1);
-				int time = 0;
-				int counter = 1;
-				for (int i = 0; i < movies.size(); i++) {
-					cout << counter << ". " << movies[i].name << endl;
-					counter++;
-					time += movies[i].runtime;
+	return false;
+}
+
+void clearPQ(priority_queue<pair<int, movie*>> &pq) {
+	while (!pq.empty()) {
+		pq.pop();
+	}
+}
+
+void printMarathon(priority_queue<pair<int, movie*>> &m1) {
+	if (chooseMarathon()) {
+		bool output = false;
+		string hour;
+		cout << "How much time do you have? " << endl;
+		cout << "Enter the max number of hours: ";
+		while (output == false) {
+			cin >> hour;
+			cout << endl;
+			try {
+				if (stod(hour)) {
+					int mins = 60 * stod(hour);
+					vector<movie*> movies;
+					movies = marathon(mins, m1);
+					int time = 0;
+					int counter = 1;
+					if (movies.size() != 0) {
+						cout << "Here is a list of movies from longest to shortest runtime." << endl;
+						for (int i = 0; i < movies.size(); i++) {
+							cout << counter << ". " << movies[i]->name << endl;
+							counter++;
+							time += movies[i]->runtime;
+						}
+						cout << "The total time it will take you to watch these movies is: ";
+						minutesToHours(time);
+						cout << endl;
+					}
+					else {
+						cout << "No movies fit in your selected time frame." << endl;
+					}
+					output = true;
 				}
-				cout << "The total time it will take you to watch these movies is: ";
-				minutesToHours(time);
-				output = true;
+				else if (hour == "0") {
+					cout << "No movies fit in your selected time frame." << endl;
+					output = true;
+				}
 			}
-		}
-		catch (...) {
-			output = false;
-			cout << "Invalid input. Please enter Y or N: ";
+			catch (...) {
+				output = false;
+				cout << "Invalid input. Please enter Y or N: ";
+			}
 		}
 	}
 }
@@ -722,6 +757,7 @@ int main() {
 	unordered_map<int, pair<int, int>> year = { {97, {1986, 1990}}, {98, {1991, 1995}}, {99, {1996, 2000}}, {100, {2001, 2005}}, {101, {2006, 2010}}, {102, {2011, 2016}}, {103, {1986, 2016}} };
 	unordered_multimap<string, movie> m1;
 	Node* tree = new Node();
+
 	//---------------------PRINTS INITIAL MENU---------------------------------------
 	cout << setfill('=') << setw(51);
 	cout << "\n";
@@ -729,7 +765,7 @@ int main() {
 	cout << "|     Est. 2020 by the Magical Movie Masters     |" << endl;
 	cout << "|><><><><><><><><><><><><><><><><><><><><><><><><|" << endl;
 	cout << "| Want to watch a movie marathon?                |" << endl;
-	cout << "|   But can't decide what movie to watch         |" << endl;
+	cout << "|   But can't decide what movie to watch.        |" << endl;
 	cout << "|      We can provide you with some options.     |" << endl;
 	cout << "|><><><><><><><><><><><><><><><><><><><><><><><><|" << endl;
 	cout << "|              Let's get started :)              |" << endl;
@@ -740,6 +776,7 @@ int main() {
 	int choice3;
 	int choice4;
 	string throwaway;
+	priority_queue<pair<int,movie*>> m;
 	int count = 1;
 	do {
 		double mins = 0.0;
@@ -751,17 +788,18 @@ int main() {
 				if (choice3 != 0) {
 					choice4 = chooseOutput();
 					if (choice4 != 0) {
-						m1 = createMap(genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
 						if (choice4 == 97) { // 97 = 'a'
-							cout << "Here is a list of " << genre[choice] << " movies from the year " << year[choice2].first << " to " << year[choice2].second << "." << endl;
+							cout << endl;
 							auto startMap = high_resolution_clock::now();
 							// prints out map options
 							m1 = createMap(genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
 							if (m1.size() != 0) {
+								cout << "Here is a list of " << genre[choice] << " movies from the year " << year[choice2].first << " to " << year[choice2].second << "." << endl;
 								printMap(m1);
 								auto stopMap = high_resolution_clock::now();
 								auto durationMap = duration_cast<microseconds>(stopMap - startMap);
 								cout << "\n" << "Time taken to create and print the map: " << durationMap.count() << " microseconds" << endl;
+								multimapToPQ(m1, m);
 							}
 							else {
 								cout << "There are no movies that fit your selections." << endl;
@@ -770,14 +808,15 @@ int main() {
 						else if (choice4 == 98) {
 							auto startTree = high_resolution_clock::now();
 							// prints out tree options
-							cout << "Here is a list of " << genre[choice] << " movies from the year " << year[choice2].first << " to " << year[choice2].second << "." << endl;
 							tree = createTree(tree, genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
 							if (tree != nullptr) {
-								cout << "#. Movie | Company | Director | Runtime (in mins)" << endl;
+								cout << "Here is a list of " << genre[choice] << " movies from the year " << year[choice2].first << " to " << year[choice2].second << "." << endl;
+								cout << "#. Movie | Company | Director | Runtime " << endl;
 								printInorder(tree, count);
 								auto stopTree = high_resolution_clock::now();
 								auto durationTree = duration_cast<microseconds>(stopTree - startTree);
 								cout << "\n" << "Time taken to create and print the tree: " << durationTree.count() << " microseconds" << endl;
+								treeToPQ(tree, m);
 							}
 							else {
 								cout << "There are no movies that fit your selections." << endl;
@@ -786,9 +825,9 @@ int main() {
 						else {
 							auto startMap = high_resolution_clock::now();
 							// prints out map options
-							cout << "Here is a list of " << genre[choice] << " movies from the year " << year[choice2].first << " to " << year[choice2].second << "." << endl;
 							m1 = createMap(genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
 							if(m1.size() != 0){
+								cout << "Here is a list of " << genre[choice] << " movies from the year " << year[choice2].first << " to " << year[choice2].second << "." << endl;
 								cout << "Movies from the map: " << endl;
 								printMap(m1);
 								auto stopMap = high_resolution_clock::now();
@@ -797,43 +836,48 @@ int main() {
 								// prints out tree options
 								cout << endl;
 							    cout << "Movies from the AVL tree: " << endl;
-								cout << "#. Movie | Company | Director | Runtime (in mins)" << endl;
+								cout << "#. Movie | Company | Director | Runtime " << endl;
 								tree = createTree(tree, genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
 								printInorder(tree, count);
 								auto stopTree = high_resolution_clock::now();
 								auto durationTree = duration_cast<microseconds>(stopTree - startTree);
+								auto durationDiff = duration_cast<microseconds>(durationTree - durationMap);
+								double timeDiff = durationDiff.count() * pow(10, -6);
 								// outputs times
 								cout << endl << "Time stats: " << endl;
-								cout << "\n" << "Time taken to create and print the map: " << durationMap.count() << " microseconds" << endl;
-								cout << "\n" << "Time taken to create and print the tree: " << durationTree.count() << " microseconds" << endl;
-								if (durationMap.count() > durationTree.count()) { // if map was faster
-									cout << "It was " << abs(durationMap.count() - durationTree.count()) << " microseconds faster to use a map than to use a tree." << endl;
+								cout << "Time taken to create and print the map: " << durationMap.count() << " microseconds" << endl;
+								cout << "Time taken to create and print the tree: " << durationTree.count() << " microseconds" << endl;
+								if (timeDiff > 0) { // if map was faster
+									cout << "It was " << timeDiff << " seconds faster to use a map than to use a tree." << endl;
 								}
-								else if (durationMap.count() < durationTree.count()) { // if tree was faster
-									cout << "It was " << abs(durationMap.count() - durationTree.count()) << " microseconds faster to use a tree than to use a map." << endl;
+								else if (timeDiff < 0) { // if tree was faster
+									cout << "It was " << abs(timeDiff) << " seconds faster to use a tree than to use a map." << endl;
 								}
 								else { // if both took the same amount of time
 									cout << "Both the tree and map took the same amount of time to create and print." << endl;
 								}
+								multimapToPQ(m1, m);
 							}
 							else {
 								cout << "There are no movies that fit your selections." << endl;
 							}
 						}
 
-						if (m1.size() != 0) {
-							selectRandom(m1); // Asks if user wants to select a random movie
-							printMarathon(m1);
+						if (!m.empty()) {
+							selectRandom(m); // Asks if user wants to select a random movie
+							printMarathon(m);
 						}
 
-						cout << endl;
 						cout << setfill('=') << setw(51);
 						cout << "\n";
-						cout << "|        Would you like to search again?         |" << endl;
+						cout << "|   Would you like to start your search again?   |" << endl;
 						cout << setfill('=') << setw(51);
 						cout << "\n";
 						cout << "Enter Y or N: ";
 						cin >> input;
+						m1.clear();
+						clearPQ(m);
+						tree = nullptr;
 						getline(cin, throwaway);
 					}
 					else {
