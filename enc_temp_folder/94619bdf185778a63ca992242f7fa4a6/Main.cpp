@@ -741,7 +741,7 @@ vector<movie*> marathon(double time, priority_queue<pair<int, movie*>> m1) {
 }
 */
 
-/*
+
 vector<movie*> marathon(double time, priority_queue<pair<int, movie*>> m1) {
 	vector<movie*> v;
 	unordered_set<string> alreadyChecked;
@@ -762,7 +762,6 @@ vector<movie*> marathon(double time, priority_queue<pair<int, movie*>> m1) {
 	}
 	return v;
 }
-*/
 
 
 
@@ -813,7 +812,7 @@ void printMarathon(priority_queue<pair<int, movie*>>& m1) {
 			if (stod(hour)) {
 				int mins = 60 * stod(hour);
 				vector<movie*> movies;
-				movies = randomMarathon(mins, m1);
+				movies = marathon(mins, m1);
 				int time = 0;
 				int counter = 1;
 				if (movies.size() != 0) {
