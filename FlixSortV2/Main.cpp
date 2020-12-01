@@ -13,6 +13,7 @@
 #include <chrono>
 #include <queue>
 #include <unordered_set>
+#define TABLE_SIZE 6821
 using namespace std;
 using namespace std::chrono;
 
@@ -742,8 +743,8 @@ vector<movie*> marathon(double time, priority_queue<pair<int, movie*>> m1) {
 vector<movie*> marathon(double time, priority_queue<pair<int, movie*>> m1) {
 	vector<movie*> v;
 	unordered_set<string> alreadyChecked;
-	int size = m1.size();
-	while (time > 0) { // FIXME : Will break if there is a duplicate
+	int numIters = 0;
+	while (time > 0) {
 		movie* maraMovie = selectRandomHelper(m1);
 		int temp = maraMovie->runtime;
 		if (time - temp > 0 && !alreadyChecked.count(maraMovie->name)) {
@@ -753,8 +754,9 @@ vector<movie*> marathon(double time, priority_queue<pair<int, movie*>> m1) {
 			}
 		}
 		alreadyChecked.insert(maraMovie->name);
-		if (alreadyChecked.size() == m1.size())
+		if (alreadyChecked.size() == m1.size() || numIters > TABLE_SIZE);
 			break;
+		numIters++;
 	}
 	return v;
 }
