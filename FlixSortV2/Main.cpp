@@ -731,9 +731,6 @@ void printMarathon(priority_queue<pair<int, movie*>> &m1) {
 					if (movies.size() != 0) {
 						cout << "Here is a list of movies from longest to shortest runtime." << endl;
 						for (int i = 0; i < movies.size(); i++) {
-							//cout << node->name.name << " | " << node->name.company << " | " << node->name.director << " | ";
-							//minutesToHours(node->name.runtime);
-							//cout << counter << ". " << movies[i]->name << endl;
 							cout << counter << ". " << movies[i]->name << " | " << movies[i]->company << " | " << movies[i]->director << " | " ;
 							minutesToHours(movies[i]->runtime);
 							counter++;
