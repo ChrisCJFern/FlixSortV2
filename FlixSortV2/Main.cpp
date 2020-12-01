@@ -95,16 +95,6 @@ struct movie {
 	}
 };
 
-movie* selectRandomHelper(priority_queue<pair<int, movie*>> pq) {
-	int randomIndex = Random::Int(0, pq.size() - 1); // Generate a random number
-	int count = 0;
-	while (count < randomIndex && !pq.empty()) {
-		pq.pop();
-		count++;
-	}
-	return pq.top().second;
-}
-
 void minutesToHours(int minutes) {
 	int hours = minutes / 60;
 	minutes %= 60;
@@ -133,6 +123,16 @@ void minutesToHours(int minutes) {
 			}
 		}
 	}
+}
+
+movie* selectRandomHelper(priority_queue<pair<int, movie*>> pq) {
+	int randomIndex = Random::Int(0, pq.size() - 1); // Generate a random number
+	int count = 0;
+	while (count < randomIndex && !pq.empty()) {
+		pq.pop();
+		count++;
+	}
+	return pq.top().second;
 }
 
 void selectRandom(priority_queue<pair<int, movie*>> pq) {
