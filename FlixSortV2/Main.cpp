@@ -620,11 +620,13 @@ Node* createTree(Node* tree, string genre, int year1, int year2, vector<string> 
 	return root;
 }
 
+// keeps count of movies in the tree
 int count(int &ctr) {
 	ctr++;
 	return ctr-1;
 }
 
+// prints movies in tree
 void printInorder(Node* node, int& counter) {
 	if (node == nullptr) {
 		return;
@@ -657,6 +659,7 @@ void treeToPQ(Node* node, priority_queue<pair<int,movie*>> &pq) {
 	}
 }
 
+// chooses movies for user to marathon
 vector<movie*> marathon(double time, priority_queue<pair<int, movie*>> m1) {
 	vector<movie*> v;
 	while (time > 0 && !m1.empty()) {
@@ -673,6 +676,7 @@ vector<movie*> marathon(double time, priority_queue<pair<int, movie*>> m1) {
 	return v;
 }
 
+// handles user's input for the option to marathon
 bool chooseMarathon() {
 	cout << "Would you like to binge watch some movies? Enter Y or N: ";
 	string yesOrNoStr = "";
@@ -700,12 +704,14 @@ bool chooseMarathon() {
 	return false;
 }
 
+// clears the priority queue
 void clearPQ(priority_queue<pair<int, movie*>> &pq) {
 	while (!pq.empty()) {
 		pq.pop();
 	}
 }
 
+// output for binge watching (marathoning) movies
 void printMarathon(priority_queue<pair<int, movie*>> &m1) {
 	if (chooseMarathon()) {
 		bool output = false;
