@@ -12,6 +12,7 @@
 #include <ctime>
 #include <chrono>
 #include <queue>
+#include <unordered_set>
 using namespace std;
 using namespace std::chrono;
 
@@ -660,6 +661,7 @@ void treeToPQ(Node* node, priority_queue<pair<int,movie*>> &pq) {
 }
 
 // chooses movies for user to marathon
+/*
 vector<movie*> marathon(double time, priority_queue<pair<int, movie*>> m1) {
 	vector<movie*> v;
 	while (time > 0 && !m1.empty()) {
@@ -672,6 +674,27 @@ vector<movie*> marathon(double time, priority_queue<pair<int, movie*>> m1) {
 		else {
 			m1.pop();
 		}
+	}
+	return v;
+}
+*/
+
+vector<movie*> marathon(double time, priority_queue<pair<int, movie*>> m1) {
+	vector<movie*> v;
+	unordered_set<string> alreadyChecked;
+	int size = m1.size();
+	while (time > 0) { // FIXME : Will break if there is a duplicate
+		movie* maraMovie = selectRandomHelper(m1);
+		int temp = maraMovie->runtime;
+		if (time - temp > 0 && !alreadyChecked.count(maraMovie->name)) {
+			if (!alreadyChecked.count(maraMovie->name)) {
+				v.push_back(maraMovie);
+				time -= temp;
+			}
+		}
+		alreadyChecked.insert(maraMovie->name);
+		if (alreadyChecked.size() == m1.size())
+			break;
 	}
 	return v;
 }
