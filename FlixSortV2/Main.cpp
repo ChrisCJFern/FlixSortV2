@@ -921,7 +921,7 @@ vector<movie> saveMovie(unordered_multimap<string, movie> m1, vector<movie>& mov
 		else if (option == "b") {
 			// if the list of movies is empty
 			if (movieSaves.size() <= 0) {
-				cout << "You have not saved any movies." << endl << endl;
+				cout << "You have not saved any movies." << endl;
 			}
 			else {
 				// cout the list of saved movies
@@ -933,7 +933,7 @@ vector<movie> saveMovie(unordered_multimap<string, movie> m1, vector<movie>& mov
 			cout << endl;
 		}
 		else { // if input is invalid
-			cout << "invalid input" << endl << endl;
+			cout << "That is not a valid input." << endl;
 		}
 		string option2 = "";
 		cout << setfill('=') << setw(74);
@@ -945,6 +945,7 @@ vector<movie> saveMovie(unordered_multimap<string, movie> m1, vector<movie>& mov
 		cout << "Please input the letter of the selected option: ";
 		getline(cin, option2);
 		if (option2 == "a") { chosen = true; }
+		else if (option2 != "a" || option2 != "b") { cout << "That is not a valid input." << endl; }
 	}	
 
 	return movieSaves;
