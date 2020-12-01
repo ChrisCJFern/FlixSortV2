@@ -145,7 +145,9 @@ void selectRandom(priority_queue<pair<int,movie*>> pq) {
 	getline(cin, throwaway);
 	input = tolower(input[0]);
 	if (input == "y") {
-		cout << "\nRandom Movie: " << selectRandomHelper(pq)->name << endl;
+		movie* tempMovie = selectRandomHelper(pq);
+		cout << "\nRandom Movie: " << tempMovie->name << " | " << tempMovie->company << " | " << tempMovie->director << " | ";
+		minutesToHours(tempMovie->runtime);
 	}
 	cout << setfill('=') << setw(51);
 	cout << "\n";
