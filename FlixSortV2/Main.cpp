@@ -305,7 +305,7 @@ int chooseOutput() {
 	return choice;
 }
 
-// creates a multimap based on user's preferences with greatest to lowest rank
+// creates a multimap based on user's preferences
 unordered_multimap<string, movie> createMap(string genre, int year1, int year2, vector<string> ratings) {
 	unordered_multimap<string, movie> m;              //https://www.cplusplus.com/reference/map/multimap/
 	string line;
@@ -542,7 +542,7 @@ void recalcBalanceFactor(Node* node) {
 	}
 }
 
-//insert a node, by taking in a root node, a string for the name and an int for the id
+//insert a node, by taking in a root node, a string for the name and an double for the rating out of 10
 //if node is nullptr, make a new node, else go to the left or right depending on how id compares to node value
 //then set node's left or right equal to the result of calling insert on the node->left or node->right
 // inserts if year and genre match, if they do, add in rating/score value and movie name
@@ -841,17 +841,16 @@ int main() {
 								printInorder(tree, count);
 								auto stopTree = high_resolution_clock::now();
 								auto durationTree = duration_cast<microseconds>(stopTree - startTree);
-								auto durationDiff = duration_cast<microseconds>(durationTree - durationMap);
-								double timeDiff = durationDiff.count() * pow(10, -6);
+								auto timeDiff = duration_cast<microseconds>(durationTree - durationMap);
 								// outputs times
 								cout << endl << "Time stats: " << endl;
 								cout << "Time taken to create and print the map: " << durationMap.count() << " microseconds" << endl;
 								cout << "Time taken to create and print the tree: " << durationTree.count() << " microseconds" << endl;
-								if (timeDiff > 0) { // if map was faster
-									cout << "It was " << timeDiff << " seconds faster to use a map than to use a tree." << endl;
+								if (timeDiff.count() > 0) { // if map was faster
+									cout << "It was " << timeDiff.count() << " microseconds faster to use a map than to use a tree." << endl;
 								}
-								else if (timeDiff < 0) { // if tree was faster
-									cout << "It was " << abs(timeDiff) << " seconds faster to use a tree than to use a map." << endl;
+								else if (timeDiff.count() < 0) { // if tree was faster
+									cout << "It was " << abs(timeDiff.count()) << " microseconds faster to use a tree than to use a map." << endl;
 								}
 								else { // if both took the same amount of time
 									cout << "Both the tree and map took the same amount of time to create and print." << endl;
