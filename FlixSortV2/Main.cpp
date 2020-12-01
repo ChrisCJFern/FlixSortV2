@@ -848,53 +848,67 @@ void printMarathon(priority_queue<pair<int, movie*>>& m1) {
 vector<movie> saveMovie(unordered_multimap<string, movie> m1, vector<movie>& movieSaves) {
 	// menu to store or show list of movies
 	int movieFound = 0;
-	string option;
+	bool chosen = false;
 	string input;
-	cout << setfill('=') << setw(71);
-	cout << "\n";
-	cout << "| Would you like to store a movie or show your list of saved movies? |" << endl;
-	cout << "|          (a) Store a movie     (b) Show list of saved movies       |" << endl;
-	cout << setfill('=') << setw(71);
-	cout << "\n";
-	cout << "Please input the letter of the selected option: ";
-	getline(cin, option);	
-	// store movie
-	if (option == "a") {
-		//find movie in list of map bc map is <movie name, movie object>
-		// find movie name as map.first, and
-		// push_back movie object (map.second) into vector
-		cout << "What movie would you like to store?: ";
-		getline(cin, input);
-		for (auto iter = m1.begin(); iter != m1.end(); ++iter) {
-			// if movie is found in list
-			if (input == iter->first) {
-				movieSaves.push_back(iter->second);
-				movieFound = 1;
-				cout << endl << input << " has been successfully saved!" << endl;
+	while (!chosen) {
+		string option = "";
+		cout << endl;
+		cout << setfill('=') << setw(71);
+		cout << "\n";
+		cout << "| Would you like to store a movie or show your list of saved movies? |" << endl;
+		cout << "|          (a) Store a movie     (b) Show list of saved movies       |" << endl;
+		cout << setfill('=') << setw(71);
+		cout << "\n";
+		cout << "Please input the letter of the selected option: ";
+		getline(cin, option);
+		// store movie
+		if (option == "a") {
+			while (movieFound == 0) {
+				cout << "What movie would you like to store?: ";
+				getline(cin, input);
+				for (auto iter = m1.begin(); iter != m1.end(); ++iter) {
+					// if movie is found in list
+					if (input == iter->first) {
+						movieSaves.push_back(iter->second);
+						movieFound = 1;
+						cout << input << " has been successfully saved!" << endl << endl;
+					}
+				}
+				// if movie was not found in the list
+				if (movieFound == 0) {
+					cout << input << " was not found. Try again. " << endl << endl;
+				}
 			}
 		}
-		// if movie was not found in the list
-		if (movieFound == 0) {
-			// try again?
-			cout << endl << input << " was not found." << endl;
-		}
-	}
-	else if (option == "b") {
-		// if the list of movies is empty
-		if (movieSaves.size() <= 0) {
-			cout << "You have not saved any movies." << endl;
-		}
-		else {
-			// cout the list of saved movies
-			for (auto iter = movieSaves.begin(); iter != movieSaves.end(); ++iter) {
-				cout << iter->name << " | " << iter->company << " | " << iter->director << " | ";
-				minutesToHours(iter->runtime);
+		else if (option == "b") {
+			// if the list of movies is empty
+			if (movieSaves.size() <= 0) {
+				cout << "You have not saved any movies." << endl << endl;
 			}
-		}	
+			else {
+				// cout the list of saved movies
+				for (auto iter = movieSaves.begin(); iter != movieSaves.end(); ++iter) {
+					cout << iter->name << " | " << iter->company << " | " << iter->director << " | ";
+					minutesToHours(iter->runtime);
+					cout << endl;
+				}
+			}
+		}
+		else { // if input is invalid
+			cout << "invalid input" << endl << endl;
+		}
+		string option2 = "";
+		cout << setfill('=') << setw(74);
+		cout << "\n";
+		cout << "|Would you like to continue or add more movies/look at saved movie list?|" << endl;
+		cout << "|                 (a) Continue               (b) Repeat                 |" << endl;
+		cout << setfill('=') << setw(74);
+		cout << "\n";
+		cout << "Please input the letter of the selected option: ";
+		getline(cin, option2);
+		if (option2 == "a") { chosen = true; }
 	}
-	else { // if input is invalid
-		cout << "invalid input" << endl;
-	}
+	
 
 	return movieSaves;
 }
