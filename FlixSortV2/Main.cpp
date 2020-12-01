@@ -740,6 +740,7 @@ vector<movie*> marathon(double time, priority_queue<pair<int, movie*>> m1) {
 	return v;
 }
 */
+
 /*
 vector<movie*> marathon(double time, priority_queue<pair<int, movie*>> m1) {
 	vector<movie*> v;
@@ -755,13 +756,14 @@ vector<movie*> marathon(double time, priority_queue<pair<int, movie*>> m1) {
 			}
 		}
 		alreadyChecked.insert(maraMovie->name);
-		if (alreadyChecked.size() == m1.size() || numIters > TABLE_SIZE);
+		if (alreadyChecked.size() == m1.size() || numIters > TABLE_SIZE)
 			break;
 		numIters++;
 	}
 	return v;
 }
 */
+
 
 vector<movie*> randomMarathon(int mins, priority_queue<pair<int, movie*>> m1) {
 	priority_queue<pair<int, movie*>> p;
