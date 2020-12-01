@@ -794,6 +794,7 @@ int main() {
 				if (choice3 != 0) {
 					choice4 = chooseOutput();
 					if (choice4 != 0) {
+						// if user wants to print movies from map
 						if (choice4 == 97) { // 97 = 'a'
 							cout << endl;
 							auto startMap = high_resolution_clock::now();
@@ -811,6 +812,7 @@ int main() {
 								cout << "There are no movies that fit your selections." << endl;
 							}
 						}
+						// if user wants to print movies from tree
 						else if (choice4 == 98) {
 							auto startTree = high_resolution_clock::now();
 							// prints out tree options
@@ -828,6 +830,7 @@ int main() {
 								cout << "There are no movies that fit your selections." << endl;
 							}
 						}
+						// if user wants to print movies from map and tree
 						else {
 							auto startMap = high_resolution_clock::now();
 							// prints out map options
