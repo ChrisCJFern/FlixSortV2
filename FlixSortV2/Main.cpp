@@ -798,6 +798,7 @@ void computeMarathon(bool output, priority_queue<pair<int, movie*>>& m1) {
 // output for binge watching (marathoning) movies
 void printMarathon(priority_queue<pair<int, movie*>>& m1) {
 	string throwaway;
+	bool chosen = false;
 	bool output = false;
 	bool exit = false;
 	cout << setfill('=') << setw(51);
@@ -809,6 +810,7 @@ void printMarathon(priority_queue<pair<int, movie*>>& m1) {
 	string input;
 	cin.clear();
 	while (!exit) {
+		chosen = false;
 		output = false;
 		getline(cin, throwaway);
 		cout << setfill('=') << setw(51);
@@ -819,18 +821,23 @@ void printMarathon(priority_queue<pair<int, movie*>>& m1) {
 		cout << setfill('=') << setw(51);
 		cout << "\n";
 		cout << "Please enter the letter of your selected option: ";
-		getline(cin, input);
-		if (input.length() != 1 || input[0] < 'A' || (input[0] < 'a' && input[0] > 'B') || input[0] > 'b') {
-			cout << input << " is an invalid input." << endl;
-			cout << "Please enter your input in the correct format: ";
-			input.clear();
-		}
-		else {
-			if (tolower(input[0]) == 97) {
-				computeMarathon(output, m1);
+		while (!chosen) {
+			getline(cin, input);
+			if (input.length() != 1 || input[0] < 'A' || (input[0] < 'a' && input[0] > 'B') || input[0] > 'b') {
+				cout << input << " is an invalid input." << endl;
+				cout << "Please enter your input in the correct format: ";
+				input.clear();
+				chosen = false;
 			}
 			else {
-				exit = true;
+				if (tolower(input[0]) == 97) {
+					computeMarathon(output, m1);
+					chosen = true;
+				}
+				else {
+					exit = true;
+					chosen = true;
+				}
 			}
 		}
 	}
@@ -855,69 +862,78 @@ vector<movie> saveMovie(unordered_multimap<string, movie> m1, vector<movie>& mov
 		cout << "\n";
 		cout << "Please input the letter of the selected option: ";
 		getline(cin, option);
+		bool path = false;
 		// stores movie
-		if (option == "a") {
-			while (!movieFound) {
-				duplicateMovie = false;
-				string input = "";
-				cout << "What movie would you like to store?: ";
-				getline(cin, input);
+		while (!path){
+			if (option == "a") {
+				path = true;
+				while (!movieFound) {
+					duplicateMovie = false;
+					string input = "";
+					cout << "What movie would you like to store?: ";
+					getline(cin, input);
 
-				for (auto iter = movieSaves.begin(); iter != movieSaves.end(); ++iter) {
-					if (iter->name == input) {
-						cout << input << " has already been added." << endl;
-						duplicateMovie = true;
-					}
-				}
-				if (!duplicateMovie) {
-					for (auto iter = m1.begin(); iter != m1.end(); ++iter) {
-						// if movie is found in list
-						if (input == iter->first) {
-							movieSaves.push_back(iter->second);
-							movieFound = true;
-							cout << input << " has been successfully saved!" << endl << endl;
+					for (auto iter = movieSaves.begin(); iter != movieSaves.end(); ++iter) {
+						if (iter->name == input) {
+							cout << input << " has already been added." << endl;
+							duplicateMovie = true;
 						}
 					}
-					// if movie was not found in the list
-					if (!movieFound) {
-						cout << input << " was not found. Try again. " << endl << endl;
+					if (!duplicateMovie) {
+						for (auto iter = m1.begin(); iter != m1.end(); ++iter) {
+							// if movie is found in list
+							if (input == iter->first) {
+								movieSaves.push_back(iter->second);
+								movieFound = true;
+								cout << input << " has been successfully saved!" << endl << endl;
+							}
+						}
+						// if movie was not found in the list
+						if (!movieFound) {
+							cout << input << " was not found. Try again. " << endl << endl;
+						}
 					}
-				}				
-				
-			}
-		}
-		// show list of saved movies
-		else if (option == "b") {
-			// if the list of movies is empty
-			if (movieSaves.size() <= 0) {
-				cout << "You have not saved any movies." << endl;
-			}
-			else {
-				// cout the list of saved movies
-				for (auto iter = movieSaves.begin(); iter != movieSaves.end(); ++iter) {
-					cout << iter->name << " | " << iter->company << " | " << iter->director << " | ";
-					minutesToHours(iter->runtime);
+
 				}
 			}
-			cout << endl;
-		}
-		else if (option == "c") {
-			movieSaves.clear();
-		}
-		else { // if input is invalid
-			cout << "That is not a valid input." << endl;
+		// show list of saved movies
+			else if (option == "b") {
+				path = true;
+				// if the list of movies is empty
+				if (movieSaves.size() <= 0) {
+					cout << "You have not saved any movies." << endl;
+				}
+				else {
+					// cout the list of saved movies
+					for (auto iter = movieSaves.begin(); iter != movieSaves.end(); ++iter) {
+						cout << iter->name << " | " << iter->company << " | " << iter->director << " | ";
+						minutesToHours(iter->runtime);
+					}
+				}
+				cout << endl;
+			}
+			else if (option == "c") {
+				path = true;
+				cout << "List has been cleared!" << endl;
+				movieSaves.clear();
+			}
+			else { // if input is invalid
+				cout << "That is not a valid input." << endl;
+				cout << "Please input the letter in the correct format: ";
+				getline(cin, option);
+			}
 		}
 		string option2 = "";
 		cout << setfill('=') << setw(74);
 		cout << "\n";
 		cout << "|Would you like to continue or add more movies/look at saved movie list?|" << endl;
-		cout << "|                 (a) Continue               (b) Repeat                 |" << endl;
+		cout << "|          (a) Back to Search        (b) View saved movie list          |" << endl;
 		cout << setfill('=') << setw(74);
 		cout << "\n";
 		cout << "Please input the letter of the selected option: ";
 		getline(cin, option2);
 		if (option2 == "a") { chosen = true; }
-		else if (option2 != "a" || option2 != "b") { cout << "That is not a valid input." << endl; }
+		else if (option2.length() != 1) { cout << "That is not a valid input." << endl; }
 	}	
 
 	return movieSaves;
