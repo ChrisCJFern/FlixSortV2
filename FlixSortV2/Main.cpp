@@ -427,12 +427,12 @@ unordered_multimap<string, movie> createMap(string genre, int year1, int year2, 
 		// only inserts movies based on the preferred genre and year range and rating
 		if (_genre == genre && (stoi(_year) >= year1) && (stoi(_year) <= year2)) {
 			if (ratings.size() == 0) {
-				m.insert({ _name, temp });
+				m.emplace( _name, temp );
 			}
 			else {
 				for (int i = 0; i < ratings.size(); i++) {
 					if (_rating == ratings[i]) {
-						m.insert({ _name, temp });
+						m.emplace( _name, temp );
 					}
 				}
 			}
@@ -730,10 +730,10 @@ priority_queue<pair<int, movie*>> randomMarathon(int mins, priority_queue<pair<i
 			if (time + temp->runtime < mins) {
 				p.push({ temp->runtime,temp });
 				time += temp->runtime;
-				fit.insert(temp);
+				fit.emplace(temp);
 			}
 			else {
-				toolong.insert(temp);
+				toolong.emplace(temp);
 			}
 		}
 		else {
