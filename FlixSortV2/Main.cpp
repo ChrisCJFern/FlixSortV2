@@ -752,18 +752,8 @@ void clearPQ(priority_queue<pair<int, movie*>>& pq) {
 	}
 }
 
-// output for binge watching (marathoning) movies
-void printMarathon(priority_queue<pair<int, movie*>>& m1) {
-	string throwaway;
-	//getline(cin, throwaway);
-	bool output = false;
-	bool exit = false;
+void computeMarathon(bool output, priority_queue<pair<int, movie*>>& m1) {
 	string hour;
-	cout << setfill('=') << setw(51);
-	cout << "\n";
-	cout << "|      Your Personal Movie Marathon Planner      |" << endl;
-	cout << setfill('=') << setw(51);
-	cout << "\n";
 	cout << "Enter the max number of hours: ";
 	while (output == false) {
 		cin >> hour;
@@ -771,13 +761,13 @@ void printMarathon(priority_queue<pair<int, movie*>>& m1) {
 		try {
 			if (stod(hour)) {
 				int mins = 60 * stod(hour);
-				priority_queue<pair<int,movie*>> movies;
+				priority_queue<pair<int, movie*>> movies;
 				movies = randomMarathon(mins, m1);
 				int time = 0;
 				int counter = 1;
-				if(!movies.empty()){
+				if (!movies.empty()) {
 					cout << "Here is a list of movies from longest to shortest runtime." << endl;
-					while(!movies.empty()){
+					while (!movies.empty()) {
 						cout << counter << ". " << movies.top().second->name << " | " << movies.top().second->company << " | " << movies.top().second->director << " | ";
 						minutesToHours(movies.top().second->runtime);
 						counter++;
@@ -803,6 +793,19 @@ void printMarathon(priority_queue<pair<int, movie*>>& m1) {
 			cout << "Invalid input. Please enter a valid number: ";
 		}
 	}
+}
+
+// output for binge watching (marathoning) movies
+void printMarathon(priority_queue<pair<int, movie*>>& m1) {
+	string throwaway;
+	bool output = false;
+	bool exit = false;
+	cout << setfill('=') << setw(51);
+	cout << "\n";
+	cout << "|      Your Personal Movie Marathon Planner      |" << endl;
+	cout << setfill('=') << setw(51);
+	cout << "\n";
+	computeMarathon(output, m1);
 	string input;
 	cin.clear();
 	while (!exit) {
@@ -824,45 +827,7 @@ void printMarathon(priority_queue<pair<int, movie*>>& m1) {
 		}
 		else {
 			if (tolower(input[0]) == 97) {
-				cout << "Enter the max number of hours: ";
-				while (output == false) {
-					cin >> hour;
-					cout << endl;
-					try {
-						if (stod(hour)) {
-							int mins = 60 * stod(hour);
-							priority_queue<pair<int, movie*>> movies; 
-							movies = randomMarathon(mins, m1);
-							int time = 0;
-							int counter = 1;
-							if (!movies.empty()) {
-								cout << "Here is a list of movies from longest to shortest runtime." << endl;
-								while (!movies.empty()) {
-									cout << counter << ". " << movies.top().second->name << " | " << movies.top().second->company << " | " << movies.top().second->director << " | ";
-									minutesToHours(movies.top().second->runtime);
-									counter++;
-									time += movies.top().second->runtime;
-									movies.pop();
-								}
-								cout << "The total time it will take you to watch these movies is: ";
-								minutesToHours(time);
-								cout << endl;
-							}
-							else {
-								cout << "No movies fit in your selected time frame." << endl;
-							}
-							output = true;
-						}
-						else if (hour == "0") {
-							cout << "No movies fit in your selected time frame." << endl;
-							output = true;
-						}
-					}
-					catch (...) {
-						output = false;
-						cout << "Invalid input. Please enter a valid number: ";
-					}
-				}
+				computeMarathon(output, m1);
 			}
 			else {
 				exit = true;
@@ -882,7 +847,8 @@ vector<movie> saveMovie(unordered_multimap<string, movie> m1, vector<movie>& mov
 		cout << setfill('=') << setw(71);
 		cout << "\n";
 		cout << "| Would you like to store a movie or show your list of saved movies? |" << endl;
-		cout << "|          (a) Store a movie     (b) Show list of saved movies       |" << endl;
+		cout << "|          (a) Store a movie           (c) Clear saved movies        |" << endl;
+		cout << "|          (b) Show saved movies                                     |" << endl;
 		cout << setfill('=') << setw(71);
 		cout << "\n";
 		cout << "Please input the letter of the selected option: ";
@@ -931,6 +897,9 @@ vector<movie> saveMovie(unordered_multimap<string, movie> m1, vector<movie>& mov
 				}
 			}
 			cout << endl;
+		}
+		else if (option == "c") {
+			movieSaves.clear();
 		}
 		else { // if input is invalid
 			cout << "That is not a valid input." << endl;
