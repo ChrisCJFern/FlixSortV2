@@ -872,8 +872,7 @@ void printMarathon(priority_queue<pair<int, movie*>>& m1) {
 }
 
 // gives user option to store movie and to look at list of saved movies
-vector<movie> saveMovie(unordered_multimap<string, movie> m1, vector<movie>& movieSaves) {
-	
+vector<movie> saveMovie(unordered_multimap<string, movie> m1, vector<movie>& movieSaves) {	
 	bool chosen = false;	
 	while (!chosen) {
 		bool movieFound = false;
@@ -916,8 +915,7 @@ vector<movie> saveMovie(unordered_multimap<string, movie> m1, vector<movie>& mov
 					if (!movieFound) {
 						cout << input << " was not found. Try again. " << endl << endl;
 					}
-				}				
-				
+				}	
 			}
 		}
 		// show list of saved movies
