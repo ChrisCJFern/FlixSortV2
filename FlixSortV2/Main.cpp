@@ -717,7 +717,7 @@ void treeToPQ(Node* node, priority_queue<pair<int, movie*>>& pq) {
 }
 
 // chooses movies for user to marathon randomly
-priority_queue<pair<int,movie*>> randomMarathon(int mins, priority_queue<pair<int, movie*>> m1) {
+priority_queue<pair<int, movie*>> randomMarathon(int mins, priority_queue<pair<int, movie*>> m1) {
 	priority_queue<pair<int, movie*>> p;
 	int time = 0;
 	bool done = false;
@@ -727,7 +727,7 @@ priority_queue<pair<int,movie*>> randomMarathon(int mins, priority_queue<pair<in
 	while (!done) {
 		movie* temp = selectRandomHelper(m1);
 		if (fit.find(temp) == fit.end() && toolong.find(temp) == toolong.end()) {
-			if (time + temp->runtime < mins ) {
+			if (time + temp->runtime < mins) {
 				p.push({ temp->runtime,temp });
 				time += temp->runtime;
 				fit.insert(temp);
@@ -939,6 +939,21 @@ vector<movie> saveMovie(unordered_multimap<string, movie> m1, vector<movie>& mov
 	return movieSaves;
 }
 
+string checkIfYorN(string input) {
+	while (true) {
+		input = tolower(input[0]);
+		try {
+			if (input != "y" && input != "n")
+				throw input;
+			return input;
+		}
+		catch (...) {
+			cout << "Incorrect input. \nEnter Y or N: ";
+			cin >> input;
+		}
+	}
+}
+
 int main() {
 	unordered_map<int, string> genre = { {97, "Action"}, {98, "Adventure"}, {99, "Animation"}, {100, "Biography"}, {101, "Comedy"}, {102, "Crime"}, {103, "Drama"}, {104, "Family"}, {105, "Fantasy"}, {106, "Horror"}, {107, "Musical"}, {108, "Mystery"}, {109, "Romance"}, {110, "Sci-Fi"}, {111, "Thriller"}, {112, "War"}, {113, "Western"} };
 	unordered_map<int, vector<string>> rating = { {97, {"G"}}, {98, {"PG", "TV-PG"}}, {99, {"PG-13", "TV-14"}}, {100, {"TV-MA"}}, {101, {"R"}}, {102, {"NC-17"}}, { 103, {"UNRATED", "NOT RATED", "Not specified"}}, { 104, {"B", "B15"}}, {105, {}} };
@@ -1088,10 +1103,11 @@ int main() {
 							cout << "\n";
 							cout << "Enter Y or N: ";
 							cin >> input;
+							getline(cin, throwaway);
+							input = checkIfYorN(input);
 							m1.clear();
 							clearPQ(m);
 							tree = nullptr;
-							getline(cin, throwaway);
 						}
 					}
 					else {
