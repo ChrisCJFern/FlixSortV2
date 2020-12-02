@@ -717,7 +717,7 @@ void treeToPQ(Node* node, priority_queue<pair<int, movie*>>& pq) {
 }
 
 // chooses movies for user to marathon randomly
-priority_queue<pair<int,movie*>> randomMarathon(int mins, priority_queue<pair<int, movie*>> m1) {
+priority_queue<pair<int, movie*>> randomMarathon(int mins, priority_queue<pair<int, movie*>> m1) {
 	priority_queue<pair<int, movie*>> p;
 	int time = 0;
 	bool done = false;
@@ -727,7 +727,7 @@ priority_queue<pair<int,movie*>> randomMarathon(int mins, priority_queue<pair<in
 	while (!done) {
 		movie* temp = selectRandomHelper(m1);
 		if (fit.find(temp) == fit.end() && toolong.find(temp) == toolong.end()) {
-			if (time + temp->runtime < mins ) {
+			if (time + temp->runtime < mins) {
 				p.push({ temp->runtime,temp });
 				time += temp->runtime;
 				fit.insert(temp);
@@ -771,13 +771,13 @@ void printMarathon(priority_queue<pair<int, movie*>>& m1) {
 		try {
 			if (stod(hour)) {
 				int mins = 60 * stod(hour);
-				priority_queue<pair<int,movie*>> movies;
+				priority_queue<pair<int, movie*>> movies;
 				movies = randomMarathon(mins, m1);
 				int time = 0;
 				int counter = 1;
-				if(!movies.empty()){
+				if (!movies.empty()) {
 					cout << "Here is a list of movies from longest to shortest runtime." << endl;
-					while(!movies.empty()){
+					while (!movies.empty()) {
 						cout << counter << ". " << movies.top().second->name << " | " << movies.top().second->company << " | " << movies.top().second->director << " | ";
 						minutesToHours(movies.top().second->runtime);
 						counter++;
@@ -831,7 +831,7 @@ void printMarathon(priority_queue<pair<int, movie*>>& m1) {
 					try {
 						if (stod(hour)) {
 							int mins = 60 * stod(hour);
-							priority_queue<pair<int, movie*>> movies; 
+							priority_queue<pair<int, movie*>> movies;
 							movies = randomMarathon(mins, m1);
 							int time = 0;
 							int counter = 1;
@@ -873,7 +873,7 @@ void printMarathon(priority_queue<pair<int, movie*>>& m1) {
 
 vector<movie> saveMovie(unordered_multimap<string, movie> m1, vector<movie>& movieSaves) {
 	// menu to store or show list of movies	
-	bool chosen = false;	
+	bool chosen = false;
 	while (!chosen) {
 		int movieFound = 0;
 		string option = "";
@@ -934,9 +934,24 @@ vector<movie> saveMovie(unordered_multimap<string, movie> m1, vector<movie>& mov
 		getline(cin, option2);
 		if (option2 == "a") { chosen = true; }
 	}
-	
+
 
 	return movieSaves;
+}
+
+string checkIfYorN(string input) {
+	while (true) {
+		input = tolower(input[0]);
+		try {
+			if (input != "y" && input != "n")
+				throw input;
+			return input;
+		}
+		catch (...) {
+			cout << "Incorrect input. \nEnter Y or N: ";
+			cin >> input;
+		}
+	}
 }
 
 int main() {
@@ -1088,10 +1103,11 @@ int main() {
 							cout << "\n";
 							cout << "Enter Y or N: ";
 							cin >> input;
+							getline(cin, throwaway);
+							input = checkIfYorN(input);
 							m1.clear();
 							clearPQ(m);
 							tree = nullptr;
-							getline(cin, throwaway);
 						}
 					}
 					else {
