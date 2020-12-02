@@ -948,7 +948,7 @@ string checkIfYorN(string input) {
 			return input;
 		}
 		catch (...) {
-			cout << "Incorrect input. \nEnter Y or N: ";
+			cout << "Invalid input. \nPLease enter Y or N: ";
 			cin >> input;
 		}
 	}
