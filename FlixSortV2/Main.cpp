@@ -717,7 +717,7 @@ void treeToPQ(Node* node, priority_queue<pair<int, movie*>>& pq) {
 }
 
 // chooses movies for user to marathon randomly
-priority_queue<pair<int,movie*>> randomMarathon(int mins, priority_queue<pair<int, movie*>> m1) {
+priority_queue<pair<int, movie*>> randomMarathon(int mins, priority_queue<pair<int, movie*>> m1) {
 	priority_queue<pair<int, movie*>> p;
 	int time = 0;
 	bool done = false;
@@ -727,7 +727,7 @@ priority_queue<pair<int,movie*>> randomMarathon(int mins, priority_queue<pair<in
 	while (!done) {
 		movie* temp = selectRandomHelper(m1);
 		if (fit.find(temp) == fit.end() && toolong.find(temp) == toolong.end()) {
-			if (time + temp->runtime < mins ) {
+			if (time + temp->runtime < mins) {
 				p.push({ temp->runtime,temp });
 				time += temp->runtime;
 				fit.insert(temp);
@@ -752,18 +752,8 @@ void clearPQ(priority_queue<pair<int, movie*>>& pq) {
 	}
 }
 
-// output for binge watching (marathoning) movies
-void printMarathon(priority_queue<pair<int, movie*>>& m1) {
-	string throwaway;
-	//getline(cin, throwaway);
-	bool output = false;
-	bool exit = false;
+void computeMarathon(bool output, priority_queue<pair<int, movie*>>& m1) {
 	string hour;
-	cout << setfill('=') << setw(51);
-	cout << "\n";
-	cout << "|      Your Personal Movie Marathon Planner      |" << endl;
-	cout << setfill('=') << setw(51);
-	cout << "\n";
 	cout << "Enter the max number of hours: ";
 	while (output == false) {
 		cin >> hour;
@@ -771,13 +761,13 @@ void printMarathon(priority_queue<pair<int, movie*>>& m1) {
 		try {
 			if (stod(hour)) {
 				int mins = 60 * stod(hour);
-				priority_queue<pair<int,movie*>> movies;
+				priority_queue<pair<int, movie*>> movies;
 				movies = randomMarathon(mins, m1);
 				int time = 0;
 				int counter = 1;
-				if(!movies.empty()){
+				if (!movies.empty()) {
 					cout << "Here is a list of movies from longest to shortest runtime." << endl;
-					while(!movies.empty()){
+					while (!movies.empty()) {
 						cout << counter << ". " << movies.top().second->name << " | " << movies.top().second->company << " | " << movies.top().second->director << " | ";
 						minutesToHours(movies.top().second->runtime);
 						counter++;
@@ -803,9 +793,24 @@ void printMarathon(priority_queue<pair<int, movie*>>& m1) {
 			cout << "Invalid input. Please enter a valid number: ";
 		}
 	}
+}
+
+// output for binge watching (marathoning) movies
+void printMarathon(priority_queue<pair<int, movie*>>& m1) {
+	string throwaway;
+	bool chosen = false;
+	bool output = false;
+	bool exit = false;
+	cout << setfill('=') << setw(51);
+	cout << "\n";
+	cout << "|      Your Personal Movie Marathon Planner      |" << endl;
+	cout << setfill('=') << setw(51);
+	cout << "\n";
+	computeMarathon(output, m1);
 	string input;
 	cin.clear();
 	while (!exit) {
+		chosen = false;
 		output = false;
 		getline(cin, throwaway);
 		cout << setfill('=') << setw(51);
@@ -816,63 +821,31 @@ void printMarathon(priority_queue<pair<int, movie*>>& m1) {
 		cout << setfill('=') << setw(51);
 		cout << "\n";
 		cout << "Please enter the letter of your selected option: ";
-		getline(cin, input);
-		if (input.length() != 1 || input[0] < 'A' || (input[0] < 'a' && input[0] > 'B') || input[0] > 'b') {
-			cout << input << " is an invalid input." << endl;
-			cout << "Please enter your input in the correct format: ";
-			input.clear();
-		}
-		else {
-			if (tolower(input[0]) == 97) {
-				cout << "Enter the max number of hours: ";
-				while (output == false) {
-					cin >> hour;
-					cout << endl;
-					try {
-						if (stod(hour)) {
-							int mins = 60 * stod(hour);
-							priority_queue<pair<int, movie*>> movies; 
-							movies = randomMarathon(mins, m1);
-							int time = 0;
-							int counter = 1;
-							if (!movies.empty()) {
-								cout << "Here is a list of movies from longest to shortest runtime." << endl;
-								while (!movies.empty()) {
-									cout << counter << ". " << movies.top().second->name << " | " << movies.top().second->company << " | " << movies.top().second->director << " | ";
-									minutesToHours(movies.top().second->runtime);
-									counter++;
-									time += movies.top().second->runtime;
-									movies.pop();
-								}
-								cout << "The total time it will take you to watch these movies is: ";
-								minutesToHours(time);
-								cout << endl;
-							}
-							else {
-								cout << "No movies fit in your selected time frame." << endl;
-							}
-							output = true;
-						}
-						else if (hour == "0") {
-							cout << "No movies fit in your selected time frame." << endl;
-							output = true;
-						}
-					}
-					catch (...) {
-						output = false;
-						cout << "Invalid input. Please enter a valid number: ";
-					}
-				}
+		while (!chosen) {
+			getline(cin, input);
+			if (input.length() != 1 || input[0] < 'A' || (input[0] < 'a' && input[0] > 'B') || input[0] > 'b') {
+				cout << input << " is an invalid input." << endl;
+				cout << "Please enter your input in the correct format: ";
+				input.clear();
+				chosen = false;
 			}
 			else {
-				exit = true;
+				if (tolower(input[0]) == 97) {
+					computeMarathon(output, m1);
+					chosen = true;
+				}
+				else {
+					exit = true;
+					chosen = true;
+				}
 			}
 		}
 	}
 }
 
 // gives user option to store movie and to look at list of saved movies
-vector<movie> saveMovie(unordered_multimap<string, movie> m1, vector<movie>& movieSaves) {	
+vector<movie> saveMovie(unordered_multimap<string, movie> m1, vector<movie>& movieSaves) {
+	
 	bool chosen = false;	
 	while (!chosen) {
 		bool movieFound = false;
@@ -883,73 +856,102 @@ vector<movie> saveMovie(unordered_multimap<string, movie> m1, vector<movie>& mov
 		cout << setfill('=') << setw(71);
 		cout << "\n";
 		cout << "| Would you like to store a movie or show your list of saved movies? |" << endl;
-		cout << "|          (a) Store a movie     (b) Show list of saved movies       |" << endl;
+		cout << "|          (a) Store a movie           (c) Clear saved movies        |" << endl;
+		cout << "|          (b) Show saved movies                                     |" << endl;
 		cout << setfill('=') << setw(71);
 		cout << "\n";
 		cout << "Please input the letter of the selected option: ";
 		getline(cin, option);
+		bool path = false;
 		// stores movie
-		if (option == "a") {
-			while (!movieFound) {
-				duplicateMovie = false;
-				string input = "";
-				cout << "What movie would you like to store?: ";
-				getline(cin, input);
+		while (!path){
+			if (option == "a") {
+				path = true;
+				while (!movieFound) {
+					duplicateMovie = false;
+					string input = "";
+					cout << "What movie would you like to store?: ";
+					getline(cin, input);
 
-				for (auto iter = movieSaves.begin(); iter != movieSaves.end(); ++iter) {
-					if (iter->name == input) {
-						cout << input << " has already been added." << endl;
-						duplicateMovie = true;
-					}
-				}
-				if (!duplicateMovie) {
-					for (auto iter = m1.begin(); iter != m1.end(); ++iter) {
-						// if movie is found in list
-						if (input == iter->first) {
-							movieSaves.push_back(iter->second);
-							movieFound = true;
-							cout << input << " has been successfully saved!" << endl << endl;
+					for (auto iter = movieSaves.begin(); iter != movieSaves.end(); ++iter) {
+						if (iter->name == input) {
+							cout << input << " has already been added." << endl;
+							duplicateMovie = true;
 						}
 					}
-					// if movie was not found in the list
-					if (!movieFound) {
-						cout << input << " was not found. Try again. " << endl << endl;
+					if (!duplicateMovie) {
+						for (auto iter = m1.begin(); iter != m1.end(); ++iter) {
+							// if movie is found in list
+							if (input == iter->first) {
+								movieSaves.push_back(iter->second);
+								movieFound = true;
+								cout << input << " has been successfully saved!" << endl << endl;
+							}
+						}
+						// if movie was not found in the list
+						if (!movieFound) {
+							cout << input << " was not found. Try again. " << endl << endl;
+						}
 					}
-				}	
-			}
-		}
-		// show list of saved movies
-		else if (option == "b") {
-			// if the list of movies is empty
-			if (movieSaves.size() <= 0) {
-				cout << "You have not saved any movies." << endl;
-			}
-			else {
-				// cout the list of saved movies
-				for (auto iter = movieSaves.begin(); iter != movieSaves.end(); ++iter) {
-					cout << iter->name << " | " << iter->company << " | " << iter->director << " | ";
-					minutesToHours(iter->runtime);
+
 				}
 			}
-			cout << endl;
-		}
-		else { // if input is invalid
-			cout << "That is not a valid input." << endl;
+		// show list of saved movies
+			else if (option == "b") {
+				path = true;
+				// if the list of movies is empty
+				if (movieSaves.size() <= 0) {
+					cout << "You have not saved any movies." << endl;
+				}
+				else {
+					// cout the list of saved movies
+					for (auto iter = movieSaves.begin(); iter != movieSaves.end(); ++iter) {
+						cout << iter->name << " | " << iter->company << " | " << iter->director << " | ";
+						minutesToHours(iter->runtime);
+					}
+				}
+				cout << endl;
+			}
+			else if (option == "c") {
+				path = true;
+				cout << "List has been cleared!" << endl;
+				movieSaves.clear();
+			}
+			else { // if input is invalid
+				cout << "That is not a valid input." << endl;
+				cout << "Please input the letter in the correct format: ";
+				getline(cin, option);
+			}
 		}
 		string option2 = "";
 		cout << setfill('=') << setw(74);
 		cout << "\n";
 		cout << "|Would you like to continue or add more movies/look at saved movie list?|" << endl;
-		cout << "|                 (a) Continue               (b) Repeat                 |" << endl;
+		cout << "|          (a) Back to Search        (b) View saved movie list          |" << endl;
 		cout << setfill('=') << setw(74);
 		cout << "\n";
 		cout << "Please input the letter of the selected option: ";
 		getline(cin, option2);
 		if (option2 == "a") { chosen = true; }
-		else if (option2 != "a" || option2 != "b") { cout << "That is not a valid input." << endl; }
+		else if (option2.length() != 1) { cout << "That is not a valid input." << endl; }
 	}	
 
 	return movieSaves;
+}
+
+string checkIfYorN(string input) {
+	while (true) {
+		input = tolower(input[0]);
+		try {
+			if (input != "y" && input != "n")
+				throw input;
+			return input;
+		}
+		catch (...) {
+			cout << "Incorrect input. \nEnter Y or N: ";
+			cin >> input;
+		}
+	}
 }
 
 int main() {
@@ -1101,10 +1103,11 @@ int main() {
 							cout << "\n";
 							cout << "Enter Y or N: ";
 							cin >> input;
+							getline(cin, throwaway);
+							input = checkIfYorN(input);
 							m1.clear();
 							clearPQ(m);
 							tree = nullptr;
-							getline(cin, throwaway);
 						}
 					}
 					else {
