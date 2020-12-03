@@ -1095,7 +1095,9 @@ int main() {
 									printMarathon(m);
 									break;
 								case 100:
-									m1 = createMap(genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
+									if (m1.size() == 0) {
+										m1 = createMap(genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
+									}
 									saveMovie(m1, movieSaves);
 									break;
 								default:
