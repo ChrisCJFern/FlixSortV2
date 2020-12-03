@@ -8,11 +8,11 @@
 #include <ctype.h>
 #include <unordered_map>
 #include <map>
+#include <queue>
+#include <unordered_set>
 #include <random>
 #include <ctime>
 #include <chrono>
-#include <queue>
-#include <unordered_set>
 #define TABLE_SIZE 6821
 using namespace std;
 using namespace std::chrono;
@@ -363,7 +363,7 @@ int chooseOption() {
 
 // creates a multimap based on user's preferences
 unordered_multimap<string, movie> createMap(string genre, int year1, int year2, vector<string> ratings) {
-	unordered_multimap<string, movie> m;              //https://www.cplusplus.com/reference/map/multimap/
+	unordered_multimap<string, movie> m;              //information on the use of a multimap: https://www.cplusplus.com/reference/map/multimap/
 	string line;
 	ifstream movieFile;
 	movieFile.open("movies.csv", ios::in);
@@ -450,7 +450,7 @@ void printMap(unordered_multimap<string, movie> m1) {
 	for (iter; iter != m1.end(); iter++) {
 		m2[(iter->second.score)].push_back(&iter->second);
 	}
-	auto iter2 = m2.rbegin();								//https://www.geeksforgeeks.org/how-to-traverse-a-stl-map-in-reverse-direction/
+	auto iter2 = m2.rbegin();								// information on how to traverse a map in reverse: https://www.geeksforgeeks.org/how-to-traverse-a-stl-map-in-reverse-direction/
 	cout << "#. Movie | Company | Director | Runtime " << endl;
 	for (iter2; iter2 != m2.rend(); iter2++) {
 		for (int i = 0; i < iter2->second.size(); i++) {
@@ -761,15 +761,15 @@ void computeMarathon(bool output, priority_queue<pair<int, movie*>>& m1) {
 		try {
 			if (stod(hour)) {
 				int mins = 60 * stod(hour);
-				priority_queue<pair<int, movie*>> movies;
-				movies = randomMarathon(mins, m1);
+				priority_queue<pair<int, movie*>> movies;     
+				movies = randomMarathon(mins, m1);         //produces a random marathon of movies and works to output it in the correct format
 				int time = 0;
 				int counter = 1;
 				if (!movies.empty()) {
 					cout << "Here is a list of movies from longest to shortest runtime." << endl;
 					while (!movies.empty()) {
 						cout << counter << ". " << movies.top().second->name << " | " << movies.top().second->company << " | " << movies.top().second->director << " | ";
-						minutesToHours(movies.top().second->runtime);
+						minutesToHours(movies.top().second->runtime);					 //converts movie runtime from minutes to hours
 						counter++;
 						time += movies.top().second->runtime;
 						movies.pop();
@@ -806,13 +806,13 @@ void printMarathon(priority_queue<pair<int, movie*>>& m1) {
 	cout << "|      Your Personal Movie Marathon Planner      |" << endl;
 	cout << setfill('=') << setw(51);
 	cout << "\n";
-	computeMarathon(output, m1);
+	computeMarathon(output, m1);   //calls compute marathon to make first random movie marathon
 	string input;
 	cin.clear();
 	while (!exit) {
 		chosen = false;
-		output = false;
-		getline(cin, throwaway);
+		output = false;										//asks user if they want to produce another marathon
+		getline(cin, throwaway);							//if (a) then produces another marathon, if (b) exits back to main loop
 		cout << setfill('=') << setw(51);
 		cout << "\n";
 		cout << "|      Would you like us to pick a different     |" << endl;
@@ -845,7 +845,6 @@ void printMarathon(priority_queue<pair<int, movie*>>& m1) {
 
 // gives user option to store movie and to look at list of saved movies
 vector<movie> saveMovie(unordered_multimap<string, movie> m1, vector<movie>& movieSaves) {
-	
 	bool chosen = false;	
 	while (!chosen) {
 		bool movieFound = false;
@@ -939,6 +938,7 @@ vector<movie> saveMovie(unordered_multimap<string, movie> m1, vector<movie>& mov
 	return movieSaves;
 }
 
+//parses input for correctly inputted Y or N
 string checkIfYorN(string input) {
 	while (true) {
 		input = tolower(input[0]);
@@ -965,7 +965,7 @@ int main() {
 	//---------------------PRINTS INITIAL MENU---------------------------------------
 	cout << setfill('=') << setw(51);
 	cout << "\n";
-	cout << "|              Welcome to FlixSort               |" << endl;              //print once
+	cout << "|              Welcome to FlixSort               |" << endl;              //print initial menu once
 	cout << "|     Est. 2020 by the Magical Movie Masters     |" << endl;
 	cout << "|><><><><><><><><><><><><><><><><><><><><><><><><|" << endl;
 	cout << "| Want to watch a movie marathon?                |" << endl;
@@ -983,9 +983,9 @@ int main() {
 	priority_queue<pair<int, movie*>> m;
 	int count = 1;
 	do {
-		double mins = 0.0;
-		choice = chooseGenre();
-		if (choice != 0) {
+		double mins = 0.0;													
+		choice = chooseGenre();											   //goes through the menus until a user enters 0 or continues to build a map or tree
+		if (choice != 0) {													//based on the user input.
 			choice2 = chooseYear();
 			if (choice2 != 0) {
 				choice3 = chooseRating();
@@ -995,7 +995,7 @@ int main() {
 						// if user wants to print movies from map
 						if (choice4 == 97) { // 97 = 'a'
 							cout << endl;
-							auto startMap = high_resolution_clock::now();
+							auto startMap = high_resolution_clock::now();						//information for timer found from https://en.cppreference.com/w/cpp/chrono 
 							// prints out map options
 							m1 = createMap(genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
 							if (m1.size() != 0) {
@@ -1012,7 +1012,7 @@ int main() {
 						}
 						// if user wants to print movies from tree
 						else if (choice4 == 98) {
-							auto startTree = high_resolution_clock::now();
+							auto startTree = high_resolution_clock::now();						 //information for timer found from https://en.cppreference.com/w/cpp/chrono 
 							// prints out tree options
 							tree = createTree(tree, genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
 							if (tree != nullptr) {
@@ -1030,7 +1030,7 @@ int main() {
 						}
 						// if user wants to print movies from map and tree
 						else {
-							auto startMap = high_resolution_clock::now();
+							auto startMap = high_resolution_clock::now();          //information for timer found from https://en.cppreference.com/w/cpp/chrono 
 							// prints out map options
 							m1 = createMap(genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
 							if (m1.size() != 0) {
@@ -1038,7 +1038,7 @@ int main() {
 								cout << "Movies from the map: " << endl;
 								printMap(m1);
 								auto stopMap = high_resolution_clock::now();
-								auto durationMap = duration_cast<microseconds>(stopMap - startMap);
+								auto durationMap = duration_cast<microseconds>(stopMap - startMap);                       
 								auto startTree = high_resolution_clock::now();
 								// prints out tree options
 								cout << endl;
@@ -1051,13 +1051,13 @@ int main() {
 								auto timeDiff = duration_cast<microseconds>(durationTree - durationMap);
 								// outputs times
 								cout << endl << "Time stats: " << endl;
-								cout << "Time taken to create and print the map: " << durationMap.count() << " microseconds" << endl;
+								cout << "Time taken to create and print the multimap: " << durationMap.count() << " microseconds" << endl;
 								cout << "Time taken to create and print the tree: " << durationTree.count() << " microseconds" << endl;
 								if (timeDiff.count() > 0) { // if map was faster
-									cout << "It was " << timeDiff.count() << " microseconds faster to use a map than to use a tree." << endl;
+									cout << "It was " << timeDiff.count() << " microseconds faster to use a multimap than to use a tree." << endl;
 								}
 								else if (timeDiff.count() < 0) { // if tree was faster
-									cout << "It was " << abs(timeDiff.count()) << " microseconds faster to use a tree than to use a map." << endl;
+									cout << "It was " << abs(timeDiff.count()) << " microseconds faster to use a tree than to use a multimap." << endl;
 								}
 								else { // if both took the same amount of time
 									cout << "Both the tree and map took the same amount of time to create and print." << endl;
@@ -1069,7 +1069,7 @@ int main() {
 							}
 						}
 
-						if (!m.empty()) {
+						if (!m.empty()) {						//if there are movies in the priority_queue allow for these options to be presented
 							int choice5 = chooseOption();
 							if (choice5 != 0) {
 								switch (choice5) {
@@ -1095,9 +1095,9 @@ int main() {
 								input = "n";
 							}
 						}
-						if (input != "n") {
-							cout << setfill('=') << setw(51);
-							cout << "\n";
+						if (input != "n") {															//ask if the user wants to search again 
+							cout << setfill('=') << setw(51);											//if yes, repeat all after clearing priority queue and multimap
+							cout << "\n";																//and setting tree = nullptr
 							cout << "|   Would you like to start your search again?   |" << endl;
 							cout << setfill('=') << setw(51);
 							cout << "\n";
@@ -1116,7 +1116,7 @@ int main() {
 				}
 				else {
 					input = "n";
-				}
+				}											//exit if the input is ever 0
 			}
 			else {
 				input = "n";
@@ -1126,7 +1126,7 @@ int main() {
 			input = "n";
 		}
 	} while (input == "Y" || input == "y");
-	cout << "Goodbye!" << endl;
-
+	cout << "\nGoodbye from the Magical Movie Masters! " << endl;
+	cout << "We hope you found a movie to enjoy!" << endl;								//parting message
 	return 0;
 }
