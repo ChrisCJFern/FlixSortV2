@@ -95,45 +95,6 @@ struct movie {
 	}
 };
 
-void minutesToHours(int minutes) {
-	int hours = minutes / 60;
-	minutes %= 60;
-	if (hours > 1) {
-		cout << hours << " hours ";
-		if (minutes > 1) {
-			cout << minutes << " minutes" << endl;
-		}
-		else {
-			if (minutes != 0) {
-				cout << minutes << " minute" << endl;
-			}
-			else {
-				cout << endl;
-			}
-		}
-	}
-	else {
-		cout << hours << " hour ";
-		if (minutes > 1) {
-			cout << minutes << " minutes" << endl;
-		}
-		else {
-			if (minutes != 0) {
-				cout << minutes << "minute" << endl;
-			}
-		}
-	}
-}
-
-movie* selectRandomHelper(priority_queue<pair<int, movie*>> pq) {
-	int randomIndex = Random::Int(0, pq.size() - 1); // Generate a random number
-	int count = 0;
-	while (count < randomIndex && !pq.empty()) {
-		pq.pop();
-		count++;
-	}
-	return pq.top().second;
-}
 
 void selectRandom(priority_queue<pair<int, movie*>> pq) {
 	string input;
@@ -173,296 +134,20 @@ void selectRandom(priority_queue<pair<int, movie*>> pq) {
 	}
 }
 
-// chooses movies based on user's preferred genre
-int chooseGenre() {
-	cin.clear();
-	cout << setfill('=') << setw(51);
-	cout << "\n";
-	cout << "|      What movie genre were you thinking?       |" << endl;
-	cout << "|   (a) Action      (g) Drama     (m) Romance    |" << endl;
-	cout << "|   (b) Adventure   (h) Family    (n) Sci-Fi     |" << endl;
-	cout << "|   (c) Animation   (i) Fantasy   (o) Thriller   |" << endl;          //what genre are you thinking 
-	cout << "|   (d) Biography   (j) Horror    (p) War        |" << endl;           //indexed list
-	cout << "|   (e) Comedy      (k) Musical   (q) Western    |" << endl;
-	cout << "|   (f) Crime       (l) Mystery                  |" << endl;
-	cout << "|   (0) Enter 0 to Exit                          |" << endl;
-	cout << setfill('=') << setw(51);
-	cout << "\n";
-	cout << "Please input the letter of the selected genre: ";
-	string choice;
-	bool chosen = false;
-	int val = 0;
-	while (!chosen) {
-		getline(cin, choice);
-		if (choice == "0") {
-			val = 0;
-			chosen = true;
-		}
-		else {
-			if (choice.length() != 1 || choice[0] < 'A' || (choice[0] < 'a' && choice[0] > 'Q') || choice[0] > 'q') {
-				cout << choice << " is an invalid input." << endl;
-				cout << "Please enter your input in the correct format: ";
-				choice.clear();
-			}
-			else {
-				chosen = true;
-				val = tolower(int(choice[0]));
-				break;
-			}
-		}
+movie* selectRandomHelper(priority_queue<pair<int, movie*>> pq) {
+	int randomIndex = Random::Int(0, pq.size() - 1); // Generate a random number
+	int count = 0;
+	while (count < randomIndex && !pq.empty()) {
+		pq.pop();
+		count++;
 	}
-	return val;
+	return pq.top().second;
 }
 
-// chooses movies based on user's preferred rating PG, G 
-int chooseRating() {
-	cin.clear();
-	cout << setfill('=') << setw(51);
-	cout << "\n";
-	cout << "|      What movie rating were you thinking?      |" << endl;
-	cout << "|   (a) G               (f) NC-17                |" << endl;
-	cout << "|   (b) PG / TV-PG      (g) Unrated/ Not rated   |" << endl;
-	cout << "|   (c) PG-13 / TV-14   (h) B / B15              |" << endl;          //what genre are you thinking 
-	cout << "|   (d) TV-MA           (i) Any rating           |" << endl;
-	cout << "|   (e) R                                        |" << endl;
-	cout << "|   (0) Enter 0 to Exit                          |" << endl;
-	cout << setfill('=') << setw(51);
-	cout << "\n";
-	cout << "Please input the letter of the selected rating: ";
-	string choice;
-	bool chosen = false;
-	int val = 0;
-	while (!chosen) {
-		getline(cin, choice);
-		if (choice == "0") {
-			val = 0;
-			chosen = true;
-		}
-		else {
-			if (choice.length() != 1 || choice[0] < 'A' || (choice[0] < 'a' && choice[0] > 'I') || choice[0] > 'i') {
-				cout << choice << " is an invalid input." << endl;
-				cout << "Please enter your input in the correct format: ";
-				choice.clear();
-			}
-			else {
-				chosen = true;
-				val = tolower(int(choice[0]));
-				break;
-			}
-		}
-	}
-	return val;
-}
-
-// chooses movies based on user's preferred year range
-int chooseYear() {
-	string input;
-	int choice = 0;
-	bool chosen = false;
-	cout << setfill('=') << setw(51);
-	cout << "\n";
-	cout << "|   Let's pick a range of years for your movie!  |" << endl;
-	cout << "|      (a) 1986 - 1990      (e) 2006 - 2010      |" << endl;
-	cout << "|      (b) 1991 - 1995      (f) 2011 - 2016      |" << endl;
-	cout << "|      (c) 1996 - 2000      (g) All (1986-2016)  |" << endl;
-	cout << "|      (d) 2001 - 2005                           |" << endl;
-	cout << "|      (0) Enter 0 to Exit                       |" << endl;
-	cout << setfill('=') << setw(51);
-	cout << "\n";
-	cout << "Please input the letter of the selected year: ";
-	while (!chosen) {
-		getline(cin, input);
-		if (input == "0") {
-			choice = 0;
-			chosen = true;
-		}
-		else {
-			if (input.length() != 1 || input[0] < 'A' || (input[0] < 'a' && input[0] > 'G') || input[0] > 'g') {
-				cout << input << " is an invalid input." << endl;
-				cout << "Please enter your input in the correct format: ";
-				input.clear();
-			}
-			else {
-				chosen = true;
-				choice = tolower(int(input[0]));
-				break;
-			}
-		}
-	}
-	return choice;
-}
-
-int chooseOutput() {
-	string input;
-	int choice = 0;
-	bool chosen = false;
-	cout << setfill('=') << setw(51);
-	cout << "\n";
-	cout << "|   Which data structure would you like to use?  |" << endl;
-	cout << "|      (a) Multimap            (c) Both          |" << endl;
-	cout << "|      (b) Binary Search Tree  (0) Exit          |" << endl;
-	cout << setfill('=') << setw(51);
-	cout << "\n";
-	cout << "Please input the letter of the selected structure: ";
-	while (!chosen) {
-		getline(cin, input);
-		if (input == "0") {
-			choice = 0;
-			chosen = true;
-		}
-		else {
-			if (input.length() != 1 || input[0] < 'A' || (input[0] < 'a' && input[0] > 'C') || input[0] > 'c') {
-				cout << input << " is an invalid input." << endl;
-				cout << "Please enter your input in the correct format: ";
-				input.clear();
-			}
-			else {
-				chosen = true;
-				choice = tolower(int(input[0]));
-				break;
-			}
-		}
-	}
-	return choice;
-}
-
-int chooseOption() {
-	string input;
-	int choice = 0;
-	bool chosen = false;
-	cout << setfill('=') << setw(51);
-	cout << "\n";
-	cout << "|          How would you like to continue?       |" << endl;
-	cout << "| (a) Movie Marathon     (d) Save or View Movies |" << endl;
-	cout << "| (b) Select Random      (0) Exit                |" << endl;
-	cout << "| (c) Random & Marathon                          |" << endl;
-	cout << setfill('=') << setw(51);
-	cout << "\n";
-	cout << "Please input the letter of the selected option: ";
-	while (!chosen) {
-		getline(cin, input);
-		if (input == "0") {
-			choice = 0;
-			chosen = true;
-		}
-		else {
-			if (input.length() != 1 || input[0] < 'A' || (input[0] < 'a' && input[0] > 'D') || input[0] > 'd') {
-				cout << input << " is an invalid input." << endl;
-				cout << "Please enter your input in the correct format: ";
-				input.clear();
-			}
-			else {
-				chosen = true;
-				choice = tolower(int(input[0]));
-				break;
-			}
-		}
-	}
-	return choice;
-}
-
-// creates a multimap based on user's preferences
-unordered_multimap<string, movie> createMap(string genre, int year1, int year2, vector<string> ratings) {
-	unordered_multimap<string, movie> m;              //information on the use of a multimap: https://www.cplusplus.com/reference/map/multimap/
-	string line;
-	ifstream movieFile;
-	movieFile.open("movies.csv", ios::in);
-	int numLine = 0;
-	// checks how many lines are in the csv file
-	if (movieFile.is_open()) {
-		getline(movieFile, line);
-		while (getline(movieFile, line)) {
-			numLine++;
-		}
-		movieFile.close();
-	}
-	string _budget, _company, _country, _director, _genre, _gross, _name, _rating;
-	string _released, _runtime, _score, _star, _votes, _writer, _year;
-	movieFile.open("movies.csv", ios::in);
-	getline(movieFile, line);
-	// loop for the amount of lines in file
-	for (int i = 0; i < numLine; i++) {
-		// first take in the budget
-		getline(movieFile, _budget, ',');
-		// then the company name
-		char d;
-		d = movieFile.get();
-		if (char(d) == '"') {
-			getline(movieFile, _company, '"');
-			_company = _company.substr(0, _company.length());
-			getline(movieFile, line, ',');
-		}
-		else {
-			movieFile.putback(d);
-			getline(movieFile, _company, ',');
-		}
-		// then the country, director, genre, and gross
-		getline(movieFile, _country, ',');
-		getline(movieFile, _director, ',');
-		getline(movieFile, _genre, ',');
-		getline(movieFile, _gross, ',');
-		// then the name
-		d = movieFile.get();
-		if (char(d) == '"') {
-			getline(movieFile, _name, '"');
-			_name = _name.substr(0, _name.length());
-			getline(movieFile, line, ',');
-		}
-		else {
-			movieFile.putback(d);
-			getline(movieFile, _name, ',');
-		}
-		// then the rating, released date, runtime, score, star, votes, writer, year
-		getline(movieFile, _rating, ',');
-		getline(movieFile, _released, ',');
-		getline(movieFile, _runtime, ',');
-		getline(movieFile, _score, ',');
-		getline(movieFile, _star, ',');
-		getline(movieFile, _votes, ',');
-		getline(movieFile, _writer, ',');
-		getline(movieFile, _year);
-		// adds values into movie structure
-		movie temp(stoi(_budget), _company, _country, _director, _genre, stoi(_gross), _name, _rating, _released, stoi(_runtime),
-			stod(_score), _star, stoi(_votes), _writer, stoi(_year));
-		// only inserts movies based on the preferred genre and year range and rating
-		if (_genre == genre && (stoi(_year) >= year1) && (stoi(_year) <= year2)) {
-			if (ratings.size() == 0) {
-				m.emplace( _name, temp );
-			}
-			else {
-				for (int i = 0; i < ratings.size(); i++) {
-					if (_rating == ratings[i]) {
-						m.emplace( _name, temp );
-					}
-				}
-			}
-		}
-	}
-	movieFile.close();
-	return m;
-}
-
-// prints the Map
-void printMap(unordered_multimap<string, movie> m1) {
-	auto iter = m1.begin();
-	map<double, vector<movie*>> m2;
-	int ct = 1;
-	for (iter; iter != m1.end(); iter++) {
-		m2[(iter->second.score)].push_back(&iter->second);
-	}
-	auto iter2 = m2.rbegin();								// information on how to traverse a map in reverse: https://www.geeksforgeeks.org/how-to-traverse-a-stl-map-in-reverse-direction/
-	cout << "#. Movie | Company | Director | Runtime " << endl;
-	for (iter2; iter2 != m2.rend(); iter2++) {
-		for (int i = 0; i < iter2->second.size(); i++) {
-			cout << ct << ". " << iter2->second[i]->name << " | " << iter2->second[i]->company << " | " << iter2->second[i]->director << " | ";
-			minutesToHours(iter2->second[i]->runtime);
-			ct++;
-		}
-	}
-}
-
+//-----------------------------------------------------AVL Tree implementation code---------------------------------------
+//---------------------------------------------------from Samantha Gilman Project 1 implementation------------------------
 // AVL Tree
-struct Node {
+struct Node {											   
 public:
 	double val;
 	movie name;
@@ -597,6 +282,8 @@ void recalcBalanceFactor(Node* node) {
 		calcBalanceFactor(node->right);
 	}
 }
+//-------------------------------------------------END AVL tree implementation code --------------------------------------------------------------
+
 
 //insert a node, by taking in a root node, a string for the name and an double for the rating out of 10
 //if node is nullptr, make a new node, else go to the left or right depending on how id compares to node value
@@ -676,6 +363,327 @@ Node* createTree(Node* tree, string genre, int year1, int year2, vector<string> 
 	return root;
 }
 
+// creates a multimap based on user's preferences
+unordered_multimap<string, movie> createMap(string genre, int year1, int year2, vector<string> ratings) {
+	unordered_multimap<string, movie> m;              //information on the use of a multimap: https://www.cplusplus.com/reference/map/multimap/
+	string line;
+	ifstream movieFile;
+	movieFile.open("movies.csv", ios::in);
+	int numLine = 0;
+	// checks how many lines are in the csv file
+	if (movieFile.is_open()) {
+		getline(movieFile, line);
+		while (getline(movieFile, line)) {
+			numLine++;
+		}
+		movieFile.close();
+	}
+	string _budget, _company, _country, _director, _genre, _gross, _name, _rating;
+	string _released, _runtime, _score, _star, _votes, _writer, _year;
+	movieFile.open("movies.csv", ios::in);
+	getline(movieFile, line);
+	// loop for the amount of lines in file
+	for (int i = 0; i < numLine; i++) {
+		// first take in the budget
+		getline(movieFile, _budget, ',');
+		// then the company name
+		char d;
+		d = movieFile.get();
+		if (char(d) == '"') {
+			getline(movieFile, _company, '"');
+			_company = _company.substr(0, _company.length());
+			getline(movieFile, line, ',');
+		}
+		else {
+			movieFile.putback(d);
+			getline(movieFile, _company, ',');
+		}
+		// then the country, director, genre, and gross
+		getline(movieFile, _country, ',');
+		getline(movieFile, _director, ',');
+		getline(movieFile, _genre, ',');
+		getline(movieFile, _gross, ',');
+		// then the name
+		d = movieFile.get();
+		if (char(d) == '"') {
+			getline(movieFile, _name, '"');
+			_name = _name.substr(0, _name.length());
+			getline(movieFile, line, ',');
+		}
+		else {
+			movieFile.putback(d);
+			getline(movieFile, _name, ',');
+		}
+		// then the rating, released date, runtime, score, star, votes, writer, year
+		getline(movieFile, _rating, ',');
+		getline(movieFile, _released, ',');
+		getline(movieFile, _runtime, ',');
+		getline(movieFile, _score, ',');
+		getline(movieFile, _star, ',');
+		getline(movieFile, _votes, ',');
+		getline(movieFile, _writer, ',');
+		getline(movieFile, _year);
+		// adds values into movie structure
+		movie temp(stoi(_budget), _company, _country, _director, _genre, stoi(_gross), _name, _rating, _released, stoi(_runtime),
+			stod(_score), _star, stoi(_votes), _writer, stoi(_year));
+		// only inserts movies based on the preferred genre and year range and rating
+		if (_genre == genre && (stoi(_year) >= year1) && (stoi(_year) <= year2)) {
+			if (ratings.size() == 0) {
+				m.emplace( _name, temp );
+			}
+			else {
+				for (int i = 0; i < ratings.size(); i++) {
+					if (_rating == ratings[i]) {
+						m.emplace( _name, temp );
+					}
+				}
+			}
+		}
+	}
+	movieFile.close();
+	return m;
+}
+
+// chooses movies based on user's preferred genre
+int chooseGenre() {
+	cin.clear();
+	cout << setfill('=') << setw(51);
+	cout << "\n";
+	cout << "|      What movie genre were you thinking?       |" << endl;
+	cout << "|   (a) Action      (g) Drama     (m) Romance    |" << endl;
+	cout << "|   (b) Adventure   (h) Family    (n) Sci-Fi     |" << endl;
+	cout << "|   (c) Animation   (i) Fantasy   (o) Thriller   |" << endl;          //what genre are you thinking 
+	cout << "|   (d) Biography   (j) Horror    (p) War        |" << endl;           //indexed list
+	cout << "|   (e) Comedy      (k) Musical   (q) Western    |" << endl;
+	cout << "|   (f) Crime       (l) Mystery                  |" << endl;
+	cout << "|   (0) Enter 0 to Exit                          |" << endl;
+	cout << setfill('=') << setw(51);
+	cout << "\n";
+	cout << "Please input the letter of the selected genre: ";
+	string choice;
+	bool chosen = false;
+	int val = 0;
+	while (!chosen) {
+		getline(cin, choice);
+		if (choice == "0") {
+			val = 0;
+			chosen = true;
+		}
+		else {
+			if (choice.length() != 1 || choice[0] < 'A' || (choice[0] < 'a' && choice[0] > 'Q') || choice[0] > 'q') {
+				cout << choice << " is an invalid input." << endl;
+				cout << "Please enter your input in the correct format: ";
+				choice.clear();
+			}
+			else {
+				chosen = true;
+				val = tolower(int(choice[0]));
+				break;
+			}
+		}
+	}
+	return val;
+}
+
+// chooses movies based on user's preferred rating PG, G 
+int chooseRating() {
+	cin.clear();
+	cout << setfill('=') << setw(51);
+	cout << "\n";
+	cout << "|      What movie rating were you thinking?      |" << endl;
+	cout << "|   (a) G               (f) NC-17                |" << endl;
+	cout << "|   (b) PG / TV-PG      (g) Unrated/ Not rated   |" << endl;
+	cout << "|   (c) PG-13 / TV-14   (h) B / B15              |" << endl;          //what genre are you thinking 
+	cout << "|   (d) TV-MA           (i) Any rating           |" << endl;
+	cout << "|   (e) R                                        |" << endl;
+	cout << "|   (0) Enter 0 to Exit                          |" << endl;
+	cout << setfill('=') << setw(51);
+	cout << "\n";
+	cout << "Please input the letter of the selected rating: ";
+	string choice;
+	bool chosen = false;
+	int val = 0;
+	while (!chosen) {
+		getline(cin, choice);
+		if (choice == "0") {
+			val = 0;
+			chosen = true;
+		}
+		else {
+			if (choice.length() != 1 || choice[0] < 'A' || (choice[0] < 'a' && choice[0] > 'I') || choice[0] > 'i') {
+				cout << choice << " is an invalid input." << endl;
+				cout << "Please enter your input in the correct format: ";
+				choice.clear();
+			}
+			else {
+				chosen = true;
+				val = tolower(int(choice[0]));
+				break;
+			}
+		}
+	}
+	return val;
+}
+
+// chooses movies based on user's preferred year range
+int chooseYear() {
+	string input;
+	int choice = 0;
+	bool chosen = false;
+	cout << setfill('=') << setw(51);
+	cout << "\n";
+	cout << "|   Let's pick a range of years for your movie!  |" << endl;
+	cout << "|      (a) 1986 - 1990      (e) 2006 - 2010      |" << endl;
+	cout << "|      (b) 1991 - 1995      (f) 2011 - 2016      |" << endl;
+	cout << "|      (c) 1996 - 2000      (g) All (1986-2016)  |" << endl;
+	cout << "|      (d) 2001 - 2005                           |" << endl;
+	cout << "|      (0) Enter 0 to Exit                       |" << endl;
+	cout << setfill('=') << setw(51);
+	cout << "\n";
+	cout << "Please input the letter of the selected year: ";
+	while (!chosen) {
+		getline(cin, input);
+		if (input == "0") {
+			choice = 0;
+			chosen = true;
+		}
+		else {
+			if (input.length() != 1 || input[0] < 'A' || (input[0] < 'a' && input[0] > 'G') || input[0] > 'g') {
+				cout << input << " is an invalid input." << endl;
+				cout << "Please enter your input in the correct format: ";
+				input.clear();
+			}
+			else {
+				chosen = true;
+				choice = tolower(int(input[0]));
+				break;
+			}
+		}
+	}
+	return choice;
+}
+
+//asks user which structure they want to output movies using
+int chooseOutput() {
+	string input;
+	int choice = 0;
+	bool chosen = false;
+	cout << setfill('=') << setw(51);
+	cout << "\n";
+	cout << "|   Which data structure would you like to use?  |" << endl;
+	cout << "|      (a) Multimap            (c) Both          |" << endl;
+	cout << "|      (b) Binary Search Tree  (0) Exit          |" << endl;
+	cout << setfill('=') << setw(51);
+	cout << "\n";
+	cout << "Please input the letter of the selected structure: ";
+	while (!chosen) {
+		getline(cin, input);
+		if (input == "0") {
+			choice = 0;
+			chosen = true;
+		}
+		else {
+			if (input.length() != 1 || input[0] < 'A' || (input[0] < 'a' && input[0] > 'C') || input[0] > 'c') {
+				cout << input << " is an invalid input." << endl;
+				cout << "Please enter your input in the correct format: ";
+				input.clear();
+			}
+			else {
+				chosen = true;
+				choice = tolower(int(input[0]));
+				break;
+			}
+		}
+	}
+	return choice;
+}
+
+//asks user which functionality they want use to get a movie
+int chooseOption() {
+	string input;
+	int choice = 0;
+	bool chosen = false;
+	cout << setfill('=') << setw(51);
+	cout << "\n";
+	cout << "|          How would you like to continue?       |" << endl;
+	cout << "| (a) Movie Marathon     (d) Save or View Movies |" << endl;
+	cout << "| (b) Select Random      (0) Exit                |" << endl;
+	cout << "| (c) Random & Marathon                          |" << endl;
+	cout << setfill('=') << setw(51);
+	cout << "\n";
+	cout << "Please input the letter of the selected option: ";
+	while (!chosen) {
+		getline(cin, input);
+		if (input == "0") {
+			choice = 0;
+			chosen = true;
+		}
+		else {
+			if (input.length() != 1 || input[0] < 'A' || (input[0] < 'a' && input[0] > 'D') || input[0] > 'd') {
+				cout << input << " is an invalid input." << endl;
+				cout << "Please enter your input in the correct format: ";
+				input.clear();
+			}
+			else {
+				chosen = true;
+				choice = tolower(int(input[0]));
+				break;
+			}
+		}
+	}
+	return choice;
+}
+
+//converts minutes of movie runtime into hours
+void minutesToHours(int minutes) {
+	int hours = minutes / 60;
+	minutes %= 60;
+	if (hours > 1) {
+		cout << hours << " hours ";
+		if (minutes > 1) {
+			cout << minutes << " minutes" << endl;
+		}
+		else {
+			if (minutes != 0) {
+				cout << minutes << " minute" << endl;
+			}
+			else {
+				cout << endl;
+			}
+		}
+	}
+	else {
+		cout << hours << " hour ";
+		if (minutes > 1) {
+			cout << minutes << " minutes" << endl;
+		}
+		else {
+			if (minutes != 0) {
+				cout << minutes << "minute" << endl;
+			}
+		}
+	}
+}
+
+// prints the Map
+void printMap(unordered_multimap<string, movie> m1) {
+	auto iter = m1.begin();
+	map<double, vector<movie*>> m2;
+	int ct = 1;
+	for (iter; iter != m1.end(); iter++) {
+		m2[(iter->second.score)].push_back(&iter->second);
+	}
+	auto iter2 = m2.rbegin();								// information on how to traverse a map in reverse: https://www.geeksforgeeks.org/how-to-traverse-a-stl-map-in-reverse-direction/
+	cout << "#. Movie | Company | Director | Runtime " << endl;
+	for (iter2; iter2 != m2.rend(); iter2++) {
+		for (int i = 0; i < iter2->second.size(); i++) {
+			cout << ct << ". " << iter2->second[i]->name << " | " << iter2->second[i]->company << " | " << iter2->second[i]->director << " | ";
+			minutesToHours(iter2->second[i]->runtime);
+			ct++;
+		}
+	}
+}
+
 // keeps count of movies in the tree
 int count(int& ctr) {
 	ctr++;
@@ -751,7 +759,8 @@ void clearPQ(priority_queue<pair<int, movie*>>& pq) {
 		pq.pop();
 	}
 }
-
+ 
+//puts together a random marathon of movies depending on amount of time 
 void computeMarathon(bool output, priority_queue<pair<int, movie*>>& m1) {
 	string hour;
 	cout << "Enter the max number of hours: ";
