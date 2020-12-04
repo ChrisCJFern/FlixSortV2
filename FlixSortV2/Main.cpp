@@ -814,7 +814,11 @@ void printMarathon(priority_queue<pair<int, movie*>>& m1) {
 	cout << "|      Your Personal Movie Marathon Planner      |" << endl;
 	cout << setfill('=') << setw(51);
 	cout << "\n";
+	auto startTime1 = high_resolution_clock::now();						 //information for timer found from https://en.cppreference.com/w/cpp/chrono 
 	computeMarathon(output, m1);   //calls compute marathon to make first random movie marathon
+	auto endTime1 = high_resolution_clock::now();
+	auto  duration1 = duration_cast<microseconds>(endTime1 - startTime1);
+	cout << "It took " << duration1.count() << " microseconds to produce this marathon." << endl;
 	string input;
 	cin.clear();
 	while (!exit) {
@@ -839,7 +843,11 @@ void printMarathon(priority_queue<pair<int, movie*>>& m1) {
 			}
 			else {
 				if (tolower(input[0]) == 97) {
+					auto startTime2 = high_resolution_clock::now();						 //information for timer found from https://en.cppreference.com/w/cpp/chrono 
 					computeMarathon(output, m1);
+					auto endTime2 = high_resolution_clock::now();
+					auto  duration2 = duration_cast<microseconds>(endTime2 - startTime2);
+					cout << "It took " << duration2.count() << " microseconds to produce this marathon." << endl;
 					chosen = true;
 				}
 				else {
