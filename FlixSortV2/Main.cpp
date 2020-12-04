@@ -705,7 +705,6 @@ void printInorder(Node* node, int& counter) {
 
 //convert multimap to priority queue for marathoning && random
 void multimapToPQ(unordered_multimap<string, movie>& m1, priority_queue<pair<int, movie*>>& pq) {
-	vector<movie> v;
 	auto iter = m1.begin();
 	for (iter; iter != m1.end(); iter++) {
 		pq.push({ iter->second.runtime, &iter->second });
@@ -919,9 +918,11 @@ vector<movie*> saveMovie(unordered_multimap<string, movie> m1, vector<movie*>& m
 				}
 				else {
 					// cout the list of saved movies
+					int ct = 1;
 					for (auto iter = movieSaves.begin(); iter != movieSaves.end(); ++iter) {
-						cout << (*iter)->name << " | " << (*iter)->company << " | " << (*iter)->director << " | ";
+						cout << ct << ". " << (*iter)->name << " | " << (*iter)->company << " | " << (*iter)->director << " | ";
 						minutesToHours((*iter)->runtime);
+						ct++;
 					}
 				}
 				cout << endl;
@@ -1006,6 +1007,7 @@ int main() {
 		choice = chooseGenre();											   //goes through the menus until a user enters 0 or continues to build a map or tree
 		if (choice != 0) {													//based on the user input.
 			choice2 = chooseYear();
+			count = 1;
 			if (choice2 != 0) {
 				choice3 = chooseRating();
 				if (choice3 != 0) {
@@ -1111,6 +1113,7 @@ int main() {
 								default:
 									break;
 								}
+								saveMovie(m1, movieSaves);
 							}
 							else {
 								input = "n";
