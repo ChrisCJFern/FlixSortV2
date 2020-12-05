@@ -1129,6 +1129,9 @@ int main() {
 									break;
 								}
 								while (cont) {
+									if (m1.size() == 0) {
+										m1 = createMap(genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
+									}
 									cont = saveMovie(m1, movieSaves);
 								}
 							}
