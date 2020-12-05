@@ -98,7 +98,7 @@ struct movie {
 //-----------------------------------------------------AVL Tree implementation code---------------------------------------
 //---------------------------------------------------from Samantha Gilman Project 1 implementation------------------------
 // AVL Tree
-struct Node {											   
+struct Node {
 public:
 	double val;
 	movie name;
@@ -380,12 +380,12 @@ unordered_multimap<string, movie> createMap(string genre, int year1, int year2, 
 		// only inserts movies based on the preferred genre and year range and rating
 		if (_genre == genre && (stoi(_year) >= year1) && (stoi(_year) <= year2)) {
 			if (ratings.size() == 0) {
-				m.emplace( _name, temp );
+				m.emplace(_name, temp);
 			}
 			else {
 				for (int i = 0; i < ratings.size(); i++) {
 					if (_rating == ratings[i]) {
-						m.emplace( _name, temp );
+						m.emplace(_name, temp);
 					}
 				}
 			}
@@ -757,7 +757,7 @@ void clearPQ(priority_queue<pair<int, movie*>>& pq) {
 		pq.pop();
 	}
 }
- 
+
 //puts together a random marathon of movies depending on amount of time 
 void computeMarathon(bool output, priority_queue<pair<int, movie*>>& m1) {
 	string hour;
@@ -768,7 +768,7 @@ void computeMarathon(bool output, priority_queue<pair<int, movie*>>& m1) {
 		try {
 			if (stod(hour)) {
 				int mins = 60 * stod(hour);
-				priority_queue<pair<int, movie*>> movies;     
+				priority_queue<pair<int, movie*>> movies;
 				movies = randomMarathon(mins, m1);         //produces a random marathon of movies and works to output it in the correct format
 				int time = 0;
 				int counter = 1;
@@ -858,7 +858,22 @@ void printMarathon(priority_queue<pair<int, movie*>>& m1) {
 	}
 }
 
-vector<movie*> saveMovie(unordered_multimap<string, movie> m1, vector<movie*>& movieSaves) {
+bool repeatSaveMovies() {
+	string option2 = "";
+	cout << setfill('=') << setw(74);
+	cout << "\n";
+	cout << "|Would you like to continue or add more movies/look at saved movie list?|" << endl;
+	cout << "|          (a) Back to Search        (b) View saved movie list          |" << endl;
+	cout << setfill('=') << setw(74);
+	cout << "\n";
+	cout << "Please input the letter of the selected option: ";
+	getline(cin, option2);
+	if (option2 == "a") { return false; }
+	if (option2 == "b") { return true; }
+	else if (option2.length() != 1) { cout << "That is not a valid input." << endl; }
+}
+
+bool saveMovie(unordered_multimap<string, movie> m1, vector<movie>& movieSaves) {
 	bool chosen = false;
 	while (!chosen) {
 		bool movieFound = false;
@@ -870,7 +885,7 @@ vector<movie*> saveMovie(unordered_multimap<string, movie> m1, vector<movie*>& m
 		cout << "\n";
 		cout << "| Would you like to store a movie or show your list of saved movies? |" << endl;
 		cout << "|          (a) Store a movie           (c) Clear saved movies        |" << endl;
-		cout << "|          (b) Show saved movies                                     |" << endl;
+		cout << "|          (b) Show saved movies       (0) Exit to main              |" << endl;
 		cout << setfill('=') << setw(71);
 		cout << "\n";
 		cout << "Please input the letter of the selected option: ";
@@ -878,81 +893,80 @@ vector<movie*> saveMovie(unordered_multimap<string, movie> m1, vector<movie*>& m
 		bool path = false;
 		// stores movie
 		while (!path) {
-			if (option == "a") {
+			if (option == "0") {
 				path = true;
-				while (!movieFound) {
-					duplicateMovie = false;
-					string input = "";
-					cout << "What movie would you like to store?: ";
-					getline(cin, input);
+				chosen = true;
+				break;
+			}
+			else {
+				if (option == "a") {
+					path = true;
+					while (!movieFound) {
+						duplicateMovie = false;
+						string input = "";
+						cout << "What movie would you like to store?: ";
+						getline(cin, input);
 
-					for (auto iter = movieSaves.begin(); iter != movieSaves.end(); ++iter) {
-						if ((*iter)->name == input) {
-							cout << input << " has already been added." << endl;
-							duplicateMovie = true;
-						}
-					}
-					if (!duplicateMovie) {
-						for (auto iter = m1.begin(); iter != m1.end(); ++iter) {
-							// if movie is found in list
-							if (input == iter->first) {
-								movieSaves.push_back(&iter->second);
-								movieFound = true;
-								cout << input << " has been successfully saved!" << endl << endl;
+						for (auto iter = movieSaves.begin(); iter != movieSaves.end(); ++iter) {
+							if (iter->name == input) {
+								cout << input << " has already been added." << endl;
+								duplicateMovie = true;
 							}
 						}
-						// if movie was not found in the list
-						if (!movieFound) {
-							cout << input << " was not found. Try again. " << endl << endl;
+						if (!duplicateMovie) {
+							for (auto iter = m1.begin(); iter != m1.end(); ++iter) {
+								// if movie is found in list
+								if (input == iter->first) {
+									movieSaves.push_back(iter->second);
+									movieFound = true;
+									cout << input << " has been successfully saved!" << endl << endl;
+								}
+							}
+							// if movie was not found in the list
+							if (!movieFound) {
+								cout << input << " was not found. Try again. " << endl << endl;
+							}
+						}
+
+					}
+				}
+				// show list of saved movies
+				else if (option == "b") {
+					path = true;
+					// if the list of movies is empty
+					if (movieSaves.size() <= 0) {
+						cout << "You have not saved any movies." << endl;
+					}
+					else {
+						// cout the list of saved movies
+						int ct = 1;
+						for (auto iter = movieSaves.begin(); iter != movieSaves.end(); ++iter) {
+							cout << ct << ". " << iter->name << " | " << iter->company << " | " << iter->director << " | ";
+							minutesToHours(iter->runtime);
+							ct++;
 						}
 					}
-
+					cout << endl;
 				}
-			}
-			// show list of saved movies
-			else if (option == "b") {
-				path = true;
-				// if the list of movies is empty
-				if (movieSaves.size() <= 0) {
-					cout << "You have not saved any movies." << endl;
+				else if (option == "c") {
+					path = true;
+					cout << "List has been cleared!" << endl;
+					movieSaves.clear();
 				}
-				else {
-					// cout the list of saved movies
-					int ct = 1;
-					for (auto iter = movieSaves.begin(); iter != movieSaves.end(); ++iter) {
-						cout << ct << ". " << (*iter)->name << " | " << (*iter)->company << " | " << (*iter)->director << " | ";
-						minutesToHours((*iter)->runtime);
-						ct++;
-					}
+				else { // if input is invalid
+					cout << "That is not a valid input." << endl;
+					cout << "Please input the letter in the correct format: ";
+					getline(cin, option);
 				}
-				cout << endl;
-			}
-			else if (option == "c") {
-				path = true;
-				cout << "List has been cleared!" << endl;
-				movieSaves.clear();
-			}
-			else { // if input is invalid
-				cout << "That is not a valid input." << endl;
-				cout << "Please input the letter in the correct format: ";
-				getline(cin, option);
 			}
 		}
-		string option2 = "";
-		cout << setfill('=') << setw(74);
-		cout << "\n";
-		cout << "|Would you like to continue or add more movies/look at saved movie list?|" << endl;
-		cout << "|          (a) Back to Search        (b) View saved movie list          |" << endl;
-		cout << setfill('=') << setw(74);
-		cout << "\n";
-		cout << "Please input the letter of the selected option: ";
-		getline(cin, option2);
-		if (option2 == "a") { chosen = true; }
-		else if (option2.length() != 1) { cout << "That is not a valid input." << endl; }
+		if (option != "0") {
+			return repeatSaveMovies();
+		}
 	}
-
-	return movieSaves;
+	return false;
 }
+
 
 //parses input for correctly inputted Y or N
 string checkIfYorN(string input) {
@@ -980,7 +994,7 @@ int main() {
 	priority_queue<pair<int, movie*>> m;
 	map<double, vector<movie*>> m2;
 	map<int, movie*> m3;
-	vector<movie*> movieSaves;
+	vector<movie> movieSaves;
 	unordered_set<int> setofMovies;
 
 	//---------------------PRINTS INITIAL MENU---------------------------------------
@@ -1003,7 +1017,7 @@ int main() {
 	string throwaway;
 	int count = 1;
 	do {
-		double mins = 0.0;													
+		double mins = 0.0;
 		choice = chooseGenre();											   //goes through the menus until a user enters 0 or continues to build a map or tree
 		if (choice != 0) {													//based on the user input.
 			choice2 = chooseYear();
@@ -1044,7 +1058,7 @@ int main() {
 								auto durationTree = duration_cast<microseconds>(stopTree - startTree);
 								cout << "\n" << "Time taken to create and print the tree: " << durationTree.count() << " microseconds" << endl;
 								treeToPQ(tree, m);
-								}
+							}
 							else {
 								cout << "There are no movies that fit your selections." << endl;
 							}
@@ -1059,7 +1073,7 @@ int main() {
 								cout << "Movies from the map: " << endl;
 								printMap(m1);
 								auto stopMap = high_resolution_clock::now();
-								auto durationMap = duration_cast<microseconds>(stopMap - startMap);                       
+								auto durationMap = duration_cast<microseconds>(stopMap - startMap);
 								auto startTree = high_resolution_clock::now();
 								// prints out tree options
 								cout << endl;
@@ -1091,6 +1105,7 @@ int main() {
 						}
 
 						if (!m.empty()) {						//if there are movies in the priority_queue allow for these options to be presented
+							bool cont = true;
 							int choice5 = chooseOption();
 							if (choice5 != 0) {
 								switch (choice5) {
@@ -1108,12 +1123,14 @@ int main() {
 									if (m1.size() == 0) {
 										m1 = createMap(genre[choice], year[choice2].first, year[choice2].second, rating[choice3]);
 									}
-									saveMovie(m1, movieSaves);
+									cont = saveMovie(m1, movieSaves);
 									break;
 								default:
 									break;
 								}
-								saveMovie(m1, movieSaves);
+								while (cont) {
+									cont = saveMovie(m1, movieSaves);
+								}
 							}
 							else {
 								input = "n";
